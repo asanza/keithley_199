@@ -148,12 +148,12 @@ static uint32_t do_sequence(unsigned char channel, hal_adc_sequence* sequence){
 
 double hal_adc_do_measurement(unsigned char channel, hal_adc_sequence* sequence){
     assert(sequence!=NULL);
-    uint32_t signal_count, sigzero_count, ref_count, refzero_count;
+    int signal_count, sigzero_count, ref_count, refzero_count;
     signal_count = do_sequence(channel, sequence);
     sigzero_count = do_sequence(channel, sequence);
     refzero_count = do_sequence(channel, sequence);
     ref_count = do_sequence(channel, sequence);
-    uint32_t signal, reference;
+    int signal, reference;
     signal = signal_count - sigzero_count;
     reference = ref_count - refzero_count;
     assert(reference);

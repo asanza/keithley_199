@@ -82,11 +82,9 @@ adc_error adc_set_input(adc_input input_in, adc_range range_in){
 
 /* DC Voltage Read */
 double read_dc(uint8_t channel, adc_range range){
-    if(range == ADC_RANGE_300m){
+    assert(range >= ADC_RANGE_300m && range <= ADC_RANGE_300);
         hal_adc_sequence* seq = hal_adc_get_sequence(input, range);
         return hal_adc_do_measurement(channel, seq);
-    }
-    return 1.1;
 }
 
 
