@@ -19,6 +19,8 @@
 #include "HardwareProfile.h"
 
 /* following codes are used with mux_d */
+#define SENSE_100K_BIT         (1<<28)
+#define SIG_x10_BIT            (1<<22)
 #define N_AC_BIT               (1<<21)
 
 
@@ -43,13 +45,14 @@ static adc_input input;
 #define VREF  -2.8
 
 static double read_ac(uint8_t channel, adc_range range);
+static double read_dc(uint8_t channel, adc_range range);
 
 double adc_read_value(adc_channel channel){
     double value;
     switch (input)
     {
         case ADC_INPUT_VOLTAGE_AC: value = read_ac(channel, range);break;
-        case ADC_INPUT_VOLTAGE_DC: value = read_ac(channel,range); break;
+        case ADC_INPUT_VOLTAGE_DC: value = read_dc(channel,range); break;
         default:
             assert(0); /* no input set. Input should be set. */
     }
@@ -76,6 +79,19 @@ adc_error adc_set_input(adc_input input_in, adc_range range_in){
     range = range_in;
 }
 
+
+/* DC Voltage Read */
+double read_dc(uint8_t channel, adc_range range){
+    if(range == ADC_RANGE_300m){
+        hal_adc_sequence* seq = hal_adc_get_sequence(input, range);
+        return hal_adc_do_measurement(channel, seq);
+    }
+    return 1.1;
+}
+
+
+
+/* AC Voltage Read */
 
 #define MUX_READ_ZERO_AC(x) (x&~NZERO_BIT)|NCAL_BIT | N_AC_BIT
 #define MUX_READ_REF_AC(x) (x& ~NCAL_BIT)|NZERO_BIT | N_AC_BIT

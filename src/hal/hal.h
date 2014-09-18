@@ -84,6 +84,8 @@ typedef enum DISP_MODE{
     DISP_ZERO   = 0x0100,
     DISP_AUTO   = 0x0200
 }disp_mode;
+
+
 hal_key hal_disp_scan();
 void hal_disp_init();
 void hal_disp_test();
@@ -97,11 +99,41 @@ void hal_disp_puts(char* c);
 void hal_disp_putc(char c, int pos);
 hal_key hal_disp_wait_for_key();
 
+typedef enum {
+        ADC_INPUT_VOLTAGE_DC = 0x00,
+        ADC_INPUT_VOLTAGE_AC,
+        ADC_INPUT_CURRENT_DC,
+        ADC_INPUT_CURRENT_AC,
+        ADC_INPUT_RESISTANCE_2W,
+        ADC_INPUT_RESISTANCE_4W,
+        ADC_INPUT_COUNT,
+}adc_input;
+
+typedef enum {
+        ADC_RANGE_300m = 0x00,
+        ADC_RANGE_3,
+        ADC_RANGE_30,
+        ADC_RANGE_300,
+        ADC_RANGE_3K,
+        ADC_RANGE_30K,
+        ADC_RANGE_300K,
+        ADC_RANGE_3M,
+        ADC_RANGE_30M,
+        ADC_RANGE_300M,
+        ADC_RANGE_COUNT,
+} adc_range;
+
+
 int hal_adc_integration_sequence(unsigned char channel, uint32_t int_mux, uint32_t pause_mux, uint32_t rund_mux);
 void hal_adc_init(unsigned int period);
 void hal_adc_send_mux(uint8_t channel, uint32_t mux);
 void hal_adc_set_integration_period(uint32_t period);
 
+typedef struct hal_adc_integration_sequence_t hal_adc_sequence;
+
+hal_adc_sequence* hal_adc_get_sequence(adc_input input, adc_range range);
+double hal_adc_do_measurement(unsigned char channel, hal_adc_sequence* sequence);
+uint32_t hal_adcseq_next(hal_adc_sequence* sequence);
 #endif /*__LANGUAGE_ASSEMBLY*/
 #ifdef	__cplusplus
 }

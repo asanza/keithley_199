@@ -112,6 +112,7 @@
         <itemPath>src/hal/counter.c</itemPath>
         <itemPath>src/hal/i2c.c</itemPath>
         <itemPath>src/hal/hal_adc.c</itemPath>
+        <itemPath>src/hal/adcseq.c</itemPath>
       </logicalFolder>
       <logicalFolder name="libscpi" displayName="libscpi" projectFiles="true">
         <logicalFolder name="src" displayName="src" projectFiles="true">

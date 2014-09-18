@@ -55,6 +55,27 @@ static int pulsecounter = 0;
 static unsigned int integration_period;
 static QueueHandle_t data_sended;
 
+#define SENSE_100K_BIT         (1<<28)
+#define SIG_x10_BIT            (1<<22)
+#define N_AC_BIT               (1<<21)
+
+
+#define NCAL_BIT                (1<<7)
+#define NZERO_BIT               (1<<6)
+#define FAST_BIT                (1<<5)
+#define NREAD_SWITCH_BIT        (1<<4)
+#define SIG_BIT                 (1<<3)
+#define N_FINAL_SLOPE_BIT       (1<<2)
+#define SYNC_BIT                (1<<1)
+#define INT_BIT                 (1<<0)
+
+#define IS_START_INTEGRATION(x)  ((x&(N_FINAL_SLOPE_BIT|INT_BIT)) == (N_FINAL_SLOPE_BIT|INT_BIT))
+#define IS_STOP_INTEGRATION(x) ((x&N_FINAL_SLOPE_BIT))== (N_FINAL_SLOPE_BIT))
+#define IS_RUN_DOWN_SLOPE(x) ((x&SYNC_BIT) == SYNC_BIT)
+#define IS_PRE_INT_PULSE(x) ((x&(N_FINAL_SLOPE_BIT|SYNC_BIT))==(N_FINAL_SLOPE_BIT|SYNC_BIT))
+
+#define VREF -2.8  /* hardware voltage reference value in volts */
+
 static void send_strobe_and_wait(unsigned int wait_time);
 static void adc_send_mux(char channel, uint32_t mux);
 
@@ -96,6 +117,47 @@ int hal_adc_integration_sequence (uint8_t channel, uint32_t int_mux, uint32_t pa
     /* make final count calculations */
     uint32_t adc_counter = up_counter*128 + down_counter;
     return adc_counter;
+}
+
+
+
+static uint32_t do_sequence(unsigned char channel, hal_adc_sequence* sequence){
+    uint32_t start_int = hal_adcseq_next(sequence);
+    /* send the start integration sequence */
+    while(IS_RUN_DOWN_SLOPE(start_int)||IS_PRE_INT_PULSE(start_int)){
+        hal_adc_send_mux(channel, start_int);
+        start_int = hal_adcseq_next(sequence);
+    }
+    if(!IS_START_INTEGRATION(start_int)){
+        /* something nasty happened. Abort. */
+        assert(0);
+    }
+    uint32_t stop_int = hal_adcseq_next(sequence);
+    if(!IS_STOP_INTEGRATION(stop_int){
+        /* something nasty happened. Abort. */
+        assert(0);
+    }
+    uint32_t run_down = hal_adcseq_next(sequence);
+    if(!IS_RUN_DOWN_SLOPE(run_down)){
+        /* something nasty happened. Abort. */
+        assert(0);
+    }
+    /* here comes the signal integration */
+    return hal_adc_integration_sequence(channel, start_int, stop_int, run_down);
+}
+
+double hal_adc_do_measurement(unsigned char channel, hal_adc_sequence* sequence){
+    assert(sequence!=NULL);
+    uint32_t signal_count, sigzero_count, ref_count, refzero_count;
+    signal_count = do_sequence(channel, sequence);
+    sigzero_count = do_sequence(channel, sequence);
+    refzero_count = do_sequence(channel, sequence);
+    ref_count = do_sequence(channel, sequence);
+    uint32_t signal, reference;
+    signal = signal_count - sigzero_count;
+    reference = ref_count - refzero_count;
+    assert(reference);
+    return VREF*signal*1.0/reference*1.0;
 }
 
 void hal_adc_set_integration_period(uint32_t period){
