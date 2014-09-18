@@ -10,7 +10,9 @@ The new board replaces the old and is in charge of controlling the analog
 circuitry (which contains a custom made, discrete analog digital converters, 
 signal conditioning and analog switchs for mode and range selection). 
 For the software, I used the mplabx environment from microchip and the xc32 
-compiler. The software works (at least I can measure voltages with good 
+compiler. 
+
+The software works (at least I can measure AC and DC voltages with good 
 accuracy, support for resistance and current measurements is on the way). 
 
 The new board contains also a temperature sensor (for accurate temperature 
