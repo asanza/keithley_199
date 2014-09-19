@@ -55,6 +55,7 @@ double adc_read_value(adc_channel channel){
         case ADC_INPUT_VOLTAGE_AC: value = read_ac(channel, range);break;
         case ADC_INPUT_VOLTAGE_DC: value = read_dc(channel,range); break;
         case ADC_INPUT_CURRENT_DC: value = read_cdc(channel, range); break;
+        case ADC_INPUT_CURRENT_AC: value = read_cdc(channel, range); break;
         default:
             assert(0); /* no input set. Input should be set. */
     }
