@@ -91,14 +91,14 @@ dmm_error sys_dmm_set_scale(adc_range scale){
     
     if(adc_get_input() == ADC_INPUT_CURRENT_DC||adc_get_input() == ADC_INPUT_CURRENT_AC){
         switch(scale){
-            case ADC_RANGE_300m: state.settings[adc_get_input()].range = scale; break;
+            case ADC_RANGE_30m: state.settings[adc_get_input()].range = scale; break;
             case ADC_RANGE_3: state.settings[adc_get_input()].range = scale; break;
             default: return DMM_NOT_SUPPORTED;
         }
     }
     
     if(adc_get_input() == ADC_INPUT_RESISTANCE_2W||adc_get_input() == ADC_INPUT_RESISTANCE_4W){
-        if(scale == ADC_RANGE_300m||scale==ADC_RANGE_3||scale == ADC_RANGE_30 || scale >= ADC_RANGE_COUNT)
+        if(scale <= ADC_RANGE_30 || scale >= ADC_RANGE_COUNT)
             return DMM_NOT_SUPPORTED;
         else state.settings[adc_get_input()].range = scale;
     }
@@ -141,11 +141,18 @@ adc_range sys_dmm_get_scale(){
 }
 
 void sys_dmm_scale_up(){
-    sys_dmm_set_scale(state.settings[adc_get_input()].range + 1);
+    if(adc_get_input() == ADC_INPUT_CURRENT_AC|| adc_get_input()==ADC_INPUT_CURRENT_DC){
+        sys_dmm_set_scale(state.settings[adc_get_input()].range + 2);
+    }
+    else
+        sys_dmm_set_scale(state.settings[adc_get_input()].range + 1);
 }
 
 void sys_dmm_scale_down(){
-    sys_dmm_set_scale(state.settings[adc_get_input()].range - 1);
+    if(adc_get_input() == ADC_INPUT_CURRENT_AC|| adc_get_input()==ADC_INPUT_CURRENT_DC)
+        sys_dmm_set_scale(state.settings[adc_get_input()].range - 2);
+    else
+         sys_dmm_set_scale(state.settings[adc_get_input()].range - 1);
 }
 
 void sys_dmm_default_to_factory_settings(){

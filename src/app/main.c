@@ -56,6 +56,8 @@ static void sysMgmTask(void *pvParameters){
             case KEY_SCANNER: continue;
             case KEY_TRIGGER: continue;
             case KEY_NEXT: shift_key = true; continue;
+            default:
+                Nop();
         }
         vTaskDelay(10);
     }
@@ -100,7 +102,7 @@ void append_scale(char* buffer){
         case ADC_INPUT_CURRENT_DC:
         case ADC_INPUT_CURRENT_AC:
         {
-            if(sys_dmm_get_scale()==ADC_RANGE_300m)
+            if(sys_dmm_get_scale()==ADC_RANGE_30m)
                 strcat(buffer,"mA");
             else
                 strcat(buffer," A");
@@ -148,6 +150,7 @@ static void MeasurementsTask(void* pvParameters)
                   }
               }
               break;
+              case ADC_RANGE_30m:
               case ADC_RANGE_30:
               case ADC_RANGE_30K:
               case ADC_RANGE_30M:

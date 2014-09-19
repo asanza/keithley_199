@@ -46,6 +46,7 @@ static adc_input input;
 
 static double read_ac(uint8_t channel, adc_range range);
 static double read_dc(uint8_t channel, adc_range range);
+static double read_cdc(uint8_t channel, adc_range range);
 
 double adc_read_value(adc_channel channel){
     double value;
@@ -53,17 +54,25 @@ double adc_read_value(adc_channel channel){
     {
         case ADC_INPUT_VOLTAGE_AC: value = read_ac(channel, range);break;
         case ADC_INPUT_VOLTAGE_DC: value = read_dc(channel,range); break;
+        case ADC_INPUT_CURRENT_DC: value = read_cdc(channel, range); break;
         default:
             assert(0); /* no input set. Input should be set. */
     }
     switch (range){
-        case ADC_RANGE_300m: return value*100.0;
-        case ADC_RANGE_3:   return value*1.0;
-        case ADC_RANGE_30:  return value*10.0;
+        case ADC_RANGE_300m:
         case ADC_RANGE_300: return value*100.0;
+        case ADC_RANGE_3:   return value*1.0;
+        case ADC_RANGE_30m:
+        case ADC_RANGE_30:  return value*10.0;
         default:
             assert(0); /* no valid range set */
     }
+}
+
+double read_cdc(uint8_t channel, adc_range range){
+    assert(range == ADC_RANGE_30m || range == ADC_RANGE_3);
+        hal_adc_sequence* seq = hal_adc_get_sequence(input, range);
+        return hal_adc_do_measurement(channel, seq);
 }
 
 adc_input adc_get_input(){
@@ -71,12 +80,16 @@ adc_input adc_get_input(){
 }
 
 adc_error adc_set_range(adc_range scale){
+    portENTER_CRITICAL();
     range = scale;
+    portEXIT_CRITICAL();
 }
 
 adc_error adc_set_input(adc_input input_in, adc_range range_in){
+    portENTER_CRITICAL();
     input = input_in;
     range = range_in;
+    portEXIT_CRITICAL();
 }
 
 
