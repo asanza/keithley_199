@@ -46,7 +46,7 @@ static uint16_t screen[NUMBER_OF_CHARACTERS];
 static unsigned int actual_character;
 static bool self_test = false;
 
-#define REFRESH_PERIOD 5000 // * 25nS * NUMBER_OF_CHARACTERS
+#define REFRESH_PERIOD 70000 // * 25nS * NUMBER_OF_CHARACTERS
 
 void hal_disp_init(){
     PORTSetPinsDigitalOut(DISPLAY_PORT,0xFFFF);
@@ -216,6 +216,7 @@ static uint16_t chartable[] = {
 };
 
 static uint16_t decode(char c){
+    /* TODO: Check c inside allowed range */
     switch(c){
         case 'm': return chartable[39];
         case '+': return chartable[36];
