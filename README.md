@@ -12,10 +12,11 @@ signal conditioning and analog switchs for mode and range selection).
 For the software, I used the mplabx environment from microchip and the xc32 
 compiler. 
 
-The software works (at least I can measure AC and DC voltages with good 
-accuracy, support for resistance and current measurements is on the way). 
+The software works (at least I can measure AC and DC voltages and Currents with good 
+accuracy, support for resistance measurements is on the way). 
 
 The new board contains also a temperature sensor (for accurate temperature 
 compensation) and instead of the old gpib interface in the old board, an usb
 interface.
 
+I want also implement mathematical functions and a scpi compliant interface (via usb).
