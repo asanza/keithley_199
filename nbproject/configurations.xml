@@ -39,24 +39,6 @@
         <itemPath>src/hal/hal.h</itemPath>
         <itemPath>src/hal/HardwareProfile.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="libscpi" displayName="libscpi" projectFiles="true">
-        <logicalFolder name="inc" displayName="inc" projectFiles="true">
-          <logicalFolder name="scpi" displayName="scpi" projectFiles="true">
-            <itemPath>src/libscpi/inc/scpi/error.h</itemPath>
-            <itemPath>src/libscpi/inc/scpi/fifo.h</itemPath>
-            <itemPath>src/libscpi/inc/scpi/units.h</itemPath>
-            <itemPath>src/libscpi/inc/scpi/ieee488.h</itemPath>
-            <itemPath>src/libscpi/inc/scpi/scpi.h</itemPath>
-            <itemPath>src/libscpi/inc/scpi/parser.h</itemPath>
-            <itemPath>src/libscpi/inc/scpi/constants.h</itemPath>
-            <itemPath>src/libscpi/inc/scpi/utils_private.h</itemPath>
-            <itemPath>src/libscpi/inc/scpi/debug.h</itemPath>
-            <itemPath>src/libscpi/inc/scpi/minimal.h</itemPath>
-            <itemPath>src/libscpi/inc/scpi/config.h</itemPath>
-            <itemPath>src/libscpi/inc/scpi/types.h</itemPath>
-          </logicalFolder>
-        </logicalFolder>
-      </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/adc.h</itemPath>
         <itemPath>src/sys/dmm.h</itemPath>
@@ -72,6 +54,7 @@
                    projectFiles="true">
       <logicalFolder name="app" displayName="app" projectFiles="true">
         <itemPath>src/app/main.c</itemPath>
+        <itemPath>src/app/measurements.c</itemPath>
       </logicalFolder>
       <logicalFolder name="drivers" displayName="drivers" projectFiles="true">
         <itemPath>src/drivers/eeprom.c</itemPath>
@@ -114,18 +97,6 @@
         <itemPath>src/hal/i2c.c</itemPath>
         <itemPath>src/hal/hal_adc.c</itemPath>
         <itemPath>src/hal/adcseq.c</itemPath>
-      </logicalFolder>
-      <logicalFolder name="libscpi" displayName="libscpi" projectFiles="true">
-        <logicalFolder name="src" displayName="src" projectFiles="true">
-          <itemPath>src/libscpi/src/fifo.c</itemPath>
-          <itemPath>src/libscpi/src/utils.c</itemPath>
-          <itemPath>src/libscpi/src/minimal.c</itemPath>
-          <itemPath>src/libscpi/src/ieee488.c</itemPath>
-          <itemPath>src/libscpi/src/debug.c</itemPath>
-          <itemPath>src/libscpi/src/error.c</itemPath>
-          <itemPath>src/libscpi/src/parser.c</itemPath>
-          <itemPath>src/libscpi/src/units.c</itemPath>
-        </logicalFolder>
       </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/dmm.c</itemPath>
