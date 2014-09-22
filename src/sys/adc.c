@@ -60,11 +60,11 @@ double adc_read_value(adc_channel channel){
             assert(0); /* no input set. Input should be set. */
     }
     switch (range){
-        case ADC_RANGE_300m:
-        case ADC_RANGE_300: return value*100.0;
         case ADC_RANGE_3:   return value*1.0;
         case ADC_RANGE_30m:
         case ADC_RANGE_30:  return value*10.0;
+        case ADC_RANGE_300m:
+        case ADC_RANGE_300: return value*100.0;
         default:
             assert(0); /* no valid range set */
     }

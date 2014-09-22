@@ -5,12 +5,13 @@
 #include <task.h>
 #include <queue.h>
 
-#include <system.h>
+#include <dmm.h>
 #include <math.h>
 
 static void MeasurementsTask(void *pvParameters);
 static void sysMgmTask(void *pvParameters);
 xTaskHandle measTaskHandle = NULL;
+xTaskHandle doCalTaskHandle = NULL;
 int main()
 {
     /* hardware initialization. An error here is unrecoverable */
@@ -23,6 +24,7 @@ int main()
         vTaskSuspend(measTaskHandle);
     /* system management task. */
     xTaskCreate(sysMgmTask,"T2",configMINIMAL_STACK_SIZE,NULL,3,NULL);
+    //xTaskCreate(doCalTask,"T3",configMINIMAL_STACK_SIZE, NULL, 3, NULL);
     vTaskStartScheduler();
 }
 
@@ -56,6 +58,10 @@ static void sysMgmTask(void *pvParameters){
             case KEY_SCANNER: continue;
             case KEY_TRIGGER: continue;
             case KEY_NEXT: shift_key = true; continue;
+            case KEY_CAL:
+                vTaskSuspend(measTaskHandle);
+                //vTaskStart(doCalTaskHandle);
+                continue;
             default:
                 Nop();
         }
@@ -130,7 +136,6 @@ static void MeasurementsTask(void* pvParameters)
     char buff[10];
     while(1)
     {
-          //double value = hal_tempsens_readvalue();
           hal_disp_adci_toggle();
           double value = sys_dmm_read();
           //value = 1.036423533*value+0.0003341082;

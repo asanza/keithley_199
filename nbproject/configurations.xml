@@ -58,8 +58,9 @@
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
-        <itemPath>src/sys/system.h</itemPath>
         <itemPath>src/sys/adc.h</itemPath>
+        <itemPath>src/sys/dmm.h</itemPath>
+        <itemPath>src/sys/utils.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -129,6 +130,8 @@
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/dmm.c</itemPath>
         <itemPath>src/sys/adc.c</itemPath>
+        <itemPath>src/sys/fitlinear.c</itemPath>
+        <itemPath>src/sys/calibrator.c</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"

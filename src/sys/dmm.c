@@ -5,11 +5,9 @@
 #include <hal.h>
 #include <adc.h>
 #include <eefs.h>
-#include "system.h"
-#include "portmacro.h"
 #include <assert.h>
+#include <dmm.h>
 
-#define VREF  -2.8  /**< Hardware reference voltage value(V) */
 
 /* represents the actual dmm state. */
 typedef struct input_settings{
@@ -62,6 +60,7 @@ void sys_dmm_set_integration_period(adc_integration_period period){
 
 void sys_dmm_set_mode(adc_input mode){
     if(mode > ADC_INPUT_COUNT) return;
+    if(mode == adc_get_input());
     switch(adc_get_input()){
         case ADC_INPUT_VOLTAGE_AC:
         case ADC_INPUT_VOLTAGE_DC:
@@ -169,7 +168,7 @@ void sys_dmm_default_to_factory_settings(){
                 break;
             case ADC_INPUT_VOLTAGE_AC:
             case ADC_INPUT_VOLTAGE_DC:
-                state.settings[i].range = ADC_RANGE_30;
+                state.settings[i].range = ADC_RANGE_300;
                 break;
             case ADC_INPUT_RESISTANCE_2W:
             case ADC_INPUT_RESISTANCE_4W:
