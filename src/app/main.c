@@ -8,10 +8,9 @@
 #include <dmm.h>
 #include <math.h>
 
-extern void measurementsTask(void *pvParameters);
 static void sysMgmTask(void *pvParameters);
-xTaskHandle measTaskHandle = NULL;
-
+extern void measurementsTask(void* pvParameters);
+xTaskHandle measTaskHandle;
 int main()
 {
     /* hardware initialization. An error here is unrecoverable */
@@ -43,6 +42,7 @@ static void sysMgmTask(void *pvParameters){
     }
     bool shift_key = false;
     vTaskResume(measTaskHandle);
+
     while(1){
         switch(hal_disp_wait_for_key())
         {
