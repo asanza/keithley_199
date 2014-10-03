@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="dmm" displayName="dmm" projectFiles="true">
+        <itemPath>src/dmm/dmm.h</itemPath>
       </logicalFolder>
       <logicalFolder name="drivers" displayName="drivers" projectFiles="true">
         <itemPath>src/drivers/eeprom.h</itemPath>
@@ -43,8 +44,8 @@
       </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/adc.h</itemPath>
-        <itemPath>src/sys/dmm.h</itemPath>
         <itemPath>src/sys/utils.h</itemPath>
+        <itemPath>src/sys/sys.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -56,9 +57,10 @@
                    projectFiles="true">
       <logicalFolder name="app" displayName="app" projectFiles="true">
         <itemPath>src/app/main.c</itemPath>
-        <itemPath>src/app/measurements.c</itemPath>
       </logicalFolder>
       <logicalFolder name="dmm" displayName="dmm" projectFiles="true">
+        <itemPath>src/dmm/calTask.c</itemPath>
+        <itemPath>src/dmm/dmmTask.c</itemPath>
       </logicalFolder>
       <logicalFolder name="drivers" displayName="drivers" projectFiles="true">
         <itemPath>src/drivers/eeprom.c</itemPath>

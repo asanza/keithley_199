@@ -6,7 +6,7 @@
 #include <adc.h>
 #include <eefs.h>
 #include <assert.h>
-#include <dmm.h>
+#include <sys.h>
 
 
 /* represents the actual dmm state. */

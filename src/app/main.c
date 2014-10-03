@@ -5,11 +5,11 @@
 #include <task.h>
 #include <queue.h>
 
-#include <dmm.h>
+#include <sys.h>
 #include <math.h>
 
 static void sysMgmTask(void *pvParameters);
-extern void measurementsTask(void* pvParameters);
+extern void dmmTaskMain(void* pvParameters);
 xTaskHandle measTaskHandle;
 int main()
 {
@@ -17,7 +17,7 @@ int main()
     hal_sys_init();
     hal_usbuart_init();
     hal_i2c_init();
-    xTaskCreate(measurementsTask,"T1",configMINIMAL_STACK_SIZE,NULL,3,&measTaskHandle);
+    xTaskCreate(dmmTaskMain,"T1",configMINIMAL_STACK_SIZE,NULL,3,&measTaskHandle);
     /* suspend measurement task until we load dmm state on management task. */
     if(measTaskHandle)
         vTaskSuspend(measTaskHandle);

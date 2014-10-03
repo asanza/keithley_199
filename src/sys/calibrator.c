@@ -2,7 +2,7 @@
  */
 
 #include <utils.h>
-#include <dmm.h>
+#include <sys.h>
 
 struct calibration_t{
     adc_input input;
