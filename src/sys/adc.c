@@ -1,48 +1,47 @@
-/*
- * ADC High Level
+/* ADC Abstraction Layer
+ * (c) 2014 Diego F. Asanza
+ * This file implements the ADC Low level control interface
  */
 
-#include <peripheral/outcompare.h>
-#include <peripheral/timer.h>
-#include <peripheral/pps.h>
-#include <peripheral/ports.h>
-#include <peripheral/spi.h>
+/** How does keithley ADC Works:
+ * The K199 uses a charge balancing adc. It is controller through five shift-
+ * registers on the analog board which controls the different switch on the input
+ * multiplexer and the charge-discharge (start-stop) of the integrator.
+ *
+ * These shift registers are controlled through three lines  from the digital
+ * board. The first line is clock, the second data, and the third the strobe (loads
+ * the data shifted from the digital board on the output of the shift registers).
+ *
+ * The values sended to the shift registers (from now on adc sequences) should
+ * be precicely timed, as the integration period should be exactly the same always.
+ * this is done by precicely controlling the strobe signal, to be sended with no
+ * jitter (which is not easy in a microcontroller).
+ *
+ * When the problem with the jitter is under controll, the rest is to send the
+ * right adc sequences according to what we are triying to measure. For ac/dc
+ * voltages, the k199 do four measurements at once, first signal, after that zero,
+ * again zero (for reference) and finally reference voltage. The final value is
+ * calculated from the formula: Vout = VREF*(signal-zero)/(ref - zero).
+ *
+ * The sequences I use to do all these measurements where reverse engineered from
+ * a working k199 and can be seen in adcseq.c.
+ *
+ * This file implements the high level abstraction of the adc, where we can set
+ * the desired input and range and integration period, and we get a nice number
+ * which represents the value measured. It works selecting the right adc sequence
+ * to work according the range and input and finally calling the low layer (hardware
+ * adc) in order to perform the actual measurement.
+ * 
+ */
+
 #include <stdint.h>
 #include <assert.h>
-
 #include <FreeRTOS.h>
-#include <queue.h>
-
-#include "task.h"
 #include "adc.h"
-
-#include "HardwareProfile.h"
-
-/* following codes are used with mux_d */
-#define SENSE_100K_BIT         (1<<28)
-#define SIG_x10_BIT            (1<<22)
-#define N_AC_BIT               (1<<21)
-
-
-#define NCAL_BIT                (1<<7)
-#define NZERO_BIT               (1<<6)
-#define FAST_BIT                (1<<5)
-#define NREAD_SWITCH_BIT        (1<<4)
-#define SIG_BIT                 (1<<3)
-#define N_FINAL_SLOPE_BIT       (1<<2)
-#define SYNC_BIT                (1<<1)
-#define INT_BIT                 (1<<0)
-
-#define START_INTEGRATION(x)  ((x&~0x07)|N_FINAL_SLOPE_BIT|INT_BIT)
-#define STOP_INTEGRATION(x) ((x&~0x07)|N_FINAL_SLOPE_BIT)
-#define RUN_DOWN_SLOPE(x) ((x&~0x07)|SYNC_BIT)
-#define PRE_INT_PULSE(x) ((x&~0x07)|N_FINAL_SLOPE_BIT|SYNC_BIT)
 
 /* state variables */
 static adc_range range;
 static adc_input input; 
-
-#define VREF  -2.8
 
 double adc_read_value(adc_channel channel){
     hal_adc_sequence* seq = hal_adc_get_sequence(input, range);
