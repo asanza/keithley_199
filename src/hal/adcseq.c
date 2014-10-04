@@ -57,6 +57,46 @@ START_SEQUENCE(seq_300V){
     0x45BFE055, 0x45BFE054, 0x45BFE052      /* ref */
 }END_SEQUENCE(seq_300V)
 
+START_SEQUENCE(seq_300mVAC){
+    0xCD1FECD5, 0xCD1FECD4, 0xCD1FECD2,     /* signal */
+    0xCD3FEC96,                             /* preset */
+    0xCD3FEC95, 0xCD3FEC94, 0xCD3F1CD2,     /* zero */
+    0xCD3FEC96,                             /* preset */
+    0xCD3FEC95, 0xCD3FEC94, 0xCD3F1CD2,     /* zero */
+    0xCD3FEC56,                             /* preset */
+    0xCD3FEC55, 0xCD3FEC54, 0xCD1FECD2,     /* ref */
+}END_SEQUENCE(seq_300mVAC)
+
+START_SEQUENCE(seq_3VAC){
+    0xCD9DCCD5, 0xCD9DCCD4, 0xCD9DCCD2,     /* signal */
+    0xCDBDCC96,
+    0xCDBDCC95, 0xCDBDCC94, 0xCD9DCCD2,      /* zero */
+    0xCDBDCC96,
+    0xCDBDCC95, 0xCDBDCC94, 0xCD9DCCD2,      /* zero */
+    0xCDBDCC56,
+    0xCDBDCC55, 0xCDBDCC54, 0xCD9DCCD2     /* ref */
+}END_SEQUENCE(seq_3VAC)
+
+START_SEQUENCE(seq_30VAC){
+    0xCD9DF4D5, 0xCD9DF4D4, 0xCD9DF4D2,     /* signal */
+    0xCDBDF496,
+    0xCDBDF495, 0xCDBDF494, 0xCD9DF4D2,     /* zero */
+    0xCDBDF496,
+    0xCDBDF495, 0xCDBDF494, 0xCD9DF4D2,     /* zero */
+    0xCDBDF456,
+    0xCDBDF455, 0xCDBDF454, 0xCD9DF4D2,     /* ref */
+}END_SEQUENCE(seq_30VAC)
+
+START_SEQUENCE(seq_300VAC){
+    0xCD9DE4D5, 0xCD9DE4D4, 0xCD9DE4D2,     /* signal */
+    0xCDBDE496,
+    0xCDBDE495, 0xCDBDE494, 0xCDBDE4D2,
+    0xCDBDE496,
+    0xCDBDE495, 0xCDBDE494, 0xCDBDE4D2,
+    0xCDBDE456,
+    0xCDBDE455, 0xCDBDE454, 0xCD9DE4D2
+}END_SEQUENCE(seq_300VAC)
+
 START_SEQUENCE(seq_30mADC){
     0x4DE7E0D5, 0x4DE7E0D4, 0x4DE7E0D2,
     0x4DF7E096,
@@ -98,6 +138,8 @@ START_SEQUENCE(seq_3AAC){
             0x4535E855, 0x4535E854, 0x4515E8D2,
 }END_SEQUENCE(seq_3AAC)
 
+
+
 static hal_adc_sequence* get_vdc_seq(adc_range range);
 static hal_adc_sequence* get_vac_seq(adc_range range);
 static hal_adc_sequence* get_cdc_seq(adc_range range);
@@ -108,9 +150,20 @@ static hal_adc_sequence* get_res_seq(adc_range range);
 hal_adc_sequence* hal_adc_get_sequence(adc_input input, adc_range range){
     switch(input){
         case ADC_INPUT_VOLTAGE_DC: return get_vdc_seq(range);
+        case ADC_INPUT_VOLTAGE_AC: return get_vac_seq(range);
         case ADC_INPUT_CURRENT_DC: return get_cdc_seq(range);
         case ADC_INPUT_CURRENT_AC: return get_cac_seq(range);
     }
+    return NULL;
+}
+
+hal_adc_sequence* get_vac_seq(adc_range range){
+    switch(range){
+        case ADC_RANGE_300m: seq_300mVAC.actual_value = 0; return &seq_300mVAC;
+        case ADC_RANGE_3: seq_3VAC.actual_value = 0; return &seq_3VAC;
+        case ADC_RANGE_30: seq_30VAC.actual_value = 0; return &seq_30VAC;
+        case ADC_RANGE_300: seq_300VAC.actual_value = 0; return &seq_300VAC;
+    };
     return NULL;
 }
 
