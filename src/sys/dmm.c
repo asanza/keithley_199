@@ -60,13 +60,14 @@ void sys_dmm_set_integration_period(adc_integration_period period){
 
 void sys_dmm_set_mode(adc_input mode){
     if(mode > ADC_INPUT_COUNT) return;
-    if(mode == adc_get_input());
     switch(adc_get_input()){
         case ADC_INPUT_VOLTAGE_AC:
+            if(mode == ADC_INPUT_VOLTAGE_DC) return;
         case ADC_INPUT_VOLTAGE_DC:
             state.last_voltage_mode = adc_get_input();
             break;
         case ADC_INPUT_CURRENT_AC:
+            if(mode == ADC_INPUT_CURRENT_DC) return;
         case ADC_INPUT_CURRENT_DC:
             state.last_current_mode = adc_get_input();
             break;
@@ -115,16 +116,20 @@ void sys_dmm_restore_current_mode(){
 dmm_error sys_dmm_toggle_acdc(){
     switch(adc_get_input()){
         case ADC_INPUT_VOLTAGE_AC:
-            sys_dmm_set_mode(ADC_INPUT_VOLTAGE_DC);
+            state.input = ADC_INPUT_VOLTAGE_DC;
+            adc_set_input(state.input, state.settings[state.input].range);
             return DMM_OK;
         case ADC_INPUT_VOLTAGE_DC:
-            sys_dmm_set_mode(ADC_INPUT_VOLTAGE_AC);
+            state.input = ADC_INPUT_VOLTAGE_AC;
+            adc_set_input(state.input, state.settings[state.input].range);
             return DMM_OK;
         case ADC_INPUT_CURRENT_AC:
-            sys_dmm_set_mode(ADC_INPUT_CURRENT_DC);
+            state.input = ADC_INPUT_CURRENT_DC;
+            adc_set_input(state.input, state.settings[state.input].range);
             return DMM_OK;
         case ADC_INPUT_CURRENT_DC:
-            sys_dmm_set_mode(ADC_INPUT_CURRENT_AC);
+            state.input = ADC_INPUT_CURRENT_AC;
+            adc_set_input(state.input, state.settings[state.input].range);
             return DMM_OK;
         default:
             return DMM_NOT_SUPPORTED;
