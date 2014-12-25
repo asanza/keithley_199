@@ -1,0 +1,85 @@
+device pic32MX350F256L  
+content/mplab/mplab.deviceSupport
+Searching for: /content/edc/AC/AC162050.AC
+Searching for: /content/edc/AC/AC162052.AC
+Searching for: /content/edc/AC/AC162053.AC
+Searching for: /content/edc/AC/AC162054.AC
+Searching for: /content/edc/AC/AC162055.AC
+Searching for: /content/edc/AC/AC162056.AC
+Searching for: /content/edc/AC/AC162057.AC
+Searching for: /content/edc/AC/AC162058.AC
+Searching for: /content/edc/AC/AC162059.AC
+Searching for: /content/edc/AC/AC162060.AC
+Searching for: /content/edc/AC/AC162061.AC
+Searching for: /content/edc/AC/AC162062.AC
+Searching for: /content/edc/AC/AC162064.AC
+Searching for: /content/edc/AC/AC162065.AC
+Searching for: /content/edc/AC/AC244028.AC
+Searching for: /content/edc/AC/AC162066.AC
+Searching for: /content/edc/AC/AC162067.AC
+Searching for: /content/edc/AC/AC162070.AC
+Searching for: /content/edc/AC/AC162074.AC
+Searching for: /content/edc/AC/AC162078.AC
+Searching for: /content/edc/AC/AC162079.AC
+Searching for: /content/edc/AC/AC162083.AC
+Searching for: /content/edc/AC/AC162087.AC
+Searching for: /content/edc/AC/AC162088.AC
+Searching for: /content/edc/AC/AC162091.AC
+Searching for: /content/edc/AC/AC162094.AC
+Searching for: /content/edc/AC/AC162096.AC
+Searching for: /content/edc/AC/AC244022.AC
+Searching for: /content/edc/AC/AC244023.AC
+Searching for: /content/edc/AC/AC244024.AC
+Searching for: /content/edc/AC/AC244026.AC
+Searching for: /content/edc/AC/AC244027.AC
+Searching for: /content/edc/AC/AC244033.AC
+Searching for: /content/edc/AC/AC244034.AC
+Searching for: /content/edc/AC/AC244035.AC
+Searching for: /content/edc/AC/AC244036.AC
+Searching for: /content/edc/AC/AC244043.AC
+Searching for: /content/edc/AC/AC244044.AC
+Searching for: /content/edc/AC/AC244046.AC
+Searching for: /content/edc/AC/AC244047.AC
+Searching for: /content/edc/AC/AC244048.AC
+Searching for: /content/edc/AC/AC244049.AC
+Searching for: /content/edc/AC/AC244050.AC
+Searching for: /content/edc/AC/AC244045.AC
+Searching for: /content/edc/AC/AC244051.AC
+Searching for: /content/edc/AC/AC244052.AC
+Searching for: /content/edc/AC/AC244053.AC
+Searching for: /content/edc/AC/AC244054.AC
+Searching for: /content/edc/AC/AC244055.AC
+Searching for: /content/edc/AC/AC244060.AC
+Searching for: /content/edc/AC/AC244061.AC
+Searching for: /content/edc/AC/AC244062.AC
+Searching for: /content/edc/AC/AC244063.AC
+Searching for: /content/edc/AC/AC244064.AC
+Searching for: /content/edc/AC/AC244065.AC
+content/mplab/PluginBoardSupport.xml
+
+hwtool sim               
+
+set uart2io.uartioenabled	true
+
+set uart2io.output		file
+
+set uart2io.outputfile		test/simulation/out.txt
+
+
+
+program build/test/TestBuild.elf
+Programming target...
+
+Resetting SFRs
+Resetting peripherals
+Program succeeded.
+
+run
+Running
+
+
+wait 5000
+
+quit
+
+

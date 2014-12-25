@@ -1,0 +1,14 @@
+device pic32MX350F256L  
+hwtool sim               
+set uart2io.uartioenabled	true
+set uart2io.output		file
+set uart2io.outputfile		test/simulation/out.txt
+
+
+program build/test/TestBuild.elf
+
+run
+
+wait 5000
+quit
+

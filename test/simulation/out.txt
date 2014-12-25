@@ -1,0 +1,8 @@
+test_svs_pwbr.c:11:test_svs_pwbr_set_socket_config:PASS
+test_svs_pwbr.c:33:test_svs_pwbr_get_socket_config:PASS
+test_svs_pwbr.c:53:test_svs_pwr_not_saved_flag_set:PASS
+test_svs_pwbr.c:67:test_svs_pwr_clear_not_saved_flag:PASS
+
+-----------------------
+4 Tests 0 Failures 0 Ignored 
+OK
