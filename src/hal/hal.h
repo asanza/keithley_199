@@ -12,9 +12,6 @@
 extern "C" {
 #endif
 
-#define SYS_CLK     80000000UL
-#define PB_CLK      80000000UL
-
 #ifndef __LANGUAGE_ASSEMBLY
 #include <stdint.h>
 #include <stdbool.h>

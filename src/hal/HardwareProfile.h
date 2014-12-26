@@ -12,6 +12,10 @@
 extern "C" {
 #endif
 
+#define SYS_CLK     80000000UL
+#define PB_CLK      80000000UL
+
+
 #include <peripheral/ports.h>
 #include <peripheral/pps.h>
 #include <peripheral/timer.h>
@@ -28,12 +32,20 @@ extern "C" {
 #define USB_UART_BAUDRATE   115200
 #define USB_UART_PRIORITY   INT_PRIORITY_LEVEL_3
 
-#define CONFIGURE_UART_PPS() do{ \
+/* map hal uarts to real uarts */
+#define HAL_UART_COUNT        1   /**< Number of enabled uarts */
+//#define HAL_UART_1          UART1
+//#define HAL_UART_2          UART2
+#define HAL_UART_3            UART3 /**< UART 3 enabled */
+//#define HAL_UART_4          UART4
+
+#if defined HAL_UART_3
+#define CONFIGURE_UART3_PPS() do{ \
         PPSInput(2,U3RX,RPB3); \
         PPSOutput(1,RPB5,U3TX); \
         PORTSetPinsDigitalIn(IOPORT_D,BIT_8);\
         PORTSetPinsDigitalOut(IOPORT_D, BIT_9); }while(0)
-
+#endif
 
 
 /* Configure hardware counter used for read adc value */

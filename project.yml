@@ -77,11 +77,13 @@
       - -mips16
       - -MMD
       - -Wno-packed-bitfield-compat
+      #- -minterlink-compressed
       - "${1}"
       - -o "${2}"
       - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
       - -I"$": COLLECTION_PATHS_TEST_SUPPORT_SOURCE_INCLUDE_VENDOR
       - -Wall
+      #- -pedantic
       #- -Werror  # We can't keep this on during test becuase of a CMock pointer issue
      # - -Os
 
@@ -89,12 +91,14 @@
     :executable: xc32-gcc
     :arguments:
       - -mprocessor=32MX350F256L
+      - -mips16
+      - --gc-sections
       - ${1}
       - -o "./build/test/TestBuild.elf"
       #- -L
       - -Wl,-Tp32MX350F256L.ld,-Map=./build/test/TestOutput.map,--report-mem
-      #- --defsym=_min_heap_size=32440
-      #- --defsym=_min_stack_size=1056
+      - --defsym=_min_heap_size=32440
+      - --defsym=_min_stack_size=1056
   :test_fixture:
     :executable: ruby
     :name: "Microchip simulator test fixture"

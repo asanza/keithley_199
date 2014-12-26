@@ -104,6 +104,7 @@
         <itemPath>src/hal/i2c.c</itemPath>
         <itemPath>src/hal/hal_adc.c</itemPath>
         <itemPath>src/hal/adcseq.c</itemPath>
+        <itemPath>src/hal/hal_uart.c</itemPath>
       </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/dmm.c</itemPath>
@@ -290,7 +291,7 @@
         <property key="codecoverage.outputfile" value=""/>
         <property key="oscillator.auxfrequency" value="120"/>
         <property key="oscillator.auxfrequencyunit" value="Mega"/>
-        <property key="oscillator.frequency" value="1"/>
+        <property key="oscillator.frequency" value="80000000"/>
         <property key="oscillator.frequencyunit" value="Mega"/>
         <property key="oscillator.rcfrequency" value="250"/>
         <property key="oscillator.rcfrequencyunit" value="Kilo"/>

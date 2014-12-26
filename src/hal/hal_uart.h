@@ -26,20 +26,35 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+#include <stdint.h>
+    
+/* Buffers is allocated statically. Adapt following lines according your
+ * requeriments. */
+#define RX_BUFFER_LENGTH 20 /**< RX Buffer in Bytes */
+#define TX_BUFFER_LENGTH 20 /**< TX Buffer in Bytes */
 
-    /* define an opaque pointer to access the uart */
-    struct _hal_uart;
-    typedef struct _hal_uart hal_uart;
+/* Standard error definitions for this module */
+    typedef enum{
+        HAL_UART_ERR_NONE,
+                HAL_UART_ERR_PORT_NOT_AVAIL,
+                HAL_UART_ERR_BAUDRATE_NOT_AVAIL,
+                HAL_UART_ERR_NA
+    }hal_uart_error;
 
     typedef enum{
-        HAL_UART_PORT_1
-    }hal_uart_port;
+        HAL_UART_PARITY_NONE,
+                HAL_UART_PARITY_ODD,
+                HAL_UART_PARITY_EVEN
+    }hal_uart_parity;
 
-    /* open an uart and get a handle to it. */
-    hal_uart* hal_uart_open(hal_uart_port port);
+    typedef enum{
+        HAL_UART_STOP_BITS_1,
+                HAL_UART_STOP_BITS_2
+    }hal_uart_stop_bits;
 
-    /* send byte */
-    void hal_uart_write(hal_uart_port port, uint8_t byte);
+hal_uart_error hal_uart_open(uint8_t port, uint32_t baudrate, hal_uart_parity parity,
+            hal_uart_stop_bits stop_bits);
+    
 
 #ifdef	__cplusplus
 }
