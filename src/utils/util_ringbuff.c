@@ -21,4 +21,77 @@
  * Created on December 26, 2014, 3:13 AM
  */
 
+#include "util_ringbuff.h"
+#include <stddef.h>
+#include <stdbool.h>
 
+struct ringbuffer_t{
+    unsigned char* elems;
+    unsigned char* next;
+    unsigned int elem_count;
+    int size;
+};
+
+util_ringbuffer buffers[NUMBER_OF_RINGBUFFERS];
+
+static unsigned int used_buffers = 0;
+
+util_ringbuffer* util_ringbuffer_new(unsigned char* data_buffer,
+            int buffer_size){
+    if(used_buffers >= NUMBER_OF_RINGBUFFERS)
+        return NULL; /* No memory available */
+    buffers[used_buffers].elems = data_buffer;
+    buffers[used_buffers].next = data_buffer;
+    buffers[used_buffers].elem_count = 0;
+    buffers[used_buffers].size = buffer_size;
+    used_buffers++;
+    return &buffers[used_buffers - 1];
+}
+
+void util_ringbuffer_put(util_ringbuffer* buffer, unsigned char data){
+    /* check if buffer is full */
+    if(buffer->elem_count >= buffer->size)
+        return;
+    /* put elem in buffer */
+    *buffer->next = data;
+    /* increment element counter */
+    buffer->elem_count++;
+    /* increment pointer */
+    buffer->next++;
+    /* check if out of bounds */
+    if(buffer->next >= buffer->elems + buffer->size)
+        buffer->next = buffer->elems;
+}
+
+unsigned char util_ringbuffer_get(util_ringbuffer* buffer){
+    /* check if buffer is empty */
+    if(buffer->elem_count <= 0)
+        return 0x00;
+    /* get first element */
+    unsigned char* first;
+    first = buffer->next - buffer->elem_count;
+    /* check if out of bounds */
+    if(first < buffer->elems)
+    {
+        int t = buffer->elems - first;
+        first = buffer->elems + buffer->size - t;
+    }
+    /* decrement counter */
+    buffer->elem_count --;
+    /* return first element */
+    return *first;
+}
+
+int util_ringbuffer_is_empty(util_ringbuffer* buffer){
+    if(buffer->elem_count <= 0)
+        return UTIL_RINGBUFFER_IS_EMPTY;
+    else
+        return 0;
+}
+
+int util_ringbuffer_is_full(util_ringbuffer* buffer){
+    if(buffer->elem_count == buffer->size)
+        return UTIL_RINGBUFFER_IS_FULL;
+    else
+        return 0;
+}

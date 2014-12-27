@@ -26,7 +26,24 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+    
+#define NUMBER_OF_RINGBUFFERS 4
 
+#define UTIL_RINGBUFFER_IS_FULL 1
+#define UTIL_RINGBUFFER_IS_EMPTY 1
+
+    typedef struct ringbuffer_t util_ringbuffer;
+
+    util_ringbuffer* util_ringbuffer_new(unsigned char* data_buffer,
+            int buffer_size);
+
+    void util_ringbuffer_put(util_ringbuffer* buffer, unsigned char data);
+
+    int util_ringbuffer_is_empty(util_ringbuffer* buffer);
+
+    int util_ringbuffer_is_full(util_ringbuffer* buffer);
+
+    unsigned char util_ringbuffer_get(util_ringbuffer* buffer);
 
 
 

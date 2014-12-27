@@ -48,6 +48,9 @@
         <itemPath>src/sys/utils.h</itemPath>
         <itemPath>src/sys/sys.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="utils" displayName="utils" projectFiles="true">
+        <itemPath>src/utils/util_ringbuff.h</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -112,6 +115,9 @@
         <itemPath>src/sys/fitlinear.c</itemPath>
         <itemPath>src/sys/calibrator.c</itemPath>
       </logicalFolder>
+      <logicalFolder name="utils" displayName="utils" projectFiles="true">
+        <itemPath>src/utils/util_ringbuff.c</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -130,6 +136,7 @@
     <Elem>src/libscpi</Elem>
     <Elem>src/drivers</Elem>
     <Elem>src/dmm</Elem>
+    <Elem>src/utils</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -174,7 +181,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="src/hal;src/FreeRTOS/include;src/FreeRTOS/portable/MPLAB/PIC32MX;src/sys;src/eefs;src/libscpi/inc;src/dmm"/>
+                  value="src/hal;src/FreeRTOS/include;src/FreeRTOS/portable/MPLAB/PIC32MX;src/sys;src/eefs;src/libscpi/inc;src/dmm;src/utils"/>
         <property key="generate-16-bit-code" value="true"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
