@@ -1,3 +1,6 @@
+#undef NUMBER_OF_RINGBUFFERS
+#define NUMBER_OF_RINGBUFFERS 2
+
 #include "unity.h"
 #include "util_ringbuff.c"
 
@@ -29,43 +32,32 @@ void test_ringbuff_put_get(void){
   TEST_ASSERT_NOT_EQUAL(NULL,buff);
   /* put data into buffer */
   unsigned char i = 0;
-  while(util_ringbuffer_is_full(buff)!=UTIL_RINGBUFFER_IS_FULL){
-    util_ringbuffer_put(buff,i);
+  while(util_ringbuffer_put(buff,i)!=UTIL_RINGBUFFER_IS_FULL){
     TEST_ASSERT_EQUAL(i,data[i]);
     i++;
   }
-  /* check if buffer full */
-  int t;
-  t = util_ringbuffer_is_full(buff);
-  TEST_ASSERT_EQUAL(t,UTIL_RINGBUFFER_IS_FULL);
-  /* get data from buffer */
-  t = util_ringbuffer_is_empty(buff);
-  TEST_ASSERT_NOT_EQUAL(t,UTIL_RINGBUFFER_IS_EMPTY);
   /* get data from buffer */
   i = 0;
-  while(util_ringbuffer_is_empty(buff)!=UTIL_RINGBUFFER_IS_EMPTY){
-    unsigned char c;
-    c = util_ringbuffer_get(buff);
+  unsigned char c;
+  while(util_ringbuffer_get(buff,&c)!=UTIL_RINGBUFFER_IS_EMPTY){
     TEST_ASSERT_EQUAL(i,c);
     i++;
   }
   i = 0;
-  while(util_ringbuffer_is_full(buff)!=UTIL_RINGBUFFER_IS_FULL){
-    util_ringbuffer_put(buff,i++);
-  }
+  while(util_ringbuffer_put(buff,i++)!=UTIL_RINGBUFFER_IS_FULL);
+  i--;
   int j = 0, k = 8;
   while(k-- >= 0){
     unsigned char c;
-    c = util_ringbuffer_get(buff);
+    util_ringbuffer_get(buff,&c);
     TEST_ASSERT_EQUAL(j++,c);
   }
-  while(util_ringbuffer_is_full(buff)!=UTIL_RINGBUFFER_IS_FULL){
-    util_ringbuffer_put(buff,i++);
-  }
+  while(util_ringbuffer_put(buff,i++)!=UTIL_RINGBUFFER_IS_FULL);
+  i--;
   k = 12;
   while(k-- >= 0){
     unsigned char c;
-    c = util_ringbuffer_get(buff);
+    util_ringbuffer_get(buff, &c);
     TEST_ASSERT_EQUAL(j++,c);
   }
 }

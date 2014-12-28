@@ -26,8 +26,10 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-    
+
+#ifndef NUMBER_OF_RINGBUFFERS
 #define NUMBER_OF_RINGBUFFERS 4
+#endif
 
 #define UTIL_RINGBUFFER_IS_FULL 1
 #define UTIL_RINGBUFFER_IS_EMPTY 1

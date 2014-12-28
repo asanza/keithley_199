@@ -64,7 +64,7 @@ int util_ringbuffer_put(util_ringbuffer* buffer, unsigned char data){
     return 0;
 }
 
-int util_ringbuffer_get(util_ringbuffer* buffer, char* data){
+int util_ringbuffer_get(util_ringbuffer* buffer, unsigned char* data){
     /* check if buffer is empty */
     if(buffer->elem_count <= 0)
         return UTIL_RINGBUFFER_IS_EMPTY;
