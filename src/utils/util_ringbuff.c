@@ -48,10 +48,10 @@ util_ringbuffer* util_ringbuffer_new(unsigned char* data_buffer,
     return &buffers[used_buffers - 1];
 }
 
-void util_ringbuffer_put(util_ringbuffer* buffer, unsigned char data){
+int util_ringbuffer_put(util_ringbuffer* buffer, unsigned char data){
     /* check if buffer is full */
     if(buffer->elem_count >= buffer->size)
-        return;
+        return UTIL_RINGBUFFER_IS_FULL;
     /* put elem in buffer */
     *buffer->next = data;
     /* increment element counter */
@@ -61,12 +61,13 @@ void util_ringbuffer_put(util_ringbuffer* buffer, unsigned char data){
     /* check if out of bounds */
     if(buffer->next >= buffer->elems + buffer->size)
         buffer->next = buffer->elems;
+    return 0;
 }
 
-unsigned char util_ringbuffer_get(util_ringbuffer* buffer){
+int util_ringbuffer_get(util_ringbuffer* buffer, char* data){
     /* check if buffer is empty */
     if(buffer->elem_count <= 0)
-        return 0x00;
+        return UTIL_RINGBUFFER_IS_EMPTY;
     /* get first element */
     unsigned char* first;
     first = buffer->next - buffer->elem_count;
@@ -79,19 +80,6 @@ unsigned char util_ringbuffer_get(util_ringbuffer* buffer){
     /* decrement counter */
     buffer->elem_count --;
     /* return first element */
-    return *first;
-}
-
-int util_ringbuffer_is_empty(util_ringbuffer* buffer){
-    if(buffer->elem_count <= 0)
-        return UTIL_RINGBUFFER_IS_EMPTY;
-    else
-        return 0;
-}
-
-int util_ringbuffer_is_full(util_ringbuffer* buffer){
-    if(buffer->elem_count == buffer->size)
-        return UTIL_RINGBUFFER_IS_FULL;
-    else
-        return 0;
+    *data = *first;
+    return 0;
 }
