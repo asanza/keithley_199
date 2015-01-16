@@ -10,13 +10,6 @@
 #include <queue.h>
 #include <hal.h>
 
-#if HAL_UART_3 == UART2
-void __attribute__((interrupt(), vector(_UART_2_VECTOR)))
-                                                 UARTUSBInterruptWrapper(void);
-#else
-#error "please define an interrupt vector for the usb uart"
-#endif
-
 #define RX_QUEUE_SIZE 50
 static QueueHandle_t rx_queue;
 

@@ -57,7 +57,7 @@ hal_uart_error hal_uart_open(uint8_t port, uint32_t baudrate, hal_uart_parity pa
 
 hal_uart_error hal_uart_send_byte(uint8_t port, uint8_t byte);
 
-hal_uart_error hal_uart_send_buffer(uint8_t port, uint8_t* buffer,
+hal_uart_error hal_uart_send_buffer(uint8_t port, const uint8_t* buffer,
         uint32_t buffer_size);
 
 #ifdef	__cplusplus

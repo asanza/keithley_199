@@ -31,8 +31,8 @@ extern "C" {
 #define NUMBER_OF_RINGBUFFERS 4
 #endif
 
-#define UTIL_RINGBUFFER_IS_FULL 1
-#define UTIL_RINGBUFFER_IS_EMPTY 1
+#define UTIL_RINGBUFFER_IS_FULL  -1
+#define UTIL_RINGBUFFER_IS_EMPTY -1
 
 struct ringbuffer_t{
     unsigned char* elems;

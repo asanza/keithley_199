@@ -7,8 +7,8 @@
 
 	.extern xISRStackTop
 
-	.extern UARTUSBInterruptHandler
-	.global	UARTUSBInterruptWrapper
+	.extern uart3_int_handler
+	.global	uart3_int_wrapper
     .extern OC3_handler
     .global OC3_wrapper
 
@@ -18,13 +18,13 @@
 	.set	noreorder
 	.set 	noat
 
-	.ent	UARTUSBInterruptWrapper
-UARTUSBInterruptWrapper:
+	.ent	uart3_int_wrapper
+uart3_int_wrapper:
 	portSAVE_CONTEXT
-	jal UARTUSBInterruptHandler
+	jal uart3_int_handler
 	nop
 	portRESTORE_CONTEXT
-	.end	UARTUSBInterruptWrapper
+	.end	uart3_int_wrapper
 
     .ent OC3_wrapper
 OC3_wrapper:

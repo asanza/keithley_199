@@ -2,6 +2,7 @@
 #include "hal_uart.h"
 #include <peripheral/uart.h>
 #include "mock_util_ringbuff.h"
+#include "mock_os_test.h"
 void setUp(void)
 {
 }

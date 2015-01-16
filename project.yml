@@ -77,7 +77,7 @@
       - -mips16
       - -MMD
       - -Wno-packed-bitfield-compat
-      #- -minterlink-compressed
+      - -minterlink-compressed
       - "${1}"
       - -o "${2}"
       - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
@@ -92,6 +92,7 @@
     :arguments:
       - -mprocessor=32MX350F256L
       - -mips16
+      - -minterlink-compressed
       - --gc-sections
       - ${1}
       - -o "./build/test/TestBuild.elf"
@@ -111,6 +112,7 @@
     :arguments:
       - -mcpu=32MX150F128D
       - -x c
+      - -minterlink-compressed
       - -c
       - "${1}"
       - -o "${2}"

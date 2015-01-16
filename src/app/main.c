@@ -10,7 +10,7 @@
 
 static void sysMgmTask(void *pvParameters);
 extern void dmmTaskMain(void* pvParameters);
-xTaskHandle measTaskHandle;
+TaskHandle_t measTaskHandle;
 int main()
 {
     /* hardware initialization. An error here is unrecoverable */
@@ -79,7 +79,7 @@ void vApplicationIdleHook( void ){
     hal_sys_idle();
 }
 
-void vApplicationStackOverflowHook( xTaskHandle pxTask, signed char *pcTaskName )
+void vApplicationStackOverflowHook( TaskHandle_t pxTask, signed char *pcTaskName )
 {
     while(1);
 }

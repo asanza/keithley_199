@@ -142,5 +142,6 @@ be called.  Only API functions that end in ...FromISR() can be used within
 interrupts. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY            0x03
 
+#define configENABLE_BACKWARD_COMPATIBILITY 0
 
 #endif /* FREERTOS_CONFIG_H */
