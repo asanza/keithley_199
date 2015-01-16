@@ -10,7 +10,7 @@
 #include <queue.h>
 #include <hal.h>
 
-#if USB_UART == UART2
+#if HAL_UART_3 == UART2
 void __attribute__((interrupt(), vector(_UART_2_VECTOR)))
                                                  UARTUSBInterruptWrapper(void);
 #else
@@ -24,29 +24,29 @@ void hal_usbuart_init()
 {
     CONFIGURE_UART3_PPS();
     /* Initialize Uart Module */
-    UARTConfigure(USB_UART, UART_ENABLE_PINS_TX_RX_ONLY);
-    UARTSetFifoMode(USB_UART, UART_INTERRUPT_ON_TX_BUFFER_EMPTY | UART_INTERRUPT_ON_RX_NOT_EMPTY);
-    UARTSetLineControl(USB_UART, UART_DATA_SIZE_8_BITS | UART_PARITY_NONE | UART_STOP_BITS_1);
-    UARTSetDataRate(USB_UART, SYS_CLK, USB_UART_BAUDRATE);
+    UARTConfigure(HAL_UART_3, UART_ENABLE_PINS_TX_RX_ONLY);
+    UARTSetFifoMode(HAL_UART_3, UART_INTERRUPT_ON_TX_BUFFER_EMPTY | UART_INTERRUPT_ON_RX_NOT_EMPTY);
+    UARTSetLineControl(HAL_UART_3, UART_DATA_SIZE_8_BITS | UART_PARITY_NONE | UART_STOP_BITS_1);
+    UARTSetDataRate(HAL_UART_3, SYS_CLK, USB_UART_BAUDRATE);
     /* set uart module interrupt priority */
-    INTSetVectorPriority(INT_VECTOR_UART(USB_UART),USB_UART_PRIORITY);
+    INTSetVectorPriority(INT_VECTOR_UART(HAL_UART_3),USB_UART_PRIORITY);
     /* disable uart tx interrupt */
-    INTEnable(INT_SOURCE_UART_RX(USB_UART),INT_ENABLED);
-    UARTEnable(USB_UART, UART_ENABLE_FLAGS(UART_PERIPHERAL|UART_RX|UART_TX));
+    INTEnable(INT_SOURCE_UART_RX(HAL_UART_3),INT_ENABLED);
+    UARTEnable(HAL_UART_3, UART_ENABLE_FLAGS(UART_PERIPHERAL|UART_RX|UART_TX));
     rx_queue = xQueueCreate(RX_QUEUE_SIZE,sizeof(uint8_t));
 }
 
 void hal_usbuart_puts(char* string){
     if(!string) return;
     while(string++!='\0'){
-        while(!UARTTransmitterIsReady(USB_UART));
-        UARTSendDataByte(USB_UART,*string);
+        while(!UARTTransmitterIsReady(HAL_UART_3));
+        UARTSendDataByte(HAL_UART_3,*string);
     }
 }
 
 void hal_usbuart_putc(char c){
-    while(!UARTTransmitterIsReady(USB_UART));
-    UARTSendDataByte(USB_UART, c);
+    while(!UARTTransmitterIsReady(HAL_UART_3));
+    UARTSendDataByte(HAL_UART_3, c);
 }
 
 void _mon_putc(char c){
@@ -55,20 +55,20 @@ void _mon_putc(char c){
 
 void UARTUSBInterruptHandler(){
     portBASE_TYPE xHigherPriorityTaskWoken;
-    if(INTGetFlag(INT_SOURCE_UART_TX(USB_UART))){
+    if(INTGetFlag(INT_SOURCE_UART_TX(HAL_UART_3))){
         //Manage TX interrupt
-        INTClearFlag(INT_SOURCE_UART_TX(USB_UART));
+        INTClearFlag(INT_SOURCE_UART_TX(HAL_UART_3));
     }
-    if(INTGetFlag(INT_SOURCE_UART(USB_UART))){
+    if(INTGetFlag(INT_SOURCE_UART(HAL_UART_3))){
         /* get data from buffer and put in queue */
-        while(UARTReceivedDataIsAvailable(USB_UART)){
-            char t = UARTGetDataByte(USB_UART);
+        while(UARTReceivedDataIsAvailable(HAL_UART_3)){
+            char t = UARTGetDataByte(HAL_UART_3);
             xQueueSendFromISR(rx_queue,&t,&xHigherPriorityTaskWoken);
         }
-        INTClearFlag(INT_SOURCE_UART_RX(USB_UART));
+        INTClearFlag(INT_SOURCE_UART_RX(HAL_UART_3));
     }
-    if(INTGetFlag(INT_SOURCE_UART_ERROR(USB_UART))){
-        UART_LINE_STATUS line_status = UARTGetLineStatus(USB_UART);
+    if(INTGetFlag(INT_SOURCE_UART_ERROR(HAL_UART_3))){
+        UART_LINE_STATUS line_status = UARTGetLineStatus(HAL_UART_3);
         switch(line_status){
             case UART_OVERRUN_ERROR: break;
         }

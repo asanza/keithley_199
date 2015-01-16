@@ -135,7 +135,7 @@ hal_uart_error hal_uart_open(uint8_t port, uint32_t baudrate, hal_uart_parity pa
     uint32_t br = UARTSetDataRate(hwuart, SYS_CLK, baudrate);
     if(br < MIN_BAUD(baudrate) || br > MAX_BAUD(baudrate))
         return HAL_UART_ERR_BAUDRATE_NOT_AVAIL;
-    UARTEnable(USB_UART, UART_ENABLE_FLAGS(UART_PERIPHERAL|UART_RX|UART_TX));
+    UARTEnable(HAL_UART_3, UART_ENABLE_FLAGS(UART_PERIPHERAL|UART_RX|UART_TX));
     return HAL_UART_ERR_NONE;
 }
 

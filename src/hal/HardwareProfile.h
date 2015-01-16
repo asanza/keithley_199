@@ -24,7 +24,6 @@ extern "C" {
 #define DEBUG_PIN_0         IOPORT_B, BIT_13
 
 /* UART Definitions, adjust to your hardware configuration */
-#define USB_UART            UART3
 #define USB_UART_BAUDRATE   115200
 #define USB_UART_PRIORITY   INT_PRIORITY_LEVEL_3
 
