@@ -1,7 +1,7 @@
 #include "unity.h"
 #include "hal_uart.h"
 #include <peripheral/uart.h>
-
+#include "mock_util_ringbuff.h"
 void setUp(void)
 {
 }

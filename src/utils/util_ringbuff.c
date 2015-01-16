@@ -25,13 +25,6 @@
 #include <stddef.h>
 #include <stdbool.h>
 
-struct ringbuffer_t{
-    unsigned char* elems;
-    unsigned char* next;
-    unsigned int elem_count;
-    int size;
-};
-
 util_ringbuffer buffers[NUMBER_OF_RINGBUFFERS];
 
 static unsigned int used_buffers = 0;

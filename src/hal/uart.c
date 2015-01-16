@@ -22,7 +22,7 @@ static QueueHandle_t rx_queue;
 
 void hal_usbuart_init()
 {
-    CONFIGURE_UART_PPS();
+    CONFIGURE_UART3_PPS();
     /* Initialize Uart Module */
     UARTConfigure(USB_UART, UART_ENABLE_PINS_TX_RX_ONLY);
     UARTSetFifoMode(USB_UART, UART_INTERRUPT_ON_TX_BUFFER_EMPTY | UART_INTERRUPT_ON_RX_NOT_EMPTY);

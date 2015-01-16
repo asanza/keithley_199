@@ -34,6 +34,14 @@ extern "C" {
 #define UTIL_RINGBUFFER_IS_FULL 1
 #define UTIL_RINGBUFFER_IS_EMPTY 1
 
+struct ringbuffer_t{
+    unsigned char* elems;
+    unsigned char* next;
+    unsigned int elem_count;
+    int size;
+};
+
+
     typedef struct ringbuffer_t util_ringbuffer;
 
     util_ringbuffer* util_ringbuffer_new(unsigned char* data_buffer,

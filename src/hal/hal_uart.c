@@ -21,7 +21,7 @@
  * Created on December 27, 2014, 3:11 AM
  */
 
-
+#include <hal.h>
 #include <hal_uart.h>
 #include <peripheral/uart.h>
 #include <assert.h>
@@ -49,7 +49,7 @@ static struct uart_buffer_t uart_buffers[HAL_UART_COUNT];
 static struct uart_buffer_t* get_buffer(uint8_t port){
     int i;
     for(i = 0; i < HAL_UART_COUNT; i++){
-        if(uart_buffers[i]->port == port) return &uart_buffers[i];
+        if(uart_buffers[i].port == port) return &uart_buffers[i];
     }
     return NULL;
 }
@@ -116,7 +116,7 @@ hal_uart_error hal_uart_open(uint8_t port, uint32_t baudrate, hal_uart_parity pa
     }
     /* get the next free buffer and initialize it */
     int i = 0;
-    uart_buffer_t* uart_buffer = NULL;
+    struct uart_buffer_t* uart_buffer = NULL;
     for(i = 0; i < HAL_UART_COUNT; i++){
         if(uart_buffers[i].port == 0){
             uart_buffer = &uart_buffers[i];

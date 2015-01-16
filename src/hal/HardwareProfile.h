@@ -12,10 +12,6 @@
 extern "C" {
 #endif
 
-#define SYS_CLK     80000000UL
-#define PB_CLK      80000000UL
-
-
 #include <peripheral/ports.h>
 #include <peripheral/pps.h>
 #include <peripheral/timer.h>

@@ -16,6 +16,8 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
+#define SYS_CLK     80000000UL
+#define PB_CLK      80000000UL
 
 typedef enum{
     SYSERR_LED,
