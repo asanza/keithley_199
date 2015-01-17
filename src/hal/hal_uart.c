@@ -24,6 +24,7 @@
 #include <hal.h>
 #include <hal_uart.h>
 #include <peripheral/uart.h>
+#include <peripheral/int.h>
 #include <assert.h>
 #include <util_ringbuff.h>
 #include "HardwareProfile.h"
@@ -38,15 +39,8 @@
 #define MIN_BAUD(x) ((uint32_t)( x - x * BAUD_TOL ))
 #define MAX_BAUD(x) ((uint32_t)( x + x * BAUD_TOL ))
 
-QueueHandle_t rx_queues[HAL_UART_COUNT];
-QueueHandle_t tx_queues[HAL_UART_COUNT];
-
-static QueueHandle_t* get_rxqueue(uint8_t port){
-    return &rx_queues[port];
-}
-static QueueHandle_t* get_txqueue(uint8_t port){
-    return &tx_queues[port];
-}
+static QueueHandle_t rx_queues[HAL_UART_COUNT];
+static QueueHandle_t tx_queues[HAL_UART_COUNT];
 
 static UART_MODULE port_to_module(uint8_t port){
     switch (port){
@@ -119,18 +113,20 @@ hal_uart_error hal_uart_open(uint8_t port, uint32_t baudrate, hal_uart_parity pa
     uint32_t br = UARTSetDataRate(hwuart, SYS_CLK, baudrate);
     if(br < MIN_BAUD(baudrate) || br > MAX_BAUD(baudrate))
         return HAL_UART_ERR_BAUDRATE_NOT_AVAIL;
-    UARTEnable(HAL_UART_3, UART_ENABLE_FLAGS(UART_PERIPHERAL|UART_RX|UART_TX));
+    UARTEnable(hwuart, UART_ENABLE_FLAGS(UART_PERIPHERAL|UART_RX|UART_TX));
+    INTSetVectorPriority(INT_VECTOR_UART(hwuart),3);
+    INTClearFlag(INT_SOURCE_UART_RX(hwuart));
+    INTClearFlag(INT_SOURCE_UART_TX(hwuart));
+    INTEnable(INT_SOURCE_UART_RX(hwuart), INT_ENABLED);
     return HAL_UART_ERR_NONE;
 }
 
 hal_uart_error hal_uart_send_byte(uint8_t port, uint8_t byte){
     UART_MODULE uart = port_to_module(port);
     if(uart == UART_NUMBER_OF_MODULES) return HAL_UART_ERR_PORT_NOT_AVAIL;
-    QueueHandle_t buffer = get_txqueue(port);
-    assert(buffer);
-    xQueueSend(buffer,&byte,portMAX_DELAY);
+    xQueueSend(tx_queues[port],&byte,portMAX_DELAY);
     /* set flag to start transmissions */
-    INTSetFlag(INT_U1TX + uart);
+    INTEnable(INT_SOURCE_UART_TX(uart), INT_ENABLED);
     return HAL_UART_ERR_NONE;
 }
 
@@ -138,16 +134,77 @@ hal_uart_error hal_uart_send_buffer(uint8_t port, const uint8_t* buffer,
         uint32_t buffer_size){
     UART_MODULE uart = port_to_module(port);
     if(uart == UART_NUMBER_OF_MODULES) return HAL_UART_ERR_PORT_NOT_AVAIL;
-    QueueHandle_t queue = get_txqueue(port);
     uint8_t temp = 0;
     while(buffer_size--){
-        if(xQueueSend(queue,buffer++,portMAX_DELAY) == errQUEUE_FULL)
-            INTSetFlag(INT_U1TX + uart);
+        if(xQueueSend(tx_queues[port],buffer++,portMAX_DELAY) == errQUEUE_FULL)
+            INTEnable(INT_SOURCE_UART_TX(uart), INT_ENABLED);
     }
     /* send the last bytes if queue not yet empty */
-    if(xQueuePeek(queue,&temp, 0) == pdTRUE)
-        INTSetFlag(INT_U1TX + uart);
+    if(xQueuePeek(tx_queues[port],&temp, 0) == pdTRUE)
+        INTEnable(INT_SOURCE_UART_TX(uart), INT_ENABLED);
     return HAL_UART_ERR_NONE;
+}
+
+hal_uart_error hal_uart_receive_buffer(uint8_t port, uint8_t* buffer,
+           uint32_t buffer_size){
+    UART_MODULE uart = port_to_module(port);
+    if(uart == UART_NUMBER_OF_MODULES) return HAL_UART_ERR_PORT_NOT_AVAIL;
+    while(buffer_size --){
+        xQueueReceive(rx_queues[port],buffer++,portMAX_DELAY);
+    }
+    return HAL_UART_ERR_NONE;
+}
+
+int hal_uart_receive(uint8_t port, uint8_t* buffer, uint32_t buffer_size,
+        int timeout){
+    UART_MODULE uart = port_to_module(port);
+    if(uart == UART_NUMBER_OF_MODULES) return -1;
+    int rec_bytes = 0;
+    while(buffer_size--){
+        if(xQueueReceive(rx_queues[port], buffer++, timeout/portTICK_PERIOD_MS)){
+            rec_bytes++;
+        }else{
+            break;
+        }
+    }
+    return rec_bytes;
+}
+
+static void generic_handler(int port){
+    
+    UART_MODULE uart = port_to_module(port);
+    portBASE_TYPE xHigherPriorityTaskWoken;
+    if(INTGetFlag(INT_SOURCE_UART_TX(uart))){
+        char data;
+        while(UARTTransmitterIsReady(uart)){
+            if(xQueueReceiveFromISR(tx_queues[port],&data,&xHigherPriorityTaskWoken)){
+                UARTSendDataByte(uart,data);
+            }
+            else{
+                break;
+            }
+        }
+        if(!xQueuePeekFromISR(tx_queues[port],&data))
+            INTEnable(INT_SOURCE_UART_TX(uart), INT_DISABLED);
+        INTClearFlag(INT_SOURCE_UART_TX(uart));
+    }
+    
+    if(INTGetFlag(INT_SOURCE_UART_RX(uart))){
+        /* get data from buffer and put in queue */
+        while(UARTReceivedDataIsAvailable(uart)){
+            char t = UARTGetDataByte(uart);
+            xQueueSendFromISR(rx_queues[port],&t,&xHigherPriorityTaskWoken);
+        }
+        INTClearFlag(INT_SOURCE_UART_RX(uart));
+    }
+
+    if(INTGetFlag(INT_SOURCE_UART_ERROR(uart))){
+        UART_LINE_STATUS line_status = UARTGetLineStatus(uart);
+        switch(line_status){
+            case UART_OVERRUN_ERROR: break;
+        }
+        INTClearFlag(INT_SOURCE_UART_ERROR(uart));
+    }
 }
 
 #ifdef TEST
@@ -158,67 +215,17 @@ hal_uart_error hal_uart_send_buffer(uint8_t port, const uint8_t* buffer,
 /* uart interrupts */
 #if defined HAL_UART_1
 INTERRUPT(_UART_1_VECTOR) uart1_int_wrapper();
+void uart1_int_handler(){}
 #endif
 #if defined HAL_UART_2
 INTERRUPT(_UART_2_VECTOR) uart2_int_wrapper();
+void uart2_int_handler(){}
 #endif
 #if defined HAL_UART_3
 INTERRUPT(_UART_3_VECTOR) uart3_int_wrapper();
+void uart3_int_handler(){ generic_handler(3); }
 #endif
 #if defined HAL_UART_4
 INTERRUPT(_UART_4_VECTOR) uart4_int_wrapper();
+void uart4_int_handler(){}
 #endif
-
-static void generic_handler(int port){
-    
-    UART_MODULE uart = port_to_module(port);
-    QueueHandle_t queue;
-    portBASE_TYPE xHigherPriorityTaskWoken;
-    if(INTGetFlag(INT_SOURCE_UART_TX(uart))){
-        queue = get_txqueue(port);
-        char data;
-        while(UARTTransmitterIsReady(uart)){
-            if(xQueueReceiveFromISR(queue,&data,&xHigherPriorityTaskWoken)){
-                UARTSendDataByte(uart,data);
-            }
-            else{
-                break;
-            }
-        }
-        if(xQueueIsQueueEmptyFromISR(queue))
-            INTClearFlag(INT_SOURCE_UART_TX(uart));
-    }
-    
-    if(INTGetFlag(INT_SOURCE_UART(uart))){
-        queue = get_rxqueue(port);
-        /* get data from buffer and put in queue */
-        while(UARTReceivedDataIsAvailable(uart)){
-            char t = UARTGetDataByte(uart);
-            xQueueSendFromISR(queue,&t,&xHigherPriorityTaskWoken);
-        }
-        INTClearFlag(INT_SOURCE_UART_RX(uart));
-    }
-
-    if(INTGetFlag(INT_SOURCE_UART_ERROR(uart))){
-        UART_LINE_STATUS line_status = UARTGetLineStatus(uart);
-        switch(line_status){
-            case UART_OVERRUN_ERROR: break;
-        }
-    }
-}
-
-void uart1_int_handler(){
-
-}
-
-void uart2_int_handler(){
-
-}
-
-void uart3_int_handler(){
-    generic_handler(HAL_UART_3);
-}
-
-void uart4_int_handler(){
-    
-}

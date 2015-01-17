@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "adc.h"
+#include "hal_uart.h"
 #include <FreeRTOS.h>
 #include <task.h>
 #include <queue.h>
@@ -11,11 +12,14 @@
 static void sysMgmTask(void *pvParameters);
 extern void dmmTaskMain(void* pvParameters);
 TaskHandle_t measTaskHandle;
+void _mon_putc(char c){
+    hal_uart_send_byte(3,c);
+}
 int main()
 {
     /* hardware initialization. An error here is unrecoverable */
     hal_sys_init();
-    hal_usbuart_init();
+    hal_uart_open(3,115200,HAL_UART_PARITY_NONE, HAL_UART_STOP_BITS_1);
     hal_i2c_init();
     xTaskCreate(dmmTaskMain,"T1",configMINIMAL_STACK_SIZE,NULL,3,&measTaskHandle);
     /* suspend measurement task until we load dmm state on management task. */

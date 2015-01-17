@@ -13,6 +13,8 @@ typedef uint32_t TickType_t;
 #define portMAX_DELAY ( TickType_t ) 0xffffffffUL
 #define pdTRUE 1
 
+#define portTICK_PERIOD_MS 1000
+
 #define errQUEUE_FULL 0
 
 QueueHandle_t xQueueCreate(int size, int elem_size);
@@ -26,6 +28,8 @@ BaseType_t xQueueReceiveFromISR( QueueHandle_t xQueue, void * const pvBuffer, Ba
 BaseType_t xQueueIsQueueEmptyFromISR( const QueueHandle_t xQueue );
 
 BaseType_t xQueueSendFromISR( QueueHandle_t xQueue, const void * const pvItemToQueue, BaseType_t * const pxHigherPriorityTaskWoken);
+
+BaseType_t xQueueReceive( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait);
 
 void uart3_int_wrapper(void);
 

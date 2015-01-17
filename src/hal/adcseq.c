@@ -205,3 +205,7 @@ uint32_t hal_adcseq_next(hal_adc_sequence* sequence){
     }
     return value;
 }
+
+void hal_adcseq_init(hal_adc_sequence* sequence){
+    sequence->actual_value = 0;
+}

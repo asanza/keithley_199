@@ -4,7 +4,7 @@
  */
 
 /** How does keithley ADC Works:
- * The K199 uses a charge balancing adc. It is controller through five shift-
+ * The K199 uses a charge balancing adc. It is controlled through five shift-
  * registers on the analog board which controls the different switch on the input
  * multiplexer and the charge-discharge (start-stop) of the integrator.
  *

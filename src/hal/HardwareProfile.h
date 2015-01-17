@@ -38,8 +38,8 @@ extern "C" {
 #define CONFIGURE_UART3_PPS() do{ \
         PPSInput(2,U3RX,RPB3); \
         PPSOutput(1,RPB5,U3TX); \
-        PORTSetPinsDigitalIn(IOPORT_D,BIT_8);\
-        PORTSetPinsDigitalOut(IOPORT_D, BIT_9); }while(0)
+        PORTSetPinsDigitalIn(IOPORT_B,BIT_3);\
+        PORTSetPinsDigitalOut(IOPORT_B, BIT_5); }while(0)
 #endif
 
 

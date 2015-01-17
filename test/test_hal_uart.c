@@ -18,7 +18,7 @@ void test_hal_uart_open(void)
   TEST_ASSERT_EQUAL_MESSAGE(HAL_UART_ERR_PORT_NOT_AVAIL,err, 
 			    "Try to initialize not available port");
   /* try to open port 3 */
-  QueueHandle_t t;
+  QueueHandle_t t = NULL;
   xQueueCreate_ExpectAndReturn(TX_BUFFER_SIZE,sizeof(uint8_t),t);
   xQueueCreate_ExpectAndReturn(RX_BUFFER_SIZE,sizeof(uint8_t),t);
   err = hal_uart_open(3,9600,HAL_UART_PARITY_NONE, HAL_UART_STOP_BITS_1);
@@ -31,15 +31,16 @@ void test_hal_uart_open(void)
 }
 
 void test_hal_uart_send_byte(){
-  QueueHandle_t tx_queue = NULL;
-  QueueHandle_t rx_queue = NULL;
+    int dummy1, dummy2;
+  QueueHandle_t tx_queue = (void*)&dummy1;
+  QueueHandle_t rx_queue = (void*)&dummy2;
   xQueueCreate_ExpectAndReturn(TX_BUFFER_SIZE,sizeof(uint8_t),tx_queue);
   xQueueCreate_ExpectAndReturn(RX_BUFFER_SIZE,sizeof(uint8_t),rx_queue);
   hal_uart_error err = hal_uart_open(3,9600,HAL_UART_PARITY_NONE,
-				     HAL_UART_STOP_BITS_1);
-//  uint8_t data = 0x34;
-//  //xQueueSend_ExpectAndReturn(tx_queue,data,portMAX_DELAY,pdTRUE);
-//  //hal_uart_send_byte(3,data);
-//  TEST_ASSERT_EQUAL(data,U3TXREG);
+  				     HAL_UART_STOP_BITS_1);
+  uint8_t data = 0x34;
+  xQueueSend_IgnoreAndReturn(pdTRUE);
+  hal_uart_send_byte(3,data);
+  TEST_ASSERT_EQUAL(1,INTGetFlag(INT_U3TX));
 }
 

@@ -60,6 +60,12 @@ hal_uart_error hal_uart_send_byte(uint8_t port, uint8_t byte);
 hal_uart_error hal_uart_send_buffer(uint8_t port, const uint8_t* buffer,
         uint32_t buffer_size);
 
+int hal_uart_receive(uint8_t port, uint8_t* buffer, uint32_t buffer_size,
+        int timeout);
+
+hal_uart_error hal_uart_receive_buffer(uint8_t port, uint8_t* buffer,
+           uint32_t buffer_size);
+
 #ifdef	__cplusplus
 }
 #endif

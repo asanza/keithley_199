@@ -1,4 +1,4 @@
-update=Sa 30 Aug 2014 22:04:30 CEST
+update=Sa 17 Jan 2015 17:22:47 CET
 version=1
 last_client=kicad
 [cvpcb]
@@ -32,7 +32,7 @@ ModuleOutlineThickness=0.15
 LibDir=
 [eeschema]
 version=1
-LibDir=../../../../Kicad/Libraries
+LibDir=/home/diego/Kicad/Libraries
 [eeschema/libraries]
 LibName1=hw01
 LibName2=power
