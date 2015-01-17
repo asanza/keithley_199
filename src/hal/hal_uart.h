@@ -30,8 +30,8 @@ extern "C" {
     
 /* Buffers is allocated statically. Adapt following lines according your
  * requeriments. */
-#define RX_BUFFER_LENGTH 20 /**< RX Buffer in Bytes */
-#define TX_BUFFER_LENGTH 20 /**< TX Buffer in Bytes */
+#define RX_BUFFER_SIZE 20
+#define TX_BUFFER_SIZE 20
 
 /* Standard error definitions for this module */
     typedef enum{

@@ -38,10 +38,6 @@
 #define MIN_BAUD(x) ((uint32_t)( x - x * BAUD_TOL ))
 #define MAX_BAUD(x) ((uint32_t)( x + x * BAUD_TOL ))
 
-/* space for the rx and tx buffers */
-#define RX_BUFFER_SIZE 20
-#define TX_BUFFER_SIZE 20
-
 QueueHandle_t rx_queues[HAL_UART_COUNT];
 QueueHandle_t tx_queues[HAL_UART_COUNT];
 
@@ -114,7 +110,7 @@ hal_uart_error hal_uart_open(uint8_t port, uint32_t baudrate, hal_uart_parity pa
     }
     /* get the next free buffer and initialize it */
     tx_queues[port] = xQueueCreate(TX_BUFFER_SIZE, sizeof(uint8_t));
-    rx_queues[port] = xQueueCreate(TX_BUFFER_SIZE, sizeof(uint8_t));
+    rx_queues[port] = xQueueCreate(RX_BUFFER_SIZE, sizeof(uint8_t));
     /* Initialize Uart Module */
     UARTConfigure(hwuart, UART_ENABLE_PINS_TX_RX_ONLY);
     UARTSetFifoMode(hwuart, UART_INTERRUPT_ON_TX_BUFFER_EMPTY
