@@ -41,6 +41,6 @@ void test_hal_uart_send_byte(){
   uint8_t data = 0x34;
   xQueueSend_IgnoreAndReturn(pdTRUE);
   hal_uart_send_byte(3,data);
-  TEST_ASSERT_EQUAL(1,INTGetFlag(INT_U3TX));
+  TEST_ASSERT_EQUAL(1,INTGetEnable(INT_SOURCE_UART_TX(UART3)));
 }
 

@@ -17,7 +17,7 @@
  * this is done by precicely controlling the strobe signal, to be sended with no
  * jitter (which is not easy in a microcontroller).
  *
- * When the problem with the jitter is under controll, the rest is to send the
+ * When the problem with the jitter is under control, the rest is to send the
  * right adc sequences according to what we are triying to measure. For ac/dc
  * voltages, the k199 do four measurements at once, first signal, after that zero,
  * again zero (for reference) and finally reference voltage. The final value is

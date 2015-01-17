@@ -31,6 +31,8 @@ BaseType_t xQueueSendFromISR( QueueHandle_t xQueue, const void * const pvItemToQ
 
 BaseType_t xQueueReceive( QueueHandle_t xQueue, void * const pvBuffer, TickType_t xTicksToWait);
 
+BaseType_t xQueuePeekFromISR(QueueHandle_t xQueue, void * const pvBuffer);
+
 void uart3_int_wrapper(void);
 
 #endif
