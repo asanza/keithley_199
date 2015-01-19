@@ -136,11 +136,10 @@ unsigned char hal_i2c_readAck(void){
     char c;
     if(I2CReceiverEnable(HAL_I2C_BUS, TRUE) == I2C_RECEIVE_OVERFLOW)
         return 0; // overflow
-    if(!I2CReceivedDataIsAvailable(HAL_I2C_BUS)){
-        I2CAcknowledgeByte(HAL_I2C_BUS, true);
-        while(!I2CAcknowledgeHasCompleted(HAL_I2C_BUS));
-        c = I2CGetByte(HAL_I2C_BUS);
-    }
+    while(!I2CReceivedDataIsAvailable(HAL_I2C_BUS));
+    I2CAcknowledgeByte(HAL_I2C_BUS, true);
+    while(!I2CAcknowledgeHasCompleted(HAL_I2C_BUS));
+    c = I2CGetByte(HAL_I2C_BUS);
     return c;
 }
 
@@ -148,10 +147,9 @@ unsigned char hal_i2c_readNak(void){
     char c;
     if(I2CReceiverEnable(HAL_I2C_BUS, TRUE) == I2C_RECEIVE_OVERFLOW)
         return 0; // overflow
-    if(!I2CReceivedDataIsAvailable(HAL_I2C_BUS)){
-        I2CAcknowledgeByte(HAL_I2C_BUS, false);
-        c = I2CGetByte(HAL_I2C_BUS);
-        while(!I2CAcknowledgeHasCompleted(HAL_I2C_BUS));
-    }
+    while(!I2CReceivedDataIsAvailable(HAL_I2C_BUS));
+    I2CAcknowledgeByte(HAL_I2C_BUS, FALSE);
+    while(!I2CAcknowledgeHasCompleted(HAL_I2C_BUS));
+    c = I2CGetByte(HAL_I2C_BUS);
     return c;
 }
