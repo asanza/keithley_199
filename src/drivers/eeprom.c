@@ -12,11 +12,11 @@
 bool drv_eeprom_write_page(uint16_t address, uint8_t* data, uint8_t size){
     assert(address < HAL_EEPROM_SIZE);
     assert(size <= HAL_EEPROM_PAGE_SIZE);
-    return hal_eeprom_write_page(address, data, size);
+    return eeprom_write_page(address, data, size);
 }
 
 bool drv_eeprom_read_page(uint16_t address, uint8_t* data, uint8_t size){
     assert(address < HAL_EEPROM_SIZE);
     assert(size <= HAL_EEPROM_PAGE_SIZE);
-    return hal_eeprom_read_page(address, data, size);
+    return eeprom_read_page(address, data, size);
 }

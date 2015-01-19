@@ -60,11 +60,11 @@ EEFS_ERROR eefs_write_page(uint16_t page_address, eefs_page* page){
 	uint8_t bbyte;
 	/* do the write */
 	do{
-		t = hal_eeprom_write_page(page_address,p, HAL_EEPROM_PAGE_SIZE);
+		t = eeprom_write_page(page_address,p);
 		if(!t)	continue; // error while write. Retry.
 		/* read back written data */
 		for(j=0; j < HAL_EEPROM_PAGE_SIZE; j++){
-			t = hal_eeprom_read_byte(page_address*HAL_EEPROM_PAGE_SIZE + j, &bbyte);
+			t = eeprom_read_byte(page_address*HAL_EEPROM_PAGE_SIZE + j, &bbyte);
 			if(!t) break; // error while read. Retry.
 			if(bbyte!=p[j]) {
                 t = false; break;
@@ -80,7 +80,7 @@ EEFS_ERROR eefs_read_page(uint16_t page_address, eefs_page* page){
     int i = 0; bool t = false; CRC32 crc; EEFS_ERROR err = EEFS_OK;
     do{
         crc = 0;
-        t = hal_eeprom_read_page(page_address, (uint8_t*)page, HAL_EEPROM_PAGE_SIZE);
+        t = eeprom_read_page(page_address, (uint8_t*)page, HAL_EEPROM_PAGE_SIZE);
         if(!t)
         {
             err = EEFS_ERR_HW;
