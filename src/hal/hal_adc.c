@@ -120,41 +120,6 @@ int hal_adc_integration_sequence (uint8_t channel, uint32_t int_mux, uint32_t pa
 }
 
 
-
-static uint32_t do_sequence(unsigned char channel, hal_adc_sequence* sequence){
-    uint32_t start_int_mux_cfg = hal_adcseq_next(sequence);
-    /* send the start integration mux configuration */
-    while(IS_RUN_DOWN_SLOPE(start_int_mux_cfg)||IS_PRE_INT_PULSE(start_int_mux_cfg)){
-        /* if still in run down or pre-int get the next mux */
-        hal_adc_send_mux(channel, start_int_mux_cfg);
-        start_int_mux_cfg = hal_adcseq_next(sequence);
-    }
-    /* send the start integration command */
-    assert(IS_START_INTEGRATION(start_int_mux_cfg));
-    uint32_t stop_int_mux_cfg = hal_adcseq_next(sequence);
-    assert(IS_STOP_INTEGRATION(stop_int_mux_cfg));
-    uint32_t run_down_mux_cfg = hal_adcseq_next(sequence);
-    assert(IS_RUN_DOWN_SLOPE( run_down_mux_cfg));
-    /* here comes the signal integration */
-    return hal_adc_integration_sequence(channel, start_int_mux_cfg,
-            stop_int_mux_cfg,  run_down_mux_cfg);
-}
-
-double hal_adc_do_measurement(unsigned char channel, hal_adc_sequence* sequence){
-    assert(sequence!=NULL);
-    hal_adcseq_init(sequence); // always start at sequence start point.
-    int signal_count, sigzero_count, ref_count, refzero_count;
-    signal_count = do_sequence(channel, sequence);
-    sigzero_count = do_sequence(channel, sequence);
-    refzero_count = do_sequence(channel, sequence);
-    ref_count = do_sequence(channel, sequence);
-    int signal, reference;
-    signal = signal_count - sigzero_count;
-    reference = ref_count - refzero_count;
-    assert(reference);
-    return VREF*signal*1.0/reference*1.0;
-}
-
 void hal_adc_set_integration_period(uint32_t period){
     CloseOC3();
     integration_period = period;

@@ -42,11 +42,13 @@
         <itemPath>src/hal/hal.h</itemPath>
         <itemPath>src/hal/HardwareProfile.h</itemPath>
         <itemPath>src/hal/hal_uart.h</itemPath>
+        <itemPath>src/hal/hal_i2c.h</itemPath>
       </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/adc.h</itemPath>
         <itemPath>src/sys/utils.h</itemPath>
         <itemPath>src/sys/sys.h</itemPath>
+        <itemPath>src/sys/adcseq.h</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.h</itemPath>
@@ -105,14 +107,15 @@
         <itemPath>src/hal/counter.c</itemPath>
         <itemPath>src/hal/i2c.c</itemPath>
         <itemPath>src/hal/hal_adc.c</itemPath>
-        <itemPath>src/hal/adcseq.c</itemPath>
         <itemPath>src/hal/hal_uart.c</itemPath>
+        <itemPath>src/hal/hal_i2c.c</itemPath>
       </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/dmm.c</itemPath>
         <itemPath>src/sys/adc.c</itemPath>
         <itemPath>src/sys/fitlinear.c</itemPath>
         <itemPath>src/sys/calibrator.c</itemPath>
+        <itemPath>src/sys/adcseq.c</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.c</itemPath>

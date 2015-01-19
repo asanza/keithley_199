@@ -129,12 +129,6 @@ void hal_adc_init(unsigned int period);
 void hal_adc_send_mux(uint8_t channel, uint32_t mux);
 void hal_adc_set_integration_period(uint32_t period);
 
-typedef struct hal_adc_integration_sequence_t hal_adc_sequence;
-
-hal_adc_sequence* hal_adc_get_sequence(adc_input input, adc_range range);
-double hal_adc_do_measurement(unsigned char channel, hal_adc_sequence* sequence);
-uint32_t hal_adcseq_next(hal_adc_sequence* sequence);
-void hal_adcseq_init(hal_adc_sequence* sequence);
 #endif /*__LANGUAGE_ASSEMBLY*/
 #ifdef	__cplusplus
 }

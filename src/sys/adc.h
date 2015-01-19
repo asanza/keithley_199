@@ -59,6 +59,7 @@ typedef enum{
     adc_error adc_set_input(adc_input input, adc_range range);
     double adc_read_value(adc_channel channel);
     adc_error adc_init(adc_integration_period period, adc_input input, adc_range range);
+    
 #ifdef	__cplusplus
 }
 #endif

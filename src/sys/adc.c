@@ -38,15 +38,39 @@
 #include <assert.h>
 #include <FreeRTOS.h>
 #include "adc.h"
+#include "adcseq.h"
+
+#define SENSE_100K_BIT         (1<<28)
+#define SIG_x10_BIT            (1<<22)
+#define N_AC_BIT               (1<<21)
+
+
+#define NCAL_BIT                (1<<7)
+#define NZERO_BIT               (1<<6)
+#define FAST_BIT                (1<<5)
+#define NREAD_SWITCH_BIT        (1<<4)
+#define SIG_BIT                 (1<<3)
+#define N_FINAL_SLOPE_BIT       (1<<2)
+#define SYNC_BIT                (1<<1)
+#define INT_BIT                 (1<<0)
+
+#define IS_START_INTEGRATION(x)  ((x&(N_FINAL_SLOPE_BIT|INT_BIT)) == (N_FINAL_SLOPE_BIT|INT_BIT))
+#define IS_STOP_INTEGRATION(x) ((x&N_FINAL_SLOPE_BIT)== (N_FINAL_SLOPE_BIT))
+#define IS_RUN_DOWN_SLOPE(x) ((x&SYNC_BIT) == SYNC_BIT)
+#define IS_PRE_INT_PULSE(x) ((x&(N_FINAL_SLOPE_BIT|SYNC_BIT))==(N_FINAL_SLOPE_BIT|SYNC_BIT))
+#define VREF -2.8
 
 /* state variables */
 static adc_range range;
 static adc_input input; 
 
+static double adc_do_measurement(unsigned char channel, adc_sequence* sequence);
+
+
 double adc_read_value(adc_channel channel){
-    hal_adc_sequence* seq = hal_adc_get_sequence(input, range);
+    adc_sequence* seq = adcseq_get(input, range);
     assert(seq!=NULL);
-    double value = hal_adc_do_measurement(channel, seq);
+    double value = adc_do_measurement(channel, seq);
     switch(range){
         case ADC_RANGE_3: return value*1.0;
         case ADC_RANGE_30m:
@@ -81,4 +105,39 @@ adc_error adc_init(adc_integration_period period, adc_input input_, adc_range ra
     input  = input_;
     range = range_;
     hal_adc_init(period);
+}
+
+static uint32_t do_sequence(unsigned char channel, adc_sequence* sequence){
+    uint32_t start_int_mux_cfg = hal_adcseq_next(sequence);
+    /* send the start integration mux configuration */
+    while(IS_RUN_DOWN_SLOPE(start_int_mux_cfg)||IS_PRE_INT_PULSE(start_int_mux_cfg)){
+        /* if still in run down or pre-int get the next mux */
+        hal_adc_send_mux(channel, start_int_mux_cfg);
+        start_int_mux_cfg = hal_adcseq_next(sequence);
+    }
+    /* send the start integration command */
+    assert(IS_START_INTEGRATION(start_int_mux_cfg));
+    uint32_t stop_int_mux_cfg = hal_adcseq_next(sequence);
+    assert(IS_STOP_INTEGRATION(stop_int_mux_cfg));
+    uint32_t run_down_mux_cfg = hal_adcseq_next(sequence);
+    assert(IS_RUN_DOWN_SLOPE( run_down_mux_cfg));
+    /* here comes the signal integration */
+    return hal_adc_integration_sequence(channel, start_int_mux_cfg,
+            stop_int_mux_cfg,  run_down_mux_cfg);
+}
+
+
+double adc_do_measurement(unsigned char channel, adc_sequence* sequence){
+    assert(sequence!=NULL);
+    adcseq_init(sequence); // always start at sequence start point.
+    int signal_count, sigzero_count, ref_count, refzero_count;
+    signal_count = do_sequence(channel, sequence);
+    sigzero_count = do_sequence(channel, sequence);
+    refzero_count = do_sequence(channel, sequence);
+    ref_count = do_sequence(channel, sequence);
+    int signal, reference;
+    signal = signal_count - sigzero_count;
+    reference = ref_count - refzero_count;
+    assert(reference);
+    return VREF*signal*1.0/reference*1.0;
 }

@@ -19,20 +19,6 @@ static bool send_byte( uint8_t data );
  */
 static void stop_transfer( void );
 
-
-void hal_i2c_init(){
-    /* HardwareProfile.h defines to which i2c port is the eeprom attached. */
-    I2CConfigure(HAL_I2C_BUS,HAL_I2C_CONFIG);
-    /* Set the i2c scl frequency */
-    uint32_t actualClock = I2CSetFrequency(HAL_I2C_BUS, SYS_CLK, HAL_I2C_FREQ);
-    if ( abs(actualClock-HAL_I2C_FREQ) > HAL_I2C_FREQ/10 ){
-        /* if the requested clock is not possible. */
-        assert(0);
-    }
-    /* Enable the I2C bus */
-    I2CEnable(HAL_I2C_BUS, TRUE);
-}
-
 bool hal_i2c_write_byte_array(uint8_t device_address, uint8_t* data, uint8_t size){
     I2C_7_BIT_ADDRESS eeprom_address;
     I2C_FORMAT_7_BIT_ADDRESS(eeprom_address,device_address,I2C_WRITE);

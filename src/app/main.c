@@ -2,6 +2,8 @@
 
 #include "adc.h"
 #include "hal_uart.h"
+#include "hal_i2c.h"
+#include "HardwareProfile.h"
 #include <FreeRTOS.h>
 #include <task.h>
 #include <queue.h>
@@ -21,6 +23,21 @@ int main()
     hal_sys_init();
     hal_uart_open(3,115200,HAL_UART_PARITY_NONE, HAL_UART_STOP_BITS_1);
     hal_i2c_init();
+    while(1){
+        hal_i2c_start(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE);
+        hal_i2c_write(0x00);
+        hal_i2c_write(0x01);
+        hal_i2c_write(0x55);
+        hal_i2c_stop();
+        hal_i2c_start_wait(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE);
+        hal_i2c_write(0x00);
+        hal_i2c_write(0x01);
+        hal_i2c_rep_start(HAL_EEPROM_ADDRESS, HAL_I2C_READ);
+        char a = hal_i2c_read(0)
+        hal_i2c_stop();
+        if(a == 0x55)
+            printf("youp!\n");
+    }
     xTaskCreate(dmmTaskMain,"T1",configMINIMAL_STACK_SIZE,NULL,3,&measTaskHandle);
     /* suspend measurement task until we load dmm state on management task. */
     if(measTaskHandle)

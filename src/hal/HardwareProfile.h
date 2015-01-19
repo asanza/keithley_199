@@ -91,7 +91,7 @@ extern "C" {
 
 #define HAL_EEPROM_ADDRESS      0x50    /**< I2C address for the eeprom */
 #define HAL_TEMPSENS_ADDRESS    0x48    /**< I2C address for temperature sensor */
-#define HAL_I2C_FREQ     400000  /**< I2C bus frequency */
+#define HAL_I2C_FREQ     100000  /**< I2C bus frequency */
 #define HAL_EEPROM_SIZE         0x8000  /**< EEPROM size in bytes */
 #define HAL_EEPROM_PAGE_SIZE    64      /**< EEPROM page size in bytes */
 
