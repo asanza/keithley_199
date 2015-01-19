@@ -49,6 +49,7 @@
         <itemPath>src/sys/utils.h</itemPath>
         <itemPath>src/sys/sys.h</itemPath>
         <itemPath>src/sys/adcseq.h</itemPath>
+        <itemPath>src/sys/eeprom.h</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.h</itemPath>
@@ -115,6 +116,7 @@
         <itemPath>src/sys/fitlinear.c</itemPath>
         <itemPath>src/sys/calibrator.c</itemPath>
         <itemPath>src/sys/adcseq.c</itemPath>
+        <itemPath>src/sys/eeprom.c</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.c</itemPath>

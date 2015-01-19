@@ -64,8 +64,7 @@ EEFS_ERROR eefs_write_page(uint16_t page_address, eefs_page* page){
 		if(!t)	continue; // error while write. Retry.
 		/* read back written data */
 		for(j=0; j < HAL_EEPROM_PAGE_SIZE; j++){
-			t = eeprom_read_byte(page_address*HAL_EEPROM_PAGE_SIZE + j, &bbyte);
-			if(!t) break; // error while read. Retry.
+			bbyte = eeprom_read_byte(page_address*HAL_EEPROM_PAGE_SIZE + j);
 			if(bbyte!=p[j]) {
                 t = false; break;
             }; // write and read not match error. Retry.
@@ -80,7 +79,7 @@ EEFS_ERROR eefs_read_page(uint16_t page_address, eefs_page* page){
     int i = 0; bool t = false; CRC32 crc; EEFS_ERROR err = EEFS_OK;
     do{
         crc = 0;
-        t = eeprom_read_page(page_address, (uint8_t*)page, HAL_EEPROM_PAGE_SIZE);
+        t = eeprom_read_page(page_address, (uint8_t*)page);
         if(!t)
         {
             err = EEFS_ERR_HW;
