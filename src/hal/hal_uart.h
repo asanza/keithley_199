@@ -52,18 +52,26 @@ extern "C" {
                 HAL_UART_STOP_BITS_2
     }hal_uart_stop_bits;
 
-hal_uart_error hal_uart_open(uint8_t port, uint32_t baudrate, hal_uart_parity parity,
+    typedef enum{
+        HAL_UART_PORT_1 = 1,
+                HAL_UART_PORT_2,
+                HAL_UART_PORT_3,
+                HAL_UART_PORT_4,
+                HAL_UART_PORT_COUNT
+    }hal_uart_port;
+
+hal_uart_error hal_uart_open(hal_uart_port port, uint32_t baudrate, hal_uart_parity parity,
             hal_uart_stop_bits stop_bits);
 
-hal_uart_error hal_uart_send_byte(uint8_t port, uint8_t byte);
+hal_uart_error hal_uart_send_byte(hal_uart_port port, uint8_t byte);
 
-hal_uart_error hal_uart_send_buffer(uint8_t port, const uint8_t* buffer,
+hal_uart_error hal_uart_send_buffer(hal_uart_port port, const uint8_t* buffer,
         uint32_t buffer_size);
 
-int hal_uart_receive(uint8_t port, uint8_t* buffer, uint32_t buffer_size,
+int hal_uart_receive(hal_uart_port port, uint8_t* buffer, uint32_t buffer_size,
         int timeout);
 
-hal_uart_error hal_uart_receive_buffer(uint8_t port, uint8_t* buffer,
+hal_uart_error hal_uart_receive_buffer(hal_uart_port port, uint8_t* buffer,
            uint32_t buffer_size);
 
 #ifdef	__cplusplus

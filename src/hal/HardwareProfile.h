@@ -23,10 +23,6 @@ extern "C" {
 #define BRD_AUX_LED         IOPORT_B, BIT_4
 #define DEBUG_PIN_0         IOPORT_B, BIT_13
 
-/* UART Definitions, adjust to your hardware configuration */
-#define USB_UART_BAUDRATE   115200
-#define USB_UART_PRIORITY   INT_PRIORITY_LEVEL_3
-
 /* map hal uarts to real uarts */
 #define HAL_UART_COUNT        1   /**< Number of enabled uarts */
 //#define HAL_UART_1          UART1
@@ -34,12 +30,21 @@ extern "C" {
 #define HAL_UART_3            UART3 /**< UART 3 enabled */
 //#define HAL_UART_4          UART4
 
+#if defined HAL_UART_1
+#error "define pps for uart 1"
+#endif
 #if defined HAL_UART_3
+#if defined HAL_UART_2
+#error "define pps for uart 2"
+#endif
 #define CONFIGURE_UART3_PPS() do{ \
         PPSInput(2,U3RX,RPB3); \
         PPSOutput(1,RPB5,U3TX); \
         PORTSetPinsDigitalIn(IOPORT_B,BIT_3);\
         PORTSetPinsDigitalOut(IOPORT_B, BIT_5); }while(0)
+#endif
+#if defined HAL_UART_4
+#error "define pps for uart 4"
 #endif
 
 
@@ -91,7 +96,7 @@ extern "C" {
 
 #define HAL_EEPROM_ADDRESS      0x50    /**< I2C address for the eeprom */
 #define HAL_TEMPSENS_ADDRESS    0x48    /**< I2C address for temperature sensor */
-#define HAL_I2C_FREQ     100000  /**< I2C bus frequency */
+#define HAL_I2C_FREQ            100000  /**< I2C bus frequency */
 #define HAL_EEPROM_SIZE         0x8000  /**< EEPROM size in bytes */
 #define HAL_EEPROM_PAGE_SIZE    64      /**< EEPROM page size in bytes */
 

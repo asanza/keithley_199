@@ -29,6 +29,8 @@
 #include <sys.h>
 #include <hal.h>
 
+#include <tmp275.h>
+
 static void show_display_mode(){
     disp_mode display_indicator = 0x00000000;
     switch(sys_dmm_get_mode()){
@@ -89,10 +91,12 @@ static void append_scale(char* buffer){
 void dmmTaskMain(void* pvParameters)
 {
     char buff[10];
+    tmp245_init();
     while(1)
     {
           hal_disp_adci_toggle();
           double value = sys_dmm_read();
+          double temp = tmp245_read_temp_double();
           switch(sys_dmm_get_scale()){
               case ADC_RANGE_3:
               case ADC_RANGE_3K:
@@ -147,5 +151,6 @@ void dmmTaskMain(void* pvParameters)
           hal_disp_clear();
           show_display_mode();
           hal_disp_puts(buff);
+          printf("%f,%f\n",value, temp);
     }
 }

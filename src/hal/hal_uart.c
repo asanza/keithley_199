@@ -60,7 +60,7 @@ static UART_MODULE port_to_module(uint8_t port){
     }
 }
 
-hal_uart_error hal_uart_open(uint8_t port, uint32_t baudrate, hal_uart_parity parity,
+hal_uart_error hal_uart_open(hal_uart_port port, uint32_t baudrate, hal_uart_parity parity,
             hal_uart_stop_bits stop_bits){
     UART_MODULE hwuart = 0x00;
     UART_LINE_CONTROL_MODE mode = 0x00;
@@ -121,7 +121,7 @@ hal_uart_error hal_uart_open(uint8_t port, uint32_t baudrate, hal_uart_parity pa
     return HAL_UART_ERR_NONE;
 }
 
-hal_uart_error hal_uart_send_byte(uint8_t port, uint8_t byte){
+hal_uart_error hal_uart_send_byte(hal_uart_port port, uint8_t byte){
     UART_MODULE uart = port_to_module(port);
     if(uart == UART_NUMBER_OF_MODULES) return HAL_UART_ERR_PORT_NOT_AVAIL;
     xQueueSend(tx_queues[port],&byte,portMAX_DELAY);
@@ -130,7 +130,7 @@ hal_uart_error hal_uart_send_byte(uint8_t port, uint8_t byte){
     return HAL_UART_ERR_NONE;
 }
 
-hal_uart_error hal_uart_send_buffer(uint8_t port, const uint8_t* buffer,
+hal_uart_error hal_uart_send_buffer(hal_uart_port port, const uint8_t* buffer,
         uint32_t buffer_size){
     UART_MODULE uart = port_to_module(port);
     if(uart == UART_NUMBER_OF_MODULES) return HAL_UART_ERR_PORT_NOT_AVAIL;
@@ -145,7 +145,7 @@ hal_uart_error hal_uart_send_buffer(uint8_t port, const uint8_t* buffer,
     return HAL_UART_ERR_NONE;
 }
 
-hal_uart_error hal_uart_receive_buffer(uint8_t port, uint8_t* buffer,
+hal_uart_error hal_uart_receive_buffer(hal_uart_port port, uint8_t* buffer,
            uint32_t buffer_size){
     UART_MODULE uart = port_to_module(port);
     if(uart == UART_NUMBER_OF_MODULES) return HAL_UART_ERR_PORT_NOT_AVAIL;
@@ -155,7 +155,7 @@ hal_uart_error hal_uart_receive_buffer(uint8_t port, uint8_t* buffer,
     return HAL_UART_ERR_NONE;
 }
 
-int hal_uart_receive(uint8_t port, uint8_t* buffer, uint32_t buffer_size,
+int hal_uart_receive(hal_uart_port port, uint8_t* buffer, uint32_t buffer_size,
         int timeout){
     UART_MODULE uart = port_to_module(port);
     if(uart == UART_NUMBER_OF_MODULES) return -1;
@@ -170,7 +170,7 @@ int hal_uart_receive(uint8_t port, uint8_t* buffer, uint32_t buffer_size,
     return rec_bytes;
 }
 
-static void generic_handler(int port){
+static void generic_handler(hal_uart_port port){
     
     UART_MODULE uart = port_to_module(port);
     portBASE_TYPE xHigherPriorityTaskWoken;
@@ -223,7 +223,7 @@ void uart2_int_handler(){}
 #endif
 #if defined HAL_UART_3
 INTERRUPT(_UART_3_VECTOR) uart3_int_wrapper();
-void uart3_int_handler(){ generic_handler(3); }
+void uart3_int_handler(){ generic_handler(HAL_UART_PORT_3); }
 #endif
 #if defined HAL_UART_4
 INTERRUPT(_UART_4_VECTOR) uart4_int_wrapper();

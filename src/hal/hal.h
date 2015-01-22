@@ -48,10 +48,6 @@ void hal_timer_init();
 void hal_wait();
 
 
-
-bool hal_i2c_write_byte_array(uint8_t device_address, uint8_t* data, uint8_t size);
-bool hal_i2c_read_byte_array(uint8_t device_address, uint8_t* data, uint8_t size);
-
 /* DISPLAY INTERFACE */
 typedef enum{
     KEY_VOLTS,
