@@ -1,7 +1,7 @@
 #include <hal.h>
+#include <hal_timer.h>
 #include <peripheral/spi.h>
 #include <peripheral/pps.h>
-#include <peripheral/timer.h>
 #include <FreeRTOS.h>
 #include <queue.h>
 #include "task.h"
@@ -18,6 +18,8 @@ hal_key hal_disp_wait_for_key(){
     xQueueReset(event_queue);
     return key;
 }
+
+void timer_handler(void);
 
 #define NUMBER_OF_CHARACTERS 11
 #define NUMBER_OF_SEGMENTS   15
@@ -46,19 +48,17 @@ static uint16_t screen[NUMBER_OF_CHARACTERS];
 static unsigned int actual_character;
 static bool self_test = false;
 
-#define REFRESH_PERIOD 70000 // * 25nS * NUMBER_OF_CHARACTERS
+#define REFRESH_PERIOD 200 // uS
 
 void hal_disp_init(){
     PORTSetPinsDigitalOut(DISPLAY_PORT,0xFFFF);
-    SpiChnOpen(SPI_CHANNEL2, SPI_OPEN_MSTEN|SPI_OPEN_MODE16|SPI_OPEN_CKP_HIGH|SPI_OPEN_CKE_REV, 100);
-    PPSOutput(1,RPC1,SDO2);
+    hal_spi_init();
     /* initializes keyboard (keyboard is scanned with display digits */
     PORTSetPinsDigitalIn(HAL_KYB_S0);
     PORTSetPinsDigitalIn(HAL_KYB_S1);
     PORTSetPinsDigitalIn(HAL_KYB_S2);
     event_queue = xQueueCreate(EVENT_QUEUE_LENGTH, sizeof(hal_key));
-    mConfigIntCoreTimer(CT_INT_ON|CT_INT_PRIOR_2|CT_INT_SUB_PRIOR_0);
-    OpenCoreTimer(REFRESH_PERIOD);
+    hal_timer_init(200,timer_handler);
 }
 
 static void hal_disp_set(unsigned int segments, int position){
@@ -234,14 +234,9 @@ static uint16_t decode(char c){
     return chartable[c - 0x41];
 }
 
-void __attribute__(( nomips16, interrupt(), vector(_CORE_TIMER_VECTOR)))
-CT_wrapper();
-
-CT_handler(){
-    mCTClearIntFlag();
+void timer_handler(void){
     BaseType_t xHigherPriorityTaskWoken;
     hal_key key = hal_disp_scan();
-    UpdateCoreTimer(REFRESH_PERIOD);
     if(key!=KEY_NONE){
         xQueueSendToBackFromISR(event_queue,&key,&xHigherPriorityTaskWoken);
     }

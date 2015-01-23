@@ -500,10 +500,6 @@
       </item>
       <item path="src/hal/hal_io.c" ex="true" overriding="false">
       </item>
-      <item path="src/hal/hal_spi.c" ex="true" overriding="false">
-      </item>
-      <item path="src/hal/hal_timer.c" ex="true" overriding="false">
-      </item>
     </conf>
   </confs>
 </configurationDescriptor>
