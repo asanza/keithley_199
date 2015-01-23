@@ -19,6 +19,10 @@
 
 #include <math.h>
 #include <stddef.h>
+#include <fitlinear.h>
+
+#define GSL_SUCCESS 1
+
 
 /* Fit the data (x_i, y_i) to the linear relationship
 
@@ -36,7 +40,11 @@
    from the observed variance of the points around the best fit line.
 */
 
-#include <utils.h>
+
+int fit_linear(const double *x, const double* y, int size, double* c0, double* c1){
+    double cov_00, cov_01, cov_11, sumsq;
+    return gsl_fit_linear(x, 1, y, 1, size, c0, c1, &cov_00, &cov_01, &cov_11, &sumsq);
+}
 
 int
 gsl_fit_linear (const double *x, const size_t xstride,

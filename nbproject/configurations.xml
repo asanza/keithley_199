@@ -44,15 +44,18 @@
         <itemPath>src/hal/HardwareProfile.h</itemPath>
         <itemPath>src/hal/hal_uart.h</itemPath>
         <itemPath>src/hal/hal_i2c.h</itemPath>
+        <itemPath>src/hal/hal_spi.h</itemPath>
+        <itemPath>src/hal/hal_timer.h</itemPath>
+        <itemPath>src/hal/hal_io.h</itemPath>
       </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/adc.h</itemPath>
-        <itemPath>src/sys/utils.h</itemPath>
         <itemPath>src/sys/sys.h</itemPath>
         <itemPath>src/sys/adcseq.h</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.h</itemPath>
+        <itemPath>src/utils/fitlinear.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -109,16 +112,19 @@
         <itemPath>src/hal/hal_adc.c</itemPath>
         <itemPath>src/hal/hal_uart.c</itemPath>
         <itemPath>src/hal/hal_i2c.c</itemPath>
+        <itemPath>src/hal/hal_spi.c</itemPath>
+        <itemPath>src/hal/hal_timer.c</itemPath>
+        <itemPath>src/hal/hal_io.c</itemPath>
       </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/dmm.c</itemPath>
         <itemPath>src/sys/adc.c</itemPath>
-        <itemPath>src/sys/fitlinear.c</itemPath>
         <itemPath>src/sys/calibrator.c</itemPath>
         <itemPath>src/sys/adcseq.c</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.c</itemPath>
+        <itemPath>src/utils/fitlinear.c</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -184,7 +190,7 @@
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
                   value="src/hal;src/FreeRTOS/include;src/FreeRTOS/portable/MPLAB/PIC32MX;src/sys;src/eefs;src/libscpi/inc;src/dmm;src/utils;src/drivers"/>
-        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-16-bit-code" value="true"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
         <property key="make-warnings-into-errors" value="false"/>

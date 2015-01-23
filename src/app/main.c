@@ -7,7 +7,7 @@
 #include <FreeRTOS.h>
 #include <task.h>
 #include <queue.h>
-
+#include <assert.h>
 #include <sys.h>
 #include <math.h>
 
@@ -87,10 +87,12 @@ void vApplicationIdleHook( void ){
 
 void vApplicationStackOverflowHook( TaskHandle_t pxTask, signed char *pcTaskName )
 {
+    assert(0);
     while(1);
 }
 
 void vApplicationMallocFailedHook()
 {
+    assert(0);
     while(1);
 }

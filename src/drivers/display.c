@@ -1,15 +1,15 @@
 #include <hal.h>
-#include <peripheral/spi.h>
-#include <peripheral/pps.h>
-#include <peripheral/timer.h>
 #include <FreeRTOS.h>
 #include <queue.h>
 #include "task.h"
-
-#include "HardwareProfile.h"
+#include "hal_timer.h"
 
 #define EVENT_QUEUE_LENGTH 1
 QueueHandle_t event_queue; // queue for keyboard events
+
+#define TEST_MAX_DELAY 5000 /* delay for the testsequence */
+
+static void do_test_sequence(void);
 
 hal_key hal_disp_wait_for_key(){
     hal_key key;
@@ -22,49 +22,28 @@ hal_key hal_disp_wait_for_key(){
 #define NUMBER_OF_CHARACTERS 11
 #define NUMBER_OF_SEGMENTS   15
 
-static uint16_t segments[] = {
-    seg_a,
-    seg_b,
-    seg_c,
-    seg_d,
-    seg_e,
-    seg_f,
-    seg_g,
-    seg_h,
-    seg_j,
-    seg_k,
-    seg_l,
-    seg_m,
-    seg_n,
-    seg_i,
-    seg_dp
-};
-
 static uint16_t decode(char c);
 
 static uint16_t screen[NUMBER_OF_CHARACTERS];
 static unsigned int actual_character;
 static bool self_test = false;
 
-#define REFRESH_PERIOD 70000 // * 25nS * NUMBER_OF_CHARACTERS
+#define REFRESH_PERIOD 200
+
+void timer_interrupt_handler(void);
 
 void hal_disp_init(){
-    PORTSetPinsDigitalOut(DISPLAY_PORT,0xFFFF);
-    SpiChnOpen(SPI_CHANNEL2, SPI_OPEN_MSTEN|SPI_OPEN_MODE16|SPI_OPEN_CKP_HIGH|SPI_OPEN_CKE_REV, 100);
-    PPSOutput(1,RPC1,SDO2);
-    /* initializes keyboard (keyboard is scanned with display digits */
-    PORTSetPinsDigitalIn(HAL_KYB_S0);
-    PORTSetPinsDigitalIn(HAL_KYB_S1);
-    PORTSetPinsDigitalIn(HAL_KYB_S2);
+    hal_io_keyboard_init();
     event_queue = xQueueCreate(EVENT_QUEUE_LENGTH, sizeof(hal_key));
-    mConfigIntCoreTimer(CT_INT_ON|CT_INT_PRIOR_2|CT_INT_SUB_PRIOR_0);
-    OpenCoreTimer(REFRESH_PERIOD);
+    hal_spi_init();
+    hal_timer_init(REFRESH_PERIOD, timer_interrupt_handler);
 }
 
+/* set some segments on the display */
 static void hal_disp_set(unsigned int segments, int position){
-    PORTClearBits(DISPLAY_PORT, 0xFFFF);
-    SpiChnWriteC(SPI_CHANNEL2,~(0x01<<position));
-    PORTSetBits(DISPLAY_PORT, segments);
+    hal_displayport_write(0xFFFF);
+    hal_spi_write(~(0x01<<position));
+    hal_displayport_write(segments);
 }
 
 void hal_disp_setmode(disp_mode mode){
@@ -132,13 +111,16 @@ void hal_disp_test(){
     while(self_test);
 }
 
-#define TEST_MAX_DELAY 5000
 static int test_segment = 0, test_delay = TEST_MAX_DELAY;
 hal_key hal_disp_scan(){
     hal_key key_pressed = KEY_NONE;
+    if(self_test){
+        do_test_sequence();
+        return KEY_NONE;
+    }
     if(actual_character >= NUMBER_OF_CHARACTERS)
         actual_character = 0;
-    if(!PORTReadBits(HAL_KYB_S0)){
+    if(hal_io_keyboard_read() == 1){
         switch(actual_character){
             case 1: key_pressed = KEY_OHMS; break;
             case 2: key_pressed = KEY_AC; break;
@@ -146,7 +128,7 @@ hal_key hal_disp_scan(){
             case 4: key_pressed = KEY_SCANNER; break;
         }
     }
-    if(!PORTReadBits(HAL_KYB_S1)){
+    if(hal_io_keyboard_read() == 2){
         switch(actual_character){
             case 1: key_pressed = KEY_LOCAL; break;
             case 2: key_pressed = KEY_TRIGGER; break;
@@ -154,7 +136,7 @@ hal_key hal_disp_scan(){
             case 4: key_pressed = KEY_NEXT; break;
         }
     }
-    if(!PORTReadBits(HAL_KYB_S2)){
+    if(hal_io_keyboard_read() == 3){
         switch(actual_character){
             case 1: key_pressed = KEY_RANGE_UP; break;
             case 2: key_pressed = KEY_RANGE_DOWN; break;
@@ -165,14 +147,18 @@ hal_key hal_disp_scan(){
     }
 
     hal_disp_set(screen[actual_character], actual_character++);
-    if(self_test == false)
-        return key_pressed;;
+    return key_pressed;
+}
+
+/* lit each individual display segment in progression to test if display is
+ * working properly */
+void do_test_sequence(void){
     int i = 0;
     screen[NUMBER_OF_CHARACTERS - 1] = 0xFFFF;
     if(test_delay >= TEST_MAX_DELAY){
         if(test_segment < NUMBER_OF_SEGMENTS){
             for(i = 0; i < NUMBER_OF_CHARACTERS - 1; i++)
-                screen[i] = segments[test_segment];
+                screen[i] = hal_io_display_segment(test_segment);
             test_segment++;
         }else{
             for(i = 0; i < NUMBER_OF_CHARACTERS; i++)
@@ -190,8 +176,8 @@ hal_key hal_disp_scan(){
     else{
         test_delay++;
     }
-    return KEY_NONE;
 }
+
 /* bits from 2^15 to 2^0. 2^0 is not connected and should be always 0.
  * n dp d l h i j k m g a f c e b x
  * aaaaaaaaaaa
@@ -234,16 +220,12 @@ static uint16_t decode(char c){
     return chartable[c - 0x41];
 }
 
-void __attribute__(( nomips16, interrupt(), vector(_CORE_TIMER_VECTOR)))
-CT_wrapper();
-
-CT_handler(){
-    mCTClearIntFlag();
+void timer_interrupt_handler(void){
     BaseType_t xHigherPriorityTaskWoken;
     hal_key key = hal_disp_scan();
-    UpdateCoreTimer(REFRESH_PERIOD);
     if(key!=KEY_NONE){
         xQueueSendToBackFromISR(event_queue,&key,&xHigherPriorityTaskWoken);
     }
     portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
+

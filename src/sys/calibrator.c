@@ -1,7 +1,7 @@
 /**
  */
 
-#include <utils.h>
+#include <fitlinear.h>
 #include <sys.h>
 
 struct calibration_t{
@@ -17,7 +17,7 @@ dmm_error sys_dmm_calibrate(double* real_value, double* meas_value, int size,
     // TODO: Do calibration.
     int ret = gsl_fit_linear(real_value, 1, meas_value, 1, size, &cal->offset, &cal->slope,
             &cov_00, &cov_01, &cov_11, &sumsq);
-    if(ret!=GSL_SUCCESS)
+    if(ret)
         return DMM_UNCAL;
     else
         return DMM_OK;

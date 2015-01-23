@@ -45,6 +45,9 @@
  
 #    - CMOCK_MEM_STATIC
 #    - CMOCK_MEM_SIZE=1024
+    - UNITY_INCLUDE_DOUBLE
+    - UNITY_DOUBLE_PRECISION=1e-4
+#    - UNITY_DOUBLE_VERBOSE
   :test:
     - *common_defines
     - TEST
@@ -78,6 +81,7 @@
       - -MMD
       - -Wno-packed-bitfield-compat
       - -minterlink-compressed
+      #- -fno-short-double
       - "${1}"
       - -o "${2}"
       - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
@@ -123,7 +127,7 @@
       - -Werror
       - -Os
       - -mlarge-code
-      - -mlarge-arrays
+      #- -mlarge-arrays
   :release_linker:
     :executable: xc32-gcc
     :arguments:
