@@ -48,52 +48,6 @@ void hal_timer_init();
 void hal_wait();
 
 
-/* DISPLAY INTERFACE */
-typedef enum{
-    KEY_VOLTS,
-            KEY_OHMS,
-            KEY_AMPS,
-            KEY_AC,
-            KEY_ZERO,
-            KEY_LOCAL,
-            KEY_AUTO,
-            KEY_RANGE_UP,
-            KEY_RANGE_DOWN,
-            KEY_SCANNER,
-            KEY_TRIGGER,
-            KEY_NEXT,
-            KEY_CAL,
-            KEY_NONE
-}hal_key;
-
-
-typedef enum DISP_MODE{
-    DISP_STO    = 0x0010,
-    DISP_RCL    = 0x0004,
-    DISP_FLTR   = 0x0400,
-    DISP_REM    = 0x8000,
-    DISP_VOLTS  = 0x0008,
-    DISP_OHMS   = 0x0800,
-    DISP_AMPS   = 0x0080,
-    DISP_AC     = 0x4000,
-    DISP_ZERO   = 0x0100,
-    DISP_AUTO   = 0x0200
-}disp_mode;
-
-
-hal_key hal_disp_scan();
-void hal_disp_init();
-void hal_disp_test();
-void hal_disp_clear();
-void hal_disp_adci(bool value);
-void hal_disp_adci_toggle();
-void hal_disp_setmode(disp_mode mode);
-void hal_disp_addmode(disp_mode mode);
-void hal_disp_clearmode(disp_mode mode);
-void hal_disp_puts(char* c);
-void hal_disp_putc(char c, int pos);
-hal_key hal_disp_wait_for_key();
-
 typedef enum {
         ADC_INPUT_VOLTAGE_DC = 0x00,
         ADC_INPUT_VOLTAGE_AC,

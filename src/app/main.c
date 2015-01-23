@@ -3,6 +3,7 @@
 #include "adc.h"
 #include "hal_uart.h"
 #include "hal_i2c.h"
+#include <dispkyb.h>
 #include "HardwareProfile.h"
 #include <FreeRTOS.h>
 #include <task.h>
@@ -35,14 +36,14 @@ int main()
 
 static void sysMgmTask(void *pvParameters){
     /* Initialize system state */
-    hal_disp_init();
+    display_kyb_init();
     dmm_error err = sys_dmm_init();
     /* The default configuration cannot be loaded. Other could work. The user
      * can leave this state pressing a button. The button 1 is mem1, 2 mem2 etc.
      * if the user press zero, default settings are loaded again. */
     if(err == DMM_ERR_EEPROM){
-        hal_disp_puts("MEM 0-9?");
-        switch(hal_disp_wait_for_key()){
+        display_puts("MEM 0-9?");
+        switch(display_wait_for_key()){
             case KEY_VOLTS: sys_dmm_default_to_factory_settings(); break;
         }
     }
@@ -50,7 +51,7 @@ static void sysMgmTask(void *pvParameters){
     vTaskResume(measTaskHandle);
 
     while(1){
-        switch(hal_disp_wait_for_key())
+        switch(display_wait_for_key())
         {
             case KEY_RANGE_UP: sys_dmm_scale_up(); continue;
             case KEY_RANGE_DOWN: sys_dmm_scale_down(); continue;

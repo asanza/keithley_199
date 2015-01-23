@@ -27,7 +27,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <sys.h>
-#include <hal.h>
+#include <dispkyb.h>
 
 #include <tmp275.h>
 
@@ -46,7 +46,7 @@ static void show_display_mode(){
         case ADC_INPUT_RESISTANCE_4W:
             display_indicator|=DISP_OHMS; break;
     }
-    hal_disp_setmode(display_indicator);
+    display_setmode(display_indicator);
 }
 
 static void append_scale(char* buffer){
@@ -148,9 +148,9 @@ void dmmTaskMain(void* pvParameters)
               default: break;
           }
           append_scale(buff);
-          hal_disp_clear();
+          display_clear();
           show_display_mode();
-          hal_disp_puts(buff);
+          display_puts(buff);
           printf("%f,%f\n",value, temp);
     }
 }

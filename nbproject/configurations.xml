@@ -52,6 +52,7 @@
         <itemPath>src/sys/adc.h</itemPath>
         <itemPath>src/sys/sys.h</itemPath>
         <itemPath>src/sys/adcseq.h</itemPath>
+        <itemPath>src/drivers/dispkyb.h</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.h</itemPath>
@@ -74,8 +75,8 @@
       </logicalFolder>
       <logicalFolder name="drivers" displayName="drivers" projectFiles="true">
         <itemPath>src/drivers/eeprom.c</itemPath>
-        <itemPath>src/drivers/display.c</itemPath>
         <itemPath>src/drivers/tmp275.c</itemPath>
+        <itemPath>src/drivers/dispkyb.c</itemPath>
       </logicalFolder>
       <logicalFolder name="eefs" displayName="eefs" projectFiles="true">
         <itemPath>src/eefs/crc32.c</itemPath>
