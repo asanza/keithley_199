@@ -6,7 +6,7 @@
 #include <queue.h>
 #include "task.h"
 
-#include "HardwareProfile.h"
+#include "hal_io.h"
 
 #define EVENT_QUEUE_LENGTH 1
 QueueHandle_t event_queue; // queue for keyboard events
@@ -24,24 +24,6 @@ void timer_handler(void);
 #define NUMBER_OF_CHARACTERS 11
 #define NUMBER_OF_SEGMENTS   15
 
-static uint16_t segments[] = {
-    seg_a,
-    seg_b,
-    seg_c,
-    seg_d,
-    seg_e,
-    seg_f,
-    seg_g,
-    seg_h,
-    seg_j,
-    seg_k,
-    seg_l,
-    seg_m,
-    seg_n,
-    seg_i,
-    seg_dp
-};
-
 static uint16_t decode(char c);
 
 static uint16_t screen[NUMBER_OF_CHARACTERS];
@@ -51,20 +33,16 @@ static bool self_test = false;
 #define REFRESH_PERIOD 200 // uS
 
 void hal_disp_init(){
-    PORTSetPinsDigitalOut(DISPLAY_PORT,0xFFFF);
-    hal_spi_init();
-    /* initializes keyboard (keyboard is scanned with display digits */
-    PORTSetPinsDigitalIn(HAL_KYB_S0);
-    PORTSetPinsDigitalIn(HAL_KYB_S1);
-    PORTSetPinsDigitalIn(HAL_KYB_S2);
+    hal_io_displayport_init();
+    hal_io_keyboard_init();
+    hal_spi_init_16bit();
     event_queue = xQueueCreate(EVENT_QUEUE_LENGTH, sizeof(hal_key));
     hal_timer_init(200,timer_handler);
 }
 
 static void hal_disp_set(unsigned int segments, int position){
-    PORTClearBits(DISPLAY_PORT, 0xFFFF);
-    SpiChnWriteC(SPI_CHANNEL2,~(0x01<<position));
-    PORTSetBits(DISPLAY_PORT, segments);
+    hal_spi_write_16bit(~(0x01<<position));
+    hal_io_displayport_write(segments);
 }
 
 void hal_disp_setmode(disp_mode mode){
@@ -138,7 +116,7 @@ hal_key hal_disp_scan(){
     hal_key key_pressed = KEY_NONE;
     if(actual_character >= NUMBER_OF_CHARACTERS)
         actual_character = 0;
-    if(!PORTReadBits(HAL_KYB_S0)){
+    if(hal_io_keyboard_get_channel() == 1){
         switch(actual_character){
             case 1: key_pressed = KEY_OHMS; break;
             case 2: key_pressed = KEY_AC; break;
@@ -146,7 +124,7 @@ hal_key hal_disp_scan(){
             case 4: key_pressed = KEY_SCANNER; break;
         }
     }
-    if(!PORTReadBits(HAL_KYB_S1)){
+    if(hal_io_keyboard_get_channel() == 2){
         switch(actual_character){
             case 1: key_pressed = KEY_LOCAL; break;
             case 2: key_pressed = KEY_TRIGGER; break;
@@ -154,7 +132,7 @@ hal_key hal_disp_scan(){
             case 4: key_pressed = KEY_NEXT; break;
         }
     }
-    if(!PORTReadBits(HAL_KYB_S2)){
+    if(hal_io_keyboard_get_channel() == 3){
         switch(actual_character){
             case 1: key_pressed = KEY_RANGE_UP; break;
             case 2: key_pressed = KEY_RANGE_DOWN; break;
@@ -172,7 +150,7 @@ hal_key hal_disp_scan(){
     if(test_delay >= TEST_MAX_DELAY){
         if(test_segment < NUMBER_OF_SEGMENTS){
             for(i = 0; i < NUMBER_OF_CHARACTERS - 1; i++)
-                screen[i] = segments[test_segment];
+                screen[i] = hal_io_get_segment(test_segment);
             test_segment++;
         }else{
             for(i = 0; i < NUMBER_OF_CHARACTERS; i++)
