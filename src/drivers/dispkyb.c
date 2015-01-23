@@ -22,7 +22,6 @@ void timer_handler(void);
 #define NUMBER_OF_CHARACTERS 11
 #define NUMBER_OF_SEGMENTS   15
 
-static uint16_t decode(char c);
 
 static uint16_t screen[NUMBER_OF_CHARACTERS];
 static unsigned int actual_character;
@@ -69,7 +68,7 @@ void display_puts(char* c){
 
 
 void display_adc_indicator(bool set_value){
-    uint16_t adci = decode('.');
+    uint16_t adci = hal_io_displayport_map_char_to_segments('.');
     if(set_value)
         screen[NUMBER_OF_CHARACTERS-2] |= adci;
     else
@@ -77,7 +76,7 @@ void display_adc_indicator(bool set_value){
 }
 
 void hal_disp_adci_toggle(){
-    uint16_t adci = decode('.');
+    uint16_t adci = hal_io_displayport_map_char_to_segments('.');
     if(screen[NUMBER_OF_CHARACTERS-2]&adci)
         screen[NUMBER_OF_CHARACTERS-2]&=~adci;
     else
@@ -85,21 +84,21 @@ void hal_disp_adci_toggle(){
 }
 
 void display_clear(){
-    uint16_t adci = decode('.');
+    uint16_t adci = hal_io_displayport_map_char_to_segments('.');
     adci &= screen[NUMBER_OF_CHARACTERS-2];
     memset(screen,0,sizeof(uint16_t)*NUMBER_OF_CHARACTERS);
     screen[NUMBER_OF_CHARACTERS-2]|=adci;
 }
 
 void display_putc(char c, int pos){
-    uint16_t adci = decode('.');
+    uint16_t adci = hal_io_displayport_map_char_to_segments('.');
     adci &= screen[NUMBER_OF_CHARACTERS-2];
     if(self_test) return;
     if(pos < 0 || pos >= (NUMBER_OF_CHARACTERS - 1)) return;
     if(c=='.' && pos > 0)
-        screen[pos - 1] |= decode(c);
+        screen[pos - 1] |= hal_io_displayport_map_char_to_segments(c);
     else
-        screen[pos] = decode(c);
+        screen[pos] = hal_io_displayport_map_char_to_segments(c);
     screen[NUMBER_OF_CHARACTERS-2]|=adci;
 }
 
@@ -167,47 +166,6 @@ static key_id hal_disp_scan(){
         test_delay++;
     }
     return KEY_NONE;
-}
-/* bits from 2^15 to 2^0. 2^0 is not connected and should be always 0.
- * n dp d l h i j k m g a f c e b x
- * aaaaaaaaaaa
- * f i  g   hb
- * f  i g  h b
- * f   ig h  b
- * f    ih   b
- * ennnnnjjjjj
- * e   ml k  c
- * e  m l  k c
- * e m  l   kc
- * ddddddddddd
- */
-static uint16_t chartable[] = {
-    0x823E, 0x326A, 0x2034, 0x306A, 0xA034, 0x8034, 0x223C,
-    0x821E, 0x3060, 0x200E, 0x8914, 0x2014, 0x0C1E, 0x051E,
-    0x203E, 0x8236, 0x213E, 0x8336, 0xA238, 0x1060, 0x201E,
-    0x0894, 0x019E, 0x0D80, 0xA21A, 0x28A0, 0x203E, 0x1040,
-    0xA226, 0x222A, 0x821A, 0xA238, 0xA23C, 0x002A, 0xA23E,
-    0xA23A, 0x9240, 0x8200, 0x8E20, 0x920C, 0x8232, 0x0000,
-    0x4000, 0xA20E, 0x1222
-};
-
-static uint16_t decode(char c){
-    /* TODO: Check c inside allowed range */
-    switch(c){
-        case 'm': return chartable[39];
-        case '+': return chartable[36];
-        case '-': return chartable[37];
-        case 'o': return chartable[38];
-        case 'g': return chartable[40];
-        case ' ': return chartable[41];
-        case '.': return chartable[42];
-        case 'd': return chartable[43];
-        case '?': return chartable[44];
-    }
-    if(c <= 0x39){
-        return chartable[c - 22];
-    }
-    return chartable[c - 0x41];
 }
 
 void timer_handler(void){

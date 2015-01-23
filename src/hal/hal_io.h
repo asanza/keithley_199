@@ -32,6 +32,7 @@ void hal_io_displayport_write(uint16_t segments);
 uint16_t hal_io_get_segment(int segment);
 void hal_io_keyboard_init(void);
 int hal_io_keyboard_get_channel(void);
+uint16_t hal_io_displayport_map_char_to_segments(char c);
 
 #ifdef	__cplusplus
 }

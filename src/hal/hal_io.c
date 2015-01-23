@@ -83,3 +83,45 @@ int hal_io_keyboard_get_channel(void){
         return 3;
     return 0;
 }
+
+/* bits from 2^15 to 2^0. 2^0 is not connected and should be always 0.
+ * n dp d l h i j k m g a f c e b x
+ * aaaaaaaaaaa
+ * f i  g   hb
+ * f  i g  h b
+ * f   ig h  b
+ * f    ih   b
+ * ennnnnjjjjj
+ * e   ml k  c
+ * e  m l  k c
+ * e m  l   kc
+ * ddddddddddd
+ */
+static uint16_t chartable[] = {
+    0x823E, 0x326A, 0x2034, 0x306A, 0xA034, 0x8034, 0x223C,
+    0x821E, 0x3060, 0x200E, 0x8914, 0x2014, 0x0C1E, 0x051E,
+    0x203E, 0x8236, 0x213E, 0x8336, 0xA238, 0x1060, 0x201E,
+    0x0894, 0x019E, 0x0D80, 0xA21A, 0x28A0, 0x203E, 0x1040,
+    0xA226, 0x222A, 0x821A, 0xA238, 0xA23C, 0x002A, 0xA23E,
+    0xA23A, 0x9240, 0x8200, 0x8E20, 0x920C, 0x8232, 0x0000,
+    0x4000, 0xA20E, 0x1222
+};
+
+uint16_t hal_io_displayport_map_char_to_segments(char c){
+    /* TODO: Check c inside allowed range */
+    switch(c){
+        case 'm': return chartable[39];
+        case '+': return chartable[36];
+        case '-': return chartable[37];
+        case 'o': return chartable[38];
+        case 'g': return chartable[40];
+        case ' ': return chartable[41];
+        case '.': return chartable[42];
+        case 'd': return chartable[43];
+        case '?': return chartable[44];
+    }
+    if(c <= 0x39){
+        return chartable[c - 22];
+    }
+    return chartable[c - 0x41];
+}
