@@ -48,6 +48,20 @@
         <itemPath>src/hal/hal_timer.h</itemPath>
         <itemPath>src/hal/hal_io.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f1" displayName="libscpi" projectFiles="true">
+        <itemPath>src/scpi-parser/libscpi/inc/scpi/config.h</itemPath>
+        <itemPath>src/scpi-parser/libscpi/inc/scpi/constants.h</itemPath>
+        <itemPath>src/scpi-parser/libscpi/inc/scpi/debug.h</itemPath>
+        <itemPath>src/scpi-parser/libscpi/inc/scpi/error.h</itemPath>
+        <itemPath>src/scpi-parser/libscpi/inc/scpi/fifo.h</itemPath>
+        <itemPath>src/scpi-parser/libscpi/inc/scpi/ieee488.h</itemPath>
+        <itemPath>src/scpi-parser/libscpi/inc/scpi/minimal.h</itemPath>
+        <itemPath>src/scpi-parser/libscpi/inc/scpi/parser.h</itemPath>
+        <itemPath>src/scpi-parser/libscpi/inc/scpi/scpi.h</itemPath>
+        <itemPath>src/scpi-parser/libscpi/inc/scpi/types.h</itemPath>
+        <itemPath>src/scpi-parser/libscpi/inc/scpi/units.h</itemPath>
+        <itemPath>src/scpi-parser/libscpi/inc/scpi/utils_private.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/adc.h</itemPath>
         <itemPath>src/sys/sys.h</itemPath>
@@ -118,6 +132,16 @@
         <itemPath>src/hal/hal_timer.c</itemPath>
         <itemPath>src/hal/hal_io.c</itemPath>
       </logicalFolder>
+      <logicalFolder name="f1" displayName="libscpi" projectFiles="true">
+        <itemPath>src/scpi-parser/libscpi/src/debug.c</itemPath>
+        <itemPath>src/scpi-parser/libscpi/src/error.c</itemPath>
+        <itemPath>src/scpi-parser/libscpi/src/fifo.c</itemPath>
+        <itemPath>src/scpi-parser/libscpi/src/ieee488.c</itemPath>
+        <itemPath>src/scpi-parser/libscpi/src/minimal.c</itemPath>
+        <itemPath>src/scpi-parser/libscpi/src/parser.c</itemPath>
+        <itemPath>src/scpi-parser/libscpi/src/units.c</itemPath>
+        <itemPath>src/scpi-parser/libscpi/src/utils.c</itemPath>
+      </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/dmm.c</itemPath>
         <itemPath>src/sys/adc.c</itemPath>
@@ -149,6 +173,8 @@
     <Elem>src/drivers</Elem>
     <Elem>src/dmm</Elem>
     <Elem>src/utils</Elem>
+    <Elem>src/scpi-parser/libscpi/src</Elem>
+    <Elem>src/scpi-parser/libscpi/inc/scpi</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -193,7 +219,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="src/hal;src/FreeRTOS/include;src/FreeRTOS/portable/MPLAB/PIC32MX;src/sys;src/eefs;src/libscpi/inc;src/dmm;src/utils;src/drivers"/>
+                  value="src/hal;src/FreeRTOS/include;src/FreeRTOS/portable/MPLAB/PIC32MX;src/sys;src/eefs;src/libscpi/inc;src/dmm;src/utils;src/drivers;src/scpi-parser/libscpi/inc"/>
         <property key="generate-16-bit-code" value="true"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
@@ -336,7 +362,6 @@
         <property key="UART4" value="true"/>
         <property key="UART5" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
         <property key="memories.bootflash" value="false"/>
