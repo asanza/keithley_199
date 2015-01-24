@@ -45,6 +45,30 @@ typedef enum{
         ADC_CHANNEL_8 = 0x80,
         ADC_NUMBER_OF_CHANNELS,
     }adc_channel;
+typedef enum {
+        ADC_INPUT_VOLTAGE_DC = 0x00,
+        ADC_INPUT_VOLTAGE_AC,
+        ADC_INPUT_CURRENT_DC,
+        ADC_INPUT_CURRENT_AC,
+        ADC_INPUT_RESISTANCE_2W,
+        ADC_INPUT_RESISTANCE_4W,
+        ADC_INPUT_COUNT,
+}adc_input;
+
+typedef enum {
+    ADC_RANGE_30m,
+        ADC_RANGE_300m,
+        ADC_RANGE_3,
+        ADC_RANGE_30,
+        ADC_RANGE_300,
+        ADC_RANGE_3K,
+        ADC_RANGE_30K,
+        ADC_RANGE_300K,
+        ADC_RANGE_3M,
+        ADC_RANGE_30M,
+        ADC_RANGE_300M,
+        ADC_RANGE_COUNT,
+} adc_range;
 
     typedef enum{
                 ADC_ERROR_NOT_SUPPORTED, 

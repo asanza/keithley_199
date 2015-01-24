@@ -25,10 +25,6 @@ typedef enum{
             AUX_LED
 }IO_LED;
 
-typedef enum{
-            EVT_UART_RX = 0x01, /**< Data Received */
-}hal_event;
-
 void hal_sys_init();
 void hal_io_toggle_led(IO_LED led);
 void hal_io_set_led(IO_LED led);
@@ -43,35 +39,6 @@ int hal_usbuart_receive(char* buffer, int size);
 void hal_usbuart_readline(char* buffer, int size);
 
 void hal_sys_idle();
-
-void hal_timer_init();
-void hal_wait();
-
-
-typedef enum {
-        ADC_INPUT_VOLTAGE_DC = 0x00,
-        ADC_INPUT_VOLTAGE_AC,
-        ADC_INPUT_CURRENT_DC,
-        ADC_INPUT_CURRENT_AC,
-        ADC_INPUT_RESISTANCE_2W,
-        ADC_INPUT_RESISTANCE_4W,
-        ADC_INPUT_COUNT,
-}adc_input;
-
-typedef enum {
-    ADC_RANGE_30m,
-        ADC_RANGE_300m,
-        ADC_RANGE_3,
-        ADC_RANGE_30,
-        ADC_RANGE_300,
-        ADC_RANGE_3K,
-        ADC_RANGE_30K,
-        ADC_RANGE_300K,
-        ADC_RANGE_3M,
-        ADC_RANGE_30M,
-        ADC_RANGE_300M,
-        ADC_RANGE_COUNT,
-} adc_range;
 
 
 int hal_adc_integration_sequence(unsigned char channel, uint32_t int_mux, uint32_t pause_mux, uint32_t rund_mux);

@@ -31,62 +31,7 @@
 
 #include <tmp275.h>
 
-static void show_display_mode(){
-    disp_mode display_indicator = 0x00000000;
-    switch(sys_dmm_get_mode()){
-        case ADC_INPUT_VOLTAGE_AC:
-            display_indicator|=DISP_AC;
-        case ADC_INPUT_VOLTAGE_DC:
-            display_indicator|=DISP_VOLTS; break;
-        case ADC_INPUT_CURRENT_AC:
-            display_indicator|=DISP_AC;
-        case ADC_INPUT_CURRENT_DC:
-            display_indicator|=DISP_AMPS; break;
-        case ADC_INPUT_RESISTANCE_2W:
-        case ADC_INPUT_RESISTANCE_4W:
-            display_indicator|=DISP_OHMS; break;
-    }
-    display_setmode(display_indicator);
-}
-
-static void append_scale(char* buffer){
-
-    switch(sys_dmm_get_mode()){
-        case ADC_INPUT_VOLTAGE_DC:
-        case ADC_INPUT_VOLTAGE_AC:
-        {
-            if(sys_dmm_get_scale()==ADC_RANGE_300m)
-                strcat(buffer, "mV ");
-            else
-                strcat(buffer, " V");
-        }
-        break;
-        case ADC_INPUT_CURRENT_DC:
-        case ADC_INPUT_CURRENT_AC:
-        {
-            if(sys_dmm_get_scale()==ADC_RANGE_30m)
-                strcat(buffer,"mA");
-            else
-                strcat(buffer," A");
-        }
-        break;
-        case ADC_INPUT_RESISTANCE_2W:
-        case ADC_INPUT_RESISTANCE_4W:
-        {
-            switch(sys_dmm_get_scale()){
-                case ADC_RANGE_300: strcat(buffer," o");break;
-                case ADC_RANGE_3K:
-                case ADC_RANGE_30K:
-                case ADC_RANGE_300K: strcat(buffer," Ko");break;
-                case ADC_RANGE_3M:
-                case ADC_RANGE_30M:
-                case ADC_RANGE_300M: strcat(buffer," Mo");break;
-            }
-        }
-        break;
-    }
-}
-
+#include "disfmt.h"
 
 void dmmTaskMain(void* pvParameters)
 {
@@ -97,59 +42,10 @@ void dmmTaskMain(void* pvParameters)
           hal_disp_adci_toggle();
           double value = sys_dmm_read();
           double temp = tmp245_read_temp_double();
-          switch(sys_dmm_get_scale()){
-              case ADC_RANGE_3:
-              case ADC_RANGE_3K:
-              case ADC_RANGE_3M:
-              {
-                  if(value >= 0){
-                    sprintf(buff," %06.5f",value/1.0);
-                  }
-                  else{
-                    sprintf(buff,"%07.5f",value/1.0);
-                  }
-                  if(fabs(value)>3.03){
-                      sprintf(buff," O.VERFL ");
-                  }
-              }
-              break;
-              case ADC_RANGE_30m:
-              case ADC_RANGE_30:
-              case ADC_RANGE_30K:
-              case ADC_RANGE_30M:
-              {
-                  if(value >= 0){
-                    sprintf(buff," %07.4f",value/1.0);
-                  }
-                  else{
-                    sprintf(buff,"%08.4f",value/1.0);
-                  }
-                  if(fabs(value)>30.3){
-                      sprintf(buff," OV.ERFL ");
-                  }
-              }
-              break;
-              case ADC_RANGE_300:
-              case ADC_RANGE_300K:
-              case ADC_RANGE_300M:
-              case ADC_RANGE_300m:
-              {
-                  if(value >= 0){
-                    sprintf(buff," %07.3f",value/1.0);
-                  }
-                  else{
-                    sprintf(buff,"%08.3f",value/1.0);
-                  }
-                  if(fabs(value)>303){
-                      sprintf(buff," OVE.RFL ");
-                  }
-              }
-              break;
-              default: break;
-          }
-          append_scale(buff);
+          fmt_format_string(buff,sys_dmm_get_scale(),value);
+          fmt_append_scale(buff, sys_dmm_get_mode());
           display_clear();
-          show_display_mode();
+          display_setmode(fmt_get_disp_mode(adc_get_input()));
           display_puts(buff);
           printf("%f,%f\n",value, temp);
     }

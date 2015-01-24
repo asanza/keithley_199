@@ -140,11 +140,13 @@ START_SEQUENCE(seq_3AAC){
 
 
 
+
+
 static adc_sequence* get_vdc_seq(adc_range range);
 static adc_sequence* get_vac_seq(adc_range range);
 static adc_sequence* get_cdc_seq(adc_range range);
 static adc_sequence* get_cac_seq(adc_range range);
-static adc_sequence* get_res_seq(adc_range range);
+static adc_sequence* get_res4w_seq(adc_range range);
 //static hal_adc_sequence* get_vdc_seq(adc_range range);
 
 adc_sequence* adcseq_get(adc_input input, adc_range range){
@@ -153,8 +155,15 @@ adc_sequence* adcseq_get(adc_input input, adc_range range){
         case ADC_INPUT_VOLTAGE_AC: return get_vac_seq(range);
         case ADC_INPUT_CURRENT_DC: return get_cdc_seq(range);
         case ADC_INPUT_CURRENT_AC: return get_cac_seq(range);
+        case ADC_INPUT_RESISTANCE_4W: return get_res4w_seq(range);
     }
     return NULL;
+}
+
+adc_sequence* get_res4w_seq(adc_range range){
+    switch(range){
+        case ADC_RANGE_300: return NULL;
+    }
 }
 
 adc_sequence* get_vac_seq(adc_range range){

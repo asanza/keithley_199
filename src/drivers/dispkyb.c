@@ -115,27 +115,27 @@ static key_id hal_disp_scan(){
         actual_character = 0;
     if(hal_io_keyboard_get_channel() == 1){
         switch(actual_character){
-            case 1: key_pressed = KEY_OHMS; break;
-            case 2: key_pressed = KEY_AC; break;
-            case 3: key_pressed = KEY_VOLTS; break;
-            case 4: key_pressed = KEY_SCANNER; break;
+            case 1: key_pressed = KEY_1; break;
+            case 2: key_pressed = KEY_3; break;
+            case 3: key_pressed = KEY_0; break;
+            case 4: key_pressed = KEY_8; break;
         }
     }
     if(hal_io_keyboard_get_channel() == 2){
         switch(actual_character){
-            case 1: key_pressed = KEY_LOCAL; break;
-            case 2: key_pressed = KEY_TRIGGER; break;
-            case 3: key_pressed = KEY_AMPS; break;
-            case 4: key_pressed = KEY_NEXT; break;
+            case 1: key_pressed = KEY_UP; break;
+            case 2: key_pressed = KEY_9; break;
+            case 3: key_pressed = KEY_2; break;
+            case 4: key_pressed = KEY_DOWN; break;
         }
     }
     if(hal_io_keyboard_get_channel() == 3){
         switch(actual_character){
-            case 1: key_pressed = KEY_RANGE_UP; break;
-            case 2: key_pressed = KEY_RANGE_DOWN; break;
-            case 3: key_pressed = KEY_AUTO; break;
+            case 1: key_pressed = KEY_7; break;
+            case 2: key_pressed = KEY_6; break;
+            case 3: key_pressed = KEY_5; break;
             case 4: key_pressed = KEY_CAL; break;
-            case 5: key_pressed = KEY_ZERO; break;
+            case 5: key_pressed = KEY_4; break;
         }
     }
 

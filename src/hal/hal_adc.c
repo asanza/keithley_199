@@ -49,32 +49,11 @@
  * it is set to one each time the output compare triggers, and let the oc knows
  * if actually only the start strobe was triggered or also the integration strobe
  * integration strobe is two strobe pulses with separation of exactly INTEGRATION
- * PERIOD ms
- */
+ * PERIOD ms */
 static int pulsecounter = 0;
 static unsigned int integration_period;
 static QueueHandle_t data_sended;
 
-#define SENSE_100K_BIT         (1<<28)
-#define SIG_x10_BIT            (1<<22)
-#define N_AC_BIT               (1<<21)
-
-
-#define NCAL_BIT                (1<<7)
-#define NZERO_BIT               (1<<6)
-#define FAST_BIT                (1<<5)
-#define NREAD_SWITCH_BIT        (1<<4)
-#define SIG_BIT                 (1<<3)
-#define N_FINAL_SLOPE_BIT       (1<<2)
-#define SYNC_BIT                (1<<1)
-#define INT_BIT                 (1<<0)
-
-#define IS_START_INTEGRATION(x)  ((x&(N_FINAL_SLOPE_BIT|INT_BIT)) == (N_FINAL_SLOPE_BIT|INT_BIT))
-#define IS_STOP_INTEGRATION(x) ((x&N_FINAL_SLOPE_BIT)== (N_FINAL_SLOPE_BIT))
-#define IS_RUN_DOWN_SLOPE(x) ((x&SYNC_BIT) == SYNC_BIT)
-#define IS_PRE_INT_PULSE(x) ((x&(N_FINAL_SLOPE_BIT|SYNC_BIT))==(N_FINAL_SLOPE_BIT|SYNC_BIT))
-
-#define VREF -2.8  /* hardware voltage reference value in volts */
 
 static void send_strobe_and_wait(unsigned int wait_time);
 static void adc_send_mux(char channel, uint32_t mux);

@@ -27,12 +27,31 @@
 #include "HardwareProfile.h"
 #include "hal.h"
 
-void eeprom_read_page(uint16_t page_address, uint8_t* _data){
-    
+void eeprom_read_page(uint16_t address, uint8_t* _data){
+    address * HAL_EEPROM_PAGE_SIZE;
+    hal_i2c_start(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE);
+    hal_i2c_write(address >> 8);
+    hal_i2c_write(address);
+    hal_i2c_rep_start(HAL_EEPROM_ADDRESS, HAL_I2C_READ);
+    int i = 0;
+    for( i = 0; i < HAL_EEPROM_PAGE_SIZE - 1; i++)
+        *(_data++) = hal_i2c_readAck();
+    *_data = hal_i2c_readNak();
+    hal_i2c_stop();
 }
 
 void eeprom_write_page(uint16_t address, uint8_t* _data){
-
+    address * HAL_EEPROM_PAGE_SIZE;
+    hal_i2c_start(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE);
+    hal_i2c_write(address >> 8);
+    hal_i2c_write(address);
+    int i;
+    for(i = 0; i < HAL_EEPROM_PAGE_SIZE; i++)
+        hal_i2c_write(*(_data++));
+    hal_i2c_stop();
+    /* wait for write to be executed */
+    while(hal_i2c_start(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE));
+    hal_i2c_stop();
 }
 
 uint8_t eeprom_read_byte(uint16_t address){

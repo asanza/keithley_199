@@ -30,18 +30,18 @@ extern "C" {
 
     /* DISPLAY INTERFACE */
 typedef enum{
-    KEY_VOLTS,
-            KEY_OHMS,
-            KEY_AMPS,
-            KEY_AC,
-            KEY_ZERO,
-            KEY_LOCAL,
-            KEY_AUTO,
-            KEY_RANGE_UP,
-            KEY_RANGE_DOWN,
-            KEY_SCANNER,
-            KEY_TRIGGER,
-            KEY_NEXT,
+    KEY_0,
+            KEY_1,
+            KEY_2,
+            KEY_3,
+            KEY_4,
+            KEY_UP,
+            KEY_5,
+            KEY_7,
+            KEY_6,
+            KEY_8,
+            KEY_9,
+            KEY_DOWN,
             KEY_CAL,
             KEY_NONE
 }key_id;

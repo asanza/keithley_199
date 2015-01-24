@@ -44,7 +44,7 @@ static void sysMgmTask(void *pvParameters){
     if(err == DMM_ERR_EEPROM){
         display_puts("MEM 0-9?");
         switch(display_wait_for_key()){
-            case KEY_VOLTS: sys_dmm_default_to_factory_settings(); break;
+            case KEY_0: sys_dmm_default_to_factory_settings(); break;
         }
     }
     bool shift_key = false;
@@ -53,18 +53,18 @@ static void sysMgmTask(void *pvParameters){
     while(1){
         switch(display_wait_for_key())
         {
-            case KEY_RANGE_UP: sys_dmm_scale_up(); continue;
-            case KEY_RANGE_DOWN: sys_dmm_scale_down(); continue;
-            case KEY_AC: sys_dmm_toggle_acdc(); continue;
-            case KEY_OHMS:  sys_dmm_set_mode(ADC_INPUT_RESISTANCE_2W); continue;
-            case KEY_VOLTS: sys_dmm_restore_voltage_mode(); continue;
-            case KEY_AMPS:  sys_dmm_restore_current_mode(); continue;
-            case KEY_ZERO: continue;
-            case KEY_LOCAL: continue;
-            case KEY_AUTO: continue;
-            case KEY_SCANNER: continue;
-            case KEY_TRIGGER: continue;
-            case KEY_NEXT: shift_key = true; continue;
+            case KEY_7: sys_dmm_scale_up(); continue;
+            case KEY_6: sys_dmm_scale_down(); continue;
+            case KEY_3: sys_dmm_toggle_acdc(); continue;
+            case KEY_1:  sys_dmm_set_mode(ADC_INPUT_RESISTANCE_2W); continue;
+            case KEY_0: sys_dmm_restore_voltage_mode(); continue;
+            case KEY_2:  sys_dmm_restore_current_mode(); continue;
+            case KEY_4: continue;
+            case KEY_UP: continue;
+            case KEY_5: continue;
+            case KEY_8: continue;
+            case KEY_9: continue;
+            case KEY_DOWN: shift_key = true; continue;
             case KEY_CAL:
                 vTaskSuspend(measTaskHandle);
                 //vTaskStart(doCalTaskHandle);

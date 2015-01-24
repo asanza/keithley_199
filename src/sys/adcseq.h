@@ -27,7 +27,7 @@
 extern "C" {
 #endif
 #include <stdint.h>
-#include <hal.h>
+#include <adc.h>
 
 typedef struct hal_adc_integration_sequence_t adc_sequence;
 void adcseq_init(adc_sequence* sequence);
