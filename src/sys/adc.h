@@ -15,36 +15,27 @@
 extern "C" {
 #endif
 
-    /* mux structure. These bytes are sended to mux on each conversion */
-    typedef union{
-        struct{
-            uint8_t mux_d;
-            uint8_t mux_c;
-            uint8_t mux_b;
-            uint8_t mux_a;
-        };
-        struct{
-            uint32_t w;
-        };
-    }adc_mux;
+#define ADC_MAX_VALUE  3.03
+#define ADC_MIN_VALUE -3.03
 
 typedef enum{
     ADC_INTEGRATION_50HZ = 50000, /**< 20mS @ 2.5MHz */
     ADC_INTEGRATION_60HZ = 41667, /**< 16mS @ 2.5MHz */
 }adc_integration_period;
 
-    typedef enum {
-        ADC_CHANNEL_0 = 0x00,
-        ADC_CHANNEL_1 = 0x01,
-        ADC_CHANNEL_2 = 0x02,
-        ADC_CHANNEL_3 = 0x04,
-        ADC_CHANNEL_4 = 0x08,
-        ADC_CHANNEL_5 = 0x10,
-        ADC_CHANNEL_6 = 0x20,
-        ADC_CHANNEL_7 = 0x40,
-        ADC_CHANNEL_8 = 0x80,
-        ADC_NUMBER_OF_CHANNELS,
-    }adc_channel;
+typedef enum {
+    ADC_CHANNEL_0 = 0x00,
+    ADC_CHANNEL_1 = 0x01,
+    ADC_CHANNEL_2 = 0x02,
+    ADC_CHANNEL_3 = 0x04,
+    ADC_CHANNEL_4 = 0x08,
+    ADC_CHANNEL_5 = 0x10,
+    ADC_CHANNEL_6 = 0x20,
+    ADC_CHANNEL_7 = 0x40,
+    ADC_CHANNEL_8 = 0x80,
+    ADC_NUMBER_OF_CHANNELS,
+}adc_channel;
+    
 typedef enum {
         ADC_INPUT_VOLTAGE_DC = 0x00,
         ADC_INPUT_VOLTAGE_AC,
@@ -52,7 +43,7 @@ typedef enum {
         ADC_INPUT_CURRENT_AC,
         ADC_INPUT_RESISTANCE_2W,
         ADC_INPUT_RESISTANCE_4W,
-        ADC_INPUT_COUNT,
+        ADC_NUMBER_OF_INPUTS /**< number of valid inputs */
 }adc_input;
 
 typedef enum {
@@ -70,19 +61,21 @@ typedef enum {
         ADC_RANGE_COUNT,
 } adc_range;
 
-    typedef enum{
-                ADC_ERROR_NOT_SUPPORTED, 
-    }adc_error;
+typedef enum{
+            ADC_ERROR_NOT_SUPPORTED,
+            ADC_ERROR_NONE
+}adc_error;
 
-    adc_error adc_set_range(adc_range scale);
-    adc_range adc_get_range();
-    adc_input adc_get_input();
-
-    adc_error adc_set_integration_period(adc_integration_period period);
-    adc_integration_period adc_get_integration_period();
-    adc_error adc_set_input(adc_input input, adc_range range);
-    double adc_read_value(adc_channel channel);
-    adc_error adc_init(adc_integration_period period, adc_input input, adc_range range);
+adc_error adc_set_range(adc_range scale);
+adc_range adc_get_range(void);
+adc_input adc_get_input(void);
+adc_error adc_set_integration_period(adc_integration_period period);
+adc_integration_period adc_get_integration_period(void);
+adc_error adc_set_input(adc_input input, adc_range range);
+double adc_read_value(adc_channel channel);
+adc_error adc_init(adc_integration_period period, adc_input input, adc_range range);
+adc_error adc_range_up(void);
+adc_error adc_range_down(void);
     
 #ifdef	__cplusplus
 }

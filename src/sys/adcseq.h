@@ -30,7 +30,7 @@ extern "C" {
 #include <adc.h>
 
 typedef struct hal_adc_integration_sequence_t adc_sequence;
-void adcseq_init(adc_sequence* sequence);
+void adcseq_reset(adc_sequence* sequence);
 uint32_t adcseq_next(adc_sequence* sequence);
 adc_sequence* adcseq_get(adc_input input, adc_range range);
 

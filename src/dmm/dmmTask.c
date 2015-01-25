@@ -40,10 +40,10 @@ void dmmTaskMain(void* pvParameters)
     while(1)
     {
           hal_disp_adci_toggle();
-          double value = sys_dmm_read();
+          double value = adc_read_value(0); /* read value in channel 0 */
           double temp = tmp245_read_temp_double();
-          fmt_format_string(buff,sys_dmm_get_scale(),value);
-          fmt_append_scale(buff, sys_dmm_get_mode());
+          fmt_format_string(buff,sys_state_get_scale(),value);
+          fmt_append_scale(buff, sys_state_get_mode());
           display_clear();
           display_setmode(fmt_get_disp_mode(adc_get_input()));
           display_puts(buff);

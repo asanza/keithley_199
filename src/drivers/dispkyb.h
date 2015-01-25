@@ -1,7 +1,7 @@
 /*
  * dispkyb.h
  *
- * Copyright (c) ${year}, Diego F. Asanza. All rights reserved.
+ * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

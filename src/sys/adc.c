@@ -36,7 +36,6 @@
 
 #include <stdint.h>
 #include <assert.h>
-#include <FreeRTOS.h>
 #include "adc.h"
 #include "adcseq.h"
 
@@ -62,21 +61,26 @@
 
 /* state variables */
 static adc_range range;
-static adc_input input; 
+static adc_input input;
 
 static double adc_do_measurement(unsigned char channel, adc_sequence* sequence);
 
 
 double adc_read_value(adc_channel channel){
     adc_sequence* seq = adcseq_get(input, range);
-    assert(seq!=NULL);
+    assert(seq);
     double value = adc_do_measurement(channel, seq);
+    if(value >=  3.03) return ADC_MAX_VALUE;
+    if(value <= -3.03) return ADC_MIN_VALUE;
     switch(range){
-        case ADC_RANGE_3: return value*1.0;
+        case ADC_RANGE_3:
+        case ADC_RANGE_3K: return value*1.0;
         case ADC_RANGE_30m:
-        case ADC_RANGE_30: return value*10.0;
+        case ADC_RANGE_30:
+        case ADC_RANGE_30K: return value*10.0;
         case ADC_RANGE_300m:
-        case ADC_RANGE_300: return value*100.0;
+        case ADC_RANGE_300:
+        case ADC_RANGE_300K: return value*100.0;
     }
 }
 
@@ -84,17 +88,39 @@ adc_input adc_get_input(){
     return input;
 }
 
+adc_range adc_get_range(void){
+    return range;
+}
+
 adc_error adc_set_range(adc_range scale){
-    portENTER_CRITICAL();
+    adc_sequence* seq = adcseq_get(input,scale);
+    if(!seq) return ADC_ERROR_NOT_SUPPORTED;
     range = scale;
-    portEXIT_CRITICAL();
+    return ADC_ERROR_NONE;
+}
+
+adc_error adc_range_up(void){
+    adc_range range_ = range + 1;
+    adc_sequence* seq = adcseq_get(input,range_);
+    if(!seq) return ADC_ERROR_NOT_SUPPORTED;
+    range = range_;
+    return ADC_ERROR_NONE;
+}
+
+adc_error adc_range_down(void){
+    adc_range range_ = range - 1;
+    adc_sequence* seq = adcseq_get(input,range_);
+    if(!seq) return ADC_ERROR_NOT_SUPPORTED;
+    range = range_;
+    return ADC_ERROR_NONE;
 }
 
 adc_error adc_set_input(adc_input input_in, adc_range range_in){
-    portENTER_CRITICAL();
+    adc_sequence* seq = adcseq_get(input_in,range_in);
+    if(!seq) return ADC_ERROR_NOT_SUPPORTED;
     input = input_in;
     range = range_in;
-    portEXIT_CRITICAL();
+    return ADC_ERROR_NONE;
 }
 
 adc_error adc_set_integration_period(adc_integration_period period){
@@ -102,9 +128,12 @@ adc_error adc_set_integration_period(adc_integration_period period){
 }
 
 adc_error adc_init(adc_integration_period period, adc_input input_, adc_range range_){
+    adc_sequence* seq = adcseq_get(input_,range_);
+    if(!seq) return ADC_ERROR_NOT_SUPPORTED;
     input  = input_;
     range = range_;
     hal_adc_init(period);
+    return ADC_ERROR_NONE;
 }
 
 static uint32_t do_sequence(unsigned char channel, adc_sequence* sequence){
@@ -128,8 +157,8 @@ static uint32_t do_sequence(unsigned char channel, adc_sequence* sequence){
 
 
 double adc_do_measurement(unsigned char channel, adc_sequence* sequence){
-    assert(sequence!=NULL);
-    adcseq_init(sequence); // always start at sequence start point.
+    assert(sequence);
+    adcseq_reset(sequence); // always start at sequence start point.
     int signal_count, sigzero_count, ref_count, refzero_count;
     signal_count = do_sequence(channel, sequence);
     sigzero_count = do_sequence(channel, sequence);
@@ -141,3 +170,4 @@ double adc_do_measurement(unsigned char channel, adc_sequence* sequence){
     assert(reference);
     return VREF*signal*1.0/reference*1.0;
 }
+

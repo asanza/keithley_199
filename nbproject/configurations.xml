@@ -68,6 +68,7 @@
         <itemPath>src/sys/adcseq.h</itemPath>
         <itemPath>src/drivers/dispkyb.h</itemPath>
         <itemPath>src/sys/disfmt.h</itemPath>
+        <itemPath>src/sys/sysstate.h</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.h</itemPath>
@@ -143,7 +144,6 @@
         <itemPath>src/scpi-parser/libscpi/src/utils.c</itemPath>
       </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
-        <itemPath>src/sys/dmm.c</itemPath>
         <itemPath>src/sys/adc.c</itemPath>
         <itemPath>src/sys/calibrator.c</itemPath>
         <itemPath>src/sys/adcseq.c</itemPath>

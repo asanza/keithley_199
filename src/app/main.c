@@ -37,14 +37,14 @@ int main()
 static void sysMgmTask(void *pvParameters){
     /* Initialize system state */
     display_kyb_init();
-    dmm_error err = sys_dmm_init();
+    dmm_error err = sys_state_init();
     /* The default configuration cannot be loaded. Other could work. The user
      * can leave this state pressing a button. The button 1 is mem1, 2 mem2 etc.
      * if the user press zero, default settings are loaded again. */
     if(err == DMM_ERR_EEPROM){
         display_puts("MEM 0-9?");
         switch(display_wait_for_key()){
-            case KEY_0: sys_dmm_default_to_factory_settings(); break;
+            case KEY_0: sys_state_restore_factory_settings(); break;
         }
     }
     bool shift_key = false;
@@ -53,14 +53,14 @@ static void sysMgmTask(void *pvParameters){
     while(1){
         switch(display_wait_for_key())
         {
-            case KEY_7: sys_dmm_scale_up(); continue;
-            case KEY_6: sys_dmm_scale_down(); continue;
-            case KEY_3: sys_dmm_toggle_acdc(); continue;
-            case KEY_1:  sys_dmm_set_mode(ADC_INPUT_RESISTANCE_2W); continue;
-            case KEY_0: sys_dmm_restore_voltage_mode(); continue;
-            case KEY_2:  sys_dmm_restore_current_mode(); continue;
+            case KEY_7: sys_state_up_scale(); continue;
+            case KEY_6: sys_state_down_scale(); continue;
+            case KEY_3: sys_state_toggle_acdc(); continue;
+            case KEY_1: sys_state_set_mode(ADC_INPUT_RESISTANCE_2W); continue;
+            case KEY_0: sys_state_restore_voltage(); continue;
+            case KEY_2: sys_state_restore_current(); continue;
             case KEY_4: continue;
-            case KEY_UP: continue;
+            case KEY_UP:continue;
             case KEY_5: continue;
             case KEY_8: continue;
             case KEY_9: continue;
