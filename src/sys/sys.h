@@ -32,7 +32,7 @@ extern "C" {
     }dmm_memory_location;
 
     typedef enum {
-        DMM_OK,
+        DMM_ERROR_NONE,
                 DMM_NOT_SUPPORTED,
         DMM_UNCAL,
         DMM_ERR_EEPROM,

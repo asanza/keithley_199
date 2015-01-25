@@ -69,6 +69,7 @@
         <itemPath>src/drivers/dispkyb.h</itemPath>
         <itemPath>src/sys/disfmt.h</itemPath>
         <itemPath>src/sys/sysstate.h</itemPath>
+        <itemPath>src/hal/hal_adc.h</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.h</itemPath>

@@ -70,8 +70,8 @@ double adc_read_value(adc_channel channel){
     adc_sequence* seq = adcseq_get(input, range);
     assert(seq);
     double value = adc_do_measurement(channel, seq);
-    if(value >=  3.03) return ADC_MAX_VALUE;
-    if(value <= -3.03) return ADC_MIN_VALUE;
+    if(value >=  3.03) value = ADC_MAX_VALUE;
+    if(value <= -3.03) value = ADC_MIN_VALUE;
     switch(range){
         case ADC_RANGE_3:
         case ADC_RANGE_3K: return value*1.0;
@@ -99,22 +99,6 @@ adc_error adc_set_range(adc_range scale){
     return ADC_ERROR_NONE;
 }
 
-adc_error adc_range_up(void){
-    adc_range range_ = range + 1;
-    adc_sequence* seq = adcseq_get(input,range_);
-    if(!seq) return ADC_ERROR_NOT_SUPPORTED;
-    range = range_;
-    return ADC_ERROR_NONE;
-}
-
-adc_error adc_range_down(void){
-    adc_range range_ = range - 1;
-    adc_sequence* seq = adcseq_get(input,range_);
-    if(!seq) return ADC_ERROR_NOT_SUPPORTED;
-    range = range_;
-    return ADC_ERROR_NONE;
-}
-
 adc_error adc_set_input(adc_input input_in, adc_range range_in){
     adc_sequence* seq = adcseq_get(input_in,range_in);
     if(!seq) return ADC_ERROR_NOT_SUPPORTED;
@@ -123,11 +107,25 @@ adc_error adc_set_input(adc_input input_in, adc_range range_in){
     return ADC_ERROR_NONE;
 }
 
+static adc_error adc_integration_period_supported(adc_integration_period period){
+    switch(period){
+        case ADC_INTEGRATION_60HZ:
+        case ADC_INTEGRATION_50HZ:
+            return ADC_ERROR_NONE;
+        default:
+            return ADC_ERROR_NOT_SUPPORTED;
+    }
+}
+
 adc_error adc_set_integration_period(adc_integration_period period){
+    if(adc_integration_period_supported(period)!=ADC_ERROR_NONE)
+        return ADC_ERROR_NOT_SUPPORTED;
     hal_adc_set_integration_period((uint32_t)period);
 }
 
 adc_error adc_init(adc_integration_period period, adc_input input_, adc_range range_){
+    if(adc_integration_period_supported(period)!=ADC_ERROR_NONE)
+        return ADC_ERROR_NOT_SUPPORTED;
     adc_sequence* seq = adcseq_get(input_,range_);
     if(!seq) return ADC_ERROR_NOT_SUPPORTED;
     input  = input_;

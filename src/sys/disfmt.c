@@ -58,7 +58,7 @@ void fmt_format_string(char* buff,adc_range scale, double value){
               else{
                 sprintf(buff,"%07.5f",value/1.0);
               }
-              if(fabs(value)>3.03){
+              if(fabs(value)>= ADC_MAX_VALUE){
                   sprintf(buff," O.VERFL ");
               }
           }
@@ -74,7 +74,7 @@ void fmt_format_string(char* buff,adc_range scale, double value){
               else{
                 sprintf(buff,"%08.4f",value/1.0);
               }
-              if(fabs(value)>30.3){
+              if(fabs(value) >= ADC_MAX_VALUE*10){
                   sprintf(buff," OV.ERFL ");
               }
           }
@@ -90,7 +90,7 @@ void fmt_format_string(char* buff,adc_range scale, double value){
               else{
                 sprintf(buff,"%08.3f",value/1.0);
               }
-              if(fabs(value)>303){
+              if(fabs(value) >= ADC_MAX_VALUE*100){
                   sprintf(buff," OVE.RFL ");
               }
           }

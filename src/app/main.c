@@ -5,6 +5,7 @@
 #include "hal_i2c.h"
 #include <dispkyb.h>
 #include "HardwareProfile.h"
+#include "sysstate.h"
 #include <FreeRTOS.h>
 #include <task.h>
 #include <queue.h>
@@ -41,7 +42,7 @@ static void sysMgmTask(void *pvParameters){
     /* The default configuration cannot be loaded. Other could work. The user
      * can leave this state pressing a button. The button 1 is mem1, 2 mem2 etc.
      * if the user press zero, default settings are loaded again. */
-    if(err == DMM_ERR_EEPROM){
+    if(err != DMM_ERROR_NONE){
         display_puts("MEM 0-9?");
         switch(display_wait_for_key()){
             case KEY_0: sys_state_restore_factory_settings(); break;
@@ -57,8 +58,8 @@ static void sysMgmTask(void *pvParameters){
             case KEY_6: sys_state_down_scale(); continue;
             case KEY_3: sys_state_toggle_acdc(); continue;
             case KEY_1: sys_state_set_mode(ADC_INPUT_RESISTANCE_2W); continue;
-            case KEY_0: sys_state_restore_voltage(); continue;
-            case KEY_2: sys_state_restore_current(); continue;
+            case KEY_0: sys_state_set_mode(ADC_INPUT_VOLTAGE_DC); continue;
+            case KEY_2: sys_state_set_mode(ADC_INPUT_CURRENT_DC); continue;
             case KEY_4: continue;
             case KEY_UP:continue;
             case KEY_5: continue;

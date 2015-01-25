@@ -15,8 +15,8 @@
 extern "C" {
 #endif
 
-#define ADC_MAX_VALUE  3.03
-#define ADC_MIN_VALUE -3.03
+#define ADC_MAX_VALUE  3.3
+#define ADC_MIN_VALUE -3.3
 
 typedef enum{
     ADC_INTEGRATION_50HZ = 50000, /**< 20mS @ 2.5MHz */
@@ -74,8 +74,7 @@ adc_integration_period adc_get_integration_period(void);
 adc_error adc_set_input(adc_input input, adc_range range);
 double adc_read_value(adc_channel channel);
 adc_error adc_init(adc_integration_period period, adc_input input, adc_range range);
-adc_error adc_range_up(void);
-adc_error adc_range_down(void);
+
     
 #ifdef	__cplusplus
 }

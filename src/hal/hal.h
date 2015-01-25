@@ -40,12 +40,6 @@ void hal_usbuart_readline(char* buffer, int size);
 
 void hal_sys_idle();
 
-
-int hal_adc_integration_sequence(unsigned char channel, uint32_t int_mux, uint32_t pause_mux, uint32_t rund_mux);
-void hal_adc_init(unsigned int period);
-void hal_adc_send_mux(uint8_t channel, uint32_t mux);
-void hal_adc_set_integration_period(uint32_t period);
-
 #endif /*__LANGUAGE_ASSEMBLY*/
 #ifdef	__cplusplus
 }

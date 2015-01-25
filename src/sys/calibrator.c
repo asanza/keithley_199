@@ -21,5 +21,5 @@ dmm_error sys_dmm_calibrate(double* real_value, double* meas_value, int size,
     if(ret)
         return DMM_UNCAL;
     else
-        return DMM_OK;
+        return DMM_ERROR_NONE;
 }

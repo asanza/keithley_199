@@ -29,12 +29,13 @@ extern "C" {
 #include <adc.h>
 #include <sys.h>
     
-dmm_error sys_state_init();
+dmm_error sys_state_init(void);
 
 /** @brief set the scanner channel
  * @param channel
  */
 void sys_state_set_channel(adc_channel channel);
+adc_channel sys_state_get_channel(void);
 /**@brief set the integration period.
  * @param period
  */
@@ -42,18 +43,18 @@ void sys_state_set_integration_period(adc_integration_period period);
 
 adc_integration_period sys_state_get_integration_period();
 
-void sys_state_up_scale();
-void sys_state_down_scale();
-adc_range sys_state_get_scale();
-dmm_error sys_state_set_scale(adc_range scale);
+void sys_state_up_scale(void);
+void sys_state_down_scale(void);
+adc_range sys_state_get_scale(void);
+void sys_state_set_range(adc_range scale);
 
 void sys_state_set_mode(adc_input mode);
-adc_input sys_state_get_mode();
+adc_input sys_state_get_mode(void);
 
 dmm_error sys_state_save(dmm_memory_location location);
 void sys_state_restore(dmm_memory_location location);
 
-void sys_state_restore_factory_settings();
+void sys_state_restore_factory_settings(void);
 
 
 
