@@ -15,8 +15,8 @@
 extern "C" {
 #endif
 
-#define ADC_MAX_VALUE  3.3
-#define ADC_MIN_VALUE -3.3
+#define ADC_MAX_VALUE  3.03
+#define ADC_MIN_VALUE -3.03
 
 typedef enum{
     ADC_INTEGRATION_50HZ = 50000, /**< 20mS @ 2.5MHz */
