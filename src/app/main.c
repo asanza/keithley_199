@@ -5,7 +5,6 @@
 #include "hal_i2c.h"
 #include <dispkyb.h>
 #include "HardwareProfile.h"
-#include "sysstate.h"
 #include <FreeRTOS.h>
 #include <task.h>
 #include <queue.h>
@@ -25,6 +24,7 @@ int main()
     hal_sys_init();
     hal_uart_open(3,115200,HAL_UART_PARITY_NONE, HAL_UART_STOP_BITS_1);
     hal_i2c_init();
+    display_kyb_init();
     xTaskCreate(dmmTaskMain,"T1",configMINIMAL_STACK_SIZE,NULL,3,&measTaskHandle);
     /* suspend measurement task until we load dmm state on management task. */
     if(measTaskHandle)
@@ -36,18 +36,6 @@ int main()
 }
 
 static void sysMgmTask(void *pvParameters){
-    /* Initialize system state */
-    display_kyb_init();
-    dmm_error err = sys_state_init();
-    /* The default configuration cannot be loaded. Other could work. The user
-     * can leave this state pressing a button. The button 1 is mem1, 2 mem2 etc.
-     * if the user press zero, default settings are loaded again. */
-    if(err != DMM_ERROR_NONE){
-        display_puts("MEM 0-9?");
-        switch(display_wait_for_key()){
-            case KEY_0: sys_state_restore_factory_settings(); break;
-        }
-    }
     bool shift_key = false;
     vTaskResume(measTaskHandle);
 

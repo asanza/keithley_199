@@ -141,7 +141,7 @@ static key_id hal_disp_scan(){
 
     display_set(screen[actual_character], actual_character++);
     if(self_test == false)
-        return key_pressed;;
+        return key_pressed;
     int i = 0;
     screen[NUMBER_OF_CHARACTERS - 1] = 0xFFFF;
     if(test_delay >= TEST_MAX_DELAY){

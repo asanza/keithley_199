@@ -30,13 +30,23 @@
 #include <dispkyb.h>
 
 #include <tmp275.h>
-
+#include <sysstate.h>
 #include "disfmt.h"
 
 void dmmTaskMain(void* pvParameters)
 {
     char buff[10];
     tmp245_init();
+    dmm_error err = sys_state_init();
+    /* The default configuration cannot be loaded. Other could work. The user
+     * can leave this state pressing a button. The button 1 is mem1, 2 mem2 etc.
+     * if the user press zero, default settings are loaded again. */
+    if(err != DMM_ERROR_NONE){
+        display_puts("MEM 0-9?");
+        switch(display_wait_for_key()){
+            case KEY_0: sys_state_restore_factory_settings(); break;
+        }
+    }
     while(1)
     {
           hal_disp_adci_toggle();
