@@ -17,6 +17,8 @@ extern "C" {
 #include <peripheral/timer.h>
 #include <peripheral/ports.h>
 
+#define PIC32_PERIPHERALBUS_FREQ 80000000UL
+    
 /* io definitions */
 #define BRD_RED_LED         IOPORT_C, BIT_4
 #define BRD_GREEN_LED       IOPORT_C, BIT_3
@@ -59,6 +61,18 @@ extern "C" {
             |T4_32BIT_MODE_ON|T4_SOURCE_EXT, counter_period ); \
     }while(0)
 
+/**@brief Macro to clear hardware errors in UART Module */
+#define _clroverrun(value) U##value##STAbits.OERR = 0
+/**@brief Clear hardware errors from uart module */
+
+#define UARTClearOverrunError(module_id) do{ \
+        if(module_id == UART1) _clroverrun(1);\
+        if(module_id == UART2) _clroverrun(2);\
+        if(module_id == UART3) _clroverrun(3);\
+        if(module_id == UART4) _clroverrun(4);\
+        if(module_id == UART5)  _clroverrun(5);\
+}while(0)
+    
 #define HW_32BIT_COUNTER_RESTART() WriteTimer4(0)
 
 #define HW_32BIT_COUNTER_READ() ReadTimer4()

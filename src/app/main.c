@@ -22,7 +22,7 @@ int main()
 {
     /* hardware initialization. An error here is unrecoverable */
     hal_sys_init();
-    hal_uart_open(3,115200,HAL_UART_PARITY_NONE, HAL_UART_STOP_BITS_1);
+    hal_uart_open(3,115200,HAL_UART_PARITY_NONE, HAL_UART_1_STOP_BITS);
     hal_i2c_init();
     display_kyb_init();
     xTaskCreate(dmmTaskMain,"T1",configMINIMAL_STACK_SIZE,NULL,3,&measTaskHandle);
