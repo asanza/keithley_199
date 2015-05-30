@@ -22,7 +22,7 @@ int main()
     /* hardware initialization. An error here is unrecoverable */
     hal_sys_init();
     hal_i2c_init();
-    //usb_uart_init();
+    usb_uart_init();
     display_kyb_init();
     xTaskCreate(dmmTaskMain,"T1",configMINIMAL_STACK_SIZE,NULL,3,&measTaskHandle);
     /* suspend measurement task until we load dmm state on management task. */
