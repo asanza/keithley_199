@@ -136,7 +136,7 @@ void hal_adc_init(unsigned int period){
     PPSOutput(1,RPG1,OC3);
     data_sended = xQueueCreate(1, sizeof(char));
     hal_counter_init();
-    SpiChnOpen(SPI_CHANNEL1,SPI_OPEN_MSTEN|SPI_OPEN_CKE_REV|SPI_MODE8_ON
+    SpiChnOpen(SPI_CHANNEL1,SPI_OPEN_MSTEN|SPI_OPEN_CKE_REV|SPI_OPEN_MODE8 
             |SPI_OPEN_DISSDI|SPI_OPEN_ON ,80);
     PPSOutput(3,RPF8,SDO1);
     PORTSetPinsDigitalOut(KMM_CLK);
