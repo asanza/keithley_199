@@ -36,7 +36,7 @@ struct txbuffer_struct{
     uint8_t buffer[HAL_UART_BUFFER_SIZE];
     int counter; /**< will be incremented with each character transmitted. */
     int nbytes;  /**< will be decremented with each character transmitted untill = 0 */
-}__attribute__((__packed__)); /*packed to save memory*/
+}__attribute__((__packed__)); /*packed for byte alignment*/
 static struct txbuffer_struct elb_buffer[HAL_UART_NUMBER_OF_PORTS];
 /* return the actual txbuffer to be used */
 static struct txbuffer_struct* get_tx_buffer(hal_uart_port port);
@@ -47,9 +47,15 @@ static struct txbuffer_struct* get_tx_buffer(hal_uart_port port){
     return &elb_buffer[port];
 }
 
+static void SetRxTxPins(UART_MODULE uart){
+    switch(uart){
+        case UART3: CONFIGURE_UART3_PPS();break;
+        default: assert(0);
+    }
+}
 
 static UART_MODULE logic_uart2phy_uart(hal_uart_port port);
-/* todo: move buffer structure to this file. */
+
 /* you should not use the buffer until a notification is received */
 // TODO: Maybe sanity check buffer not empty
 void hal_uart_send_buffer_async(hal_uart_port port, uint8_t* buffer,
@@ -146,6 +152,7 @@ hal_uart_port hal_uart_open(hal_uart_port port, hal_uart_baudrate baudrate,
     assert(port >= HAL_UART_PORT_1 && port <= HAL_UART_NUMBER_OF_PORTS );
     /* Configure uart */
     UART_MODULE uart = logic_uart2phy_uart(port);
+    SetRxTxPins(uart);
     UARTConfigure(uart, UART_ENABLE_PINS_TX_RX_ONLY);
     UARTSetFifoMode(uart, UART_INTERRUPT_ON_TX_DONE | UART_INTERRUPT_ON_RX_NOT_EMPTY);
     UARTSetLineControl(uart, UART_DATA_SIZE_8_BITS | get_parity(parity) | get_stop_bits(stop_bits));

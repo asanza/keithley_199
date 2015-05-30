@@ -28,7 +28,7 @@
 #include "hal.h"
 
 void eeprom_read_page(uint16_t address, uint8_t* _data){
-    address * HAL_EEPROM_PAGE_SIZE;
+    address = address * HAL_EEPROM_PAGE_SIZE;
     hal_i2c_start(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE);
     hal_i2c_write(address >> 8);
     hal_i2c_write(address);
@@ -41,7 +41,7 @@ void eeprom_read_page(uint16_t address, uint8_t* _data){
 }
 
 void eeprom_write_page(uint16_t address, uint8_t* _data){
-    address * HAL_EEPROM_PAGE_SIZE;
+    address = address * HAL_EEPROM_PAGE_SIZE;
     hal_i2c_start(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE);
     hal_i2c_write(address >> 8);
     hal_i2c_write(address);
