@@ -37,6 +37,8 @@ extern "C" {
         DMM_UNCAL,
         DMM_ERR_EEPROM,
     }dmm_error;
+    
+    void SystemTaskCreate(void);
 
     /**@brief Initializes the dmm subsystem */
 

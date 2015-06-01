@@ -1,7 +1,24 @@
 /* Hardware Interface to ADC
  * Keithley 199 Upgrade
- * (c) 2014 Diego F. Asanza
+ *
  * This file implements the ADC Low level control interface
+ *
+ * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
  */
 
 /* Integrating adc control
@@ -13,15 +30,19 @@
  *
  * Output compare generates the strobe pulses. With this method we
  * can guarantee precise, hardware controlled, pulse generation. Precise
- * pulse duration of 20mS (16mS) is only for the integration (runup ramp) impor-
- * tant.
+ * pulse duration of 20mS (16mS) is only for the integration (runup ramp)
+ * important.
  *
  * The conversion sequence is fixed. It starts with the run up integration period
- * of 20mS, and after exactly 20ms a stop command is sended. Counter values
- * are readed. Finally after 1mS an start rundown command will be send. There is
- * no stop rundown, as the counter automatically stops when no more pulses are
- * present (we need only to wait a timeout time (5mS). Complete conversion
- * sequence takes 26mS.
+ * of 20mS, and after exactly 20ms (16ms) a stop command is sent, and the 
+ * integration counter is read. 1 ms after, an start rundown command is sent, and
+ * we wait for about 5-6ms that the rundown counter stops. 
+ * No stop rundown is needed, as the counter automatically stops when no more 
+ * pulses are comming from the hardware integration stage. 
+ * Complete conversion sequence takes 26mS.
+ * 
+ * The default integration period is 20ms for 50Hz and 16ms for 60Hz. Other 
+ * values are possible, playing with the pulse generation.
  *
  */
 

@@ -49,7 +49,9 @@ CP=cp
 CCADMIN=CCadmin
 RANLIB=ranlib
 
-
+GIT_VERSION := $(shell git describe --abbrev=4 --dirty --always --tags)
+GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+	
 # build
 build: .build-post
 

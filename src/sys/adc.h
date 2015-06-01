@@ -66,6 +66,8 @@ typedef enum{
             ADC_ERROR_NONE
 }adc_error;
 
+
+
 adc_error adc_set_range(adc_range scale);
 adc_range adc_get_range(void);
 adc_input adc_get_input(void);
