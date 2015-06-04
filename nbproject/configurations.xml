@@ -11,6 +11,7 @@
         <itemPath>src/drivers/eeprom.h</itemPath>
         <itemPath>src/drivers/tmp275.h</itemPath>
         <itemPath>src/drivers/usb_uart.h</itemPath>
+        <itemPath>src/drivers/dispkyb.h</itemPath>
       </logicalFolder>
       <logicalFolder name="eefs" displayName="eefs" projectFiles="true">
         <itemPath>src/eefs/eefs.h</itemPath>
@@ -68,9 +69,9 @@
         <itemPath>src/sys/adc.h</itemPath>
         <itemPath>src/sys/sys.h</itemPath>
         <itemPath>src/sys/adcseq.h</itemPath>
-        <itemPath>src/drivers/dispkyb.h</itemPath>
         <itemPath>src/sys/disfmt.h</itemPath>
         <itemPath>src/sys/sysstate.h</itemPath>
+        <itemPath>src/sys/syserr.h</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.h</itemPath>
@@ -87,6 +88,7 @@
                    projectFiles="true">
       <logicalFolder name="app" displayName="app" projectFiles="true">
         <itemPath>src/app/main.c</itemPath>
+        <itemPath>src/app/dmmtask.c</itemPath>
       </logicalFolder>
       <logicalFolder name="dmm" displayName="dmm" projectFiles="true">
         <itemPath>src/dmm/calTask.c</itemPath>
@@ -241,6 +243,7 @@
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
         <property key="use-indirect-calls" value="false"/>
+        <appendMe value="-Wno-packed-bitfield-compat"/>
       </C32>
       <C32-AR>
         <property key="additional-options-chop-files" value="false"/>

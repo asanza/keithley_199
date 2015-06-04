@@ -1,5 +1,5 @@
 /*
- * sysstate.c
+ * syserr.h
  *
  * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
  *
@@ -18,28 +18,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  *
- * Created on January 23, 2015, 9:04 PM
+ * Created on 4. Juni 2015, 22:34
  */
+#ifndef SYSERR_H
+#define	SYSERR_H
 
-#include <hal.h>
-#include <adc.h>
-#include <assert.h>
-#include <system.h>
-#include <stddef.h>
-#include <string.h>
-#include "sysstate.h"
+#ifdef	__cplusplus
+extern "C" {
+#endif
 
-/** actual (physical) dmm state */
-static dmm_state state;
+typedef enum {
+    SYSERR_NONE,
+    SYSERR_UNSUPORTED,
+    SYSERR_UNCALIBRATED,
+    SYSERR_CHECKSUM,
+}sys_error;
 
-sys_error sys_state_set(const dmm_state* _state){
-  /* set multimeter state acordly */
-  adc_error err = adc_init(_state->integration_period, _state->input,
-                          _state->range);
-  if(err != ADC_ERROR_NONE) return SYSERR_UNSUPORTED;
-  memcpy(&state, _state, sizeof(dmm_state));
+
+#ifdef	__cplusplus
 }
+#endif
 
-sys_error sys_state_get(dmm_state* _state){
-  memcpy(_state, &state, sizeof(dmm_state));
-}
+#endif	/* SYSERR_H */
+

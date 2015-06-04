@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   system.h
  * Author: diego
  *
@@ -12,10 +12,12 @@
 extern "C" {
 #endif
 
-#include <adc.h>
-#include <sys.h>
-
- /* EEFS Addresses for stored objects */
+#include <FreeRTOS.h>
+#include <task.h>
+#include "sysstate.h"
+#include "syserr.h"
+#include <dispkyb.h>
+    
     typedef enum {
         DMM_MEM_0 = 0x00,
         DMM_MEM_1,
@@ -28,17 +30,20 @@ extern "C" {
         DMM_MEM_8,
         DMM_MEM_9,
         DMM_MEM_10,
-                DMM_MEM_COUNT
-    }dmm_memory_location;
+        DMM_MEM_COUNT
+    } dmm_memory_location;
 
-    typedef enum {
-        DMM_ERROR_NONE,
-                DMM_NOT_SUPPORTED,
-        DMM_UNCAL,
-        DMM_ERR_EEPROM,
-    }dmm_error;
-    
+    typedef TaskHandle_t(*DMMTaskHandler)(dmm_state *state);
+
+    typedef struct DmmTask_t {
+        key_id key_handler;
+        DMMTaskHandler task;
+    } dmm_task;
+
     void SystemTaskCreate(void);
+
+    void SystemAddTask(dmm_task task);
+
 
     /**@brief Initializes the dmm subsystem */
 
@@ -47,4 +52,3 @@ extern "C" {
 #endif
 
 #endif	/* SYSTEM_H */
-

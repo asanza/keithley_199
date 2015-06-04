@@ -26,19 +26,12 @@
 #include <diag.h>
 #include <assert.h>
 #include <dispkyb.h>
+#include "system.h"
 
-#define SYSTEM_TASK_STACK_SIZE 200
-#define SYSTEM_TASK_PRIORITY 3
+#define SYSTEM_TASK_STACK_SIZE      200
+#define SYSTEM_TASK_PRIORITY        3
 
 static TaskHandle_t systemTaskHandle = NULL;
-
-/* define a system task */
-struct systask{
-    //function pointers.
-    // after creation, tasks are registered here.
-};
-
-static struct TaskArrayElement_t AvailableTasks[4] = {0};
 
 static void SystemTask(void *pvParameters){
     DIAG("Initializing Event System");
@@ -46,9 +39,9 @@ static void SystemTask(void *pvParameters){
     while(1){
         switch(display_wait_for_key())
         {
-            case KEY_7: sys_state_up_scale(); continue;
-            case KEY_6: sys_state_down_scale(); continue;
-            case KEY_3: sys_state_toggle_acdc(); continue;
+            case KEY_7: ;//sys_state_up_scale(); continue;
+            case KEY_6: ;//sys_state_down_scale(); continue;
+            case KEY_3: ;//sys_state_toggle_acdc(); continue;
             //case KEY_1: sys_state_set_mode(ADC_INPUT_RESISTANCE_2W); continue;
             //case KEY_0: sys_state_set_mode(ADC_INPUT_VOLTAGE_DC); continue;
             //case KEY_2: sys_state_set_mode(ADC_INPUT_CURRENT_DC); continue;
