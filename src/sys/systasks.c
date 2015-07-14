@@ -49,13 +49,14 @@ static void SystemTask(void *pvParameters) {
     (void*) pvParameters;
     DIAG("Initializing Event System");
     display_kyb_init();    
+    display_puts(" 888888888");
     bool shift_key = false;
     key_id key;
     int i;
     while (1) {
         key = display_wait_for_key();
         DIAG("Key Press: %d", key);
-        for (i = 0; i < MAX_TASK_COUNT; i++) {
+        /*for (i = 0; i < MAX_TASK_COUNT; i++) {
             if (tasks[i].task_handler == NULL) continue;
             if (tasks[i].key_switch != key) continue;
             if (shift_key != tasks[i].key_switch) continue;
@@ -85,7 +86,7 @@ static void SystemTask(void *pvParameters) {
                 continue;
             default:
                 Nop();
-        }
+        }*/
     }
 }
 

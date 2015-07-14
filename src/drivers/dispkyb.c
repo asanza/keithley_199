@@ -13,9 +13,22 @@ QueueHandle_t event_queue; // queue for keyboard events
 
 key_id display_wait_for_key(){
     key_id key;
-    xQueueReceive(event_queue,&key,portMAX_DELAY);
-    vTaskDelay(KYB_REPETITION_PERIOD_MS/portTICK_PERIOD_MS);
-    xQueueReset(event_queue);
+    static key_id last_key = KEY_NONE;
+    static int rep_factor = 0;
+    bool repeat = false;
+    do{
+        xQueueReceive(event_queue,&key,portMAX_DELAY);
+        vTaskDelay(KYB_REPETITION_PERIOD_MS/portTICK_PERIOD_MS);
+        if(key==last_key){
+            repeat = true;
+            rep_factor ++;
+            if(key == KEY_NONE) rep_factor = 0;
+        }else{
+            last_key = key;
+            repeat = false;
+            rep_factor = 0;
+        }
+    }while((repeat && rep_factor < 20)||key == KEY_NONE);
     return key;
 }
 
@@ -29,7 +42,7 @@ static uint16_t screen[NUMBER_OF_CHARACTERS];
 static unsigned int actual_character;
 static bool self_test = false;
 
-#define REFRESH_PERIOD 200 // uS
+#define REFRESH_PERIOD 300 // uS
 
 void display_kyb_init(void){
     hal_io_displayport_init();
