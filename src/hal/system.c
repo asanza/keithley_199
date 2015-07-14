@@ -15,6 +15,7 @@ void hal_sys_init(){
     PORTClearBits(DEBUG_PIN_0);
     SYSTEMConfigPerformance(SYS_CLK);
     INTConfigureSystem(INT_SYSTEM_CONFIG_MULT_VECTOR);
+    INTDisableInterrupts();
 }
 
 void hal_io_toggle_led(IO_LED led){

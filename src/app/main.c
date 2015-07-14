@@ -14,7 +14,6 @@ int main()
     hal_sys_init();
     hal_i2c_init();
     usb_uart_init();
-    display_kyb_init();
     /* create system task */
     systask_create_main();
     DIAG("START: %s, %s", REPOVERSION, REPOBRANCH);

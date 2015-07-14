@@ -26,21 +26,21 @@
 #include <peripheral/timer.h>
 #include <hal_timer.h>
 
-int period; 
-hal_timer_callback callback;
+static int period; 
+static hal_timer_callback callback;
 
 void hal_timer_init(int period_us, hal_timer_callback callback_fn){
     callback = callback_fn;
     period = period_us*40;
-    mConfigIntCoreTimer(CT_INT_ON|CT_INT_PRIOR_2|CT_INT_SUB_PRIOR_0);
+    mConfigIntCoreTimer(CT_INT_ON|CT_INT_PRIOR_3|CT_INT_SUB_PRIOR_0);
     OpenCoreTimer(period);
 }
 
 void __attribute__(( nomips16, interrupt(), vector(_CORE_TIMER_VECTOR)))
 CT_wrapper();
 
-CT_handler(){
-    mCTClearIntFlag();
+void CT_handler(){
+    INTClearFlag(INT_CT);
     if(callback){
         callback();
     }

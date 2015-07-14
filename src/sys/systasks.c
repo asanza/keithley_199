@@ -48,11 +48,13 @@ static TaskHandle_t runningTask = NULL;
 static void SystemTask(void *pvParameters) {
     (void*) pvParameters;
     DIAG("Initializing Event System");
+    display_kyb_init();    
     bool shift_key = false;
     key_id key;
     int i;
     while (1) {
         key = display_wait_for_key();
+        DIAG("Key Press: %d", key);
         for (i = 0; i < MAX_TASK_COUNT; i++) {
             if (tasks[i].task_handler == NULL) continue;
             if (tasks[i].key_switch != key) continue;
@@ -63,6 +65,7 @@ static void SystemTask(void *pvParameters) {
             runningTask = tasks[i].task_handler;
         }
         switch (display_wait_for_key()) {
+            DIAG("Key Pressed");
             case KEY_7:; //sys_state_up_scale(); continue;
             case KEY_6:; //sys_state_down_scale(); continue;
             case KEY_3:; //sys_state_toggle_acdc(); continue;

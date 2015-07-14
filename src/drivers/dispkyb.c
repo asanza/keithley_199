@@ -12,12 +12,11 @@ QueueHandle_t event_queue; // queue for keyboard events
 key_id display_wait_for_key(){
     key_id key;
     xQueueReceive(event_queue,&key,portMAX_DELAY);
-    vTaskDelay(120); // debounce delay
     xQueueReset(event_queue);
     return key;
 }
 
-void timer_handler(void);
+static void timer_handler(void);
 
 #define NUMBER_OF_CHARACTERS 11
 #define NUMBER_OF_SEGMENTS   15
@@ -137,8 +136,9 @@ static key_id hal_disp_scan(){
             case 4: key_pressed = KEY_CAL; break;
             case 5: key_pressed = KEY_4; break;
         }
+        new_scan = true;
     }
-
+    
     display_set(screen[actual_character], actual_character++);
     if(self_test == false)
         return key_pressed;
@@ -171,7 +171,7 @@ static key_id hal_disp_scan(){
 void timer_handler(void){
     BaseType_t xHigherPriorityTaskWoken;
     key_id key = hal_disp_scan();
-    if(key!=KEY_NONE){
+    if(key!=KEY_NONE ){
         xQueueSendToBackFromISR(event_queue,&key,&xHigherPriorityTaskWoken);
     }
     portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
