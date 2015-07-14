@@ -109,10 +109,12 @@ void display_test(){
 #define TEST_MAX_DELAY 5000
 static int test_segment = 0, test_delay = TEST_MAX_DELAY;
 static key_id hal_disp_scan(){
+    bool was_key = false;
     key_id key_pressed = KEY_NONE;
     if(actual_character >= NUMBER_OF_CHARACTERS)
         actual_character = 0;
     if(hal_io_keyboard_get_channel() == 1){
+        was_key = true;
         switch(actual_character){
             case 1: key_pressed = KEY_1; break;
             case 2: key_pressed = KEY_3; break;
@@ -121,6 +123,7 @@ static key_id hal_disp_scan(){
         }
     }
     if(hal_io_keyboard_get_channel() == 2){
+        was_key = true;
         switch(actual_character){
             case 1: key_pressed = KEY_UP; break;
             case 2: key_pressed = KEY_9; break;
@@ -129,6 +132,7 @@ static key_id hal_disp_scan(){
         }
     }
     if(hal_io_keyboard_get_channel() == 3){
+        was_key = true;
         switch(actual_character){
             case 1: key_pressed = KEY_7; break;
             case 2: key_pressed = KEY_6; break;
@@ -136,12 +140,14 @@ static key_id hal_disp_scan(){
             case 4: key_pressed = KEY_CAL; break;
             case 5: key_pressed = KEY_4; break;
         }
-        new_scan = true;
     }
     
     display_set(screen[actual_character], actual_character++);
-    if(self_test == false)
-        return key_pressed;
+    if(self_test == false )
+        if(was_key)
+            return key_pressed;
+        else
+            return KEY_NONE;
     int i = 0;
     screen[NUMBER_OF_CHARACTERS - 1] = 0xFFFF;
     if(test_delay >= TEST_MAX_DELAY){
