@@ -24,7 +24,7 @@
 #include <hal.h>
 #include <adc.h>
 #include <assert.h>
-#include <system.h>
+#include <systasks.h>
 #include <stddef.h>
 #include <string.h>
 #include "sysstate.h"

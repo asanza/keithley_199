@@ -28,52 +28,51 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-/* display keyboard driver */
+    /* display keyboard driver */
 
-    /* DISPLAY INTERFACE */
-typedef enum{
-    KEY_0,
-            KEY_1,
-            KEY_2,
-            KEY_3,
-            KEY_4,
-            KEY_UP,
-            KEY_5,
-            KEY_7,
-            KEY_6,
-            KEY_8,
-            KEY_9,
-            KEY_DOWN,
-            KEY_CAL,
-            KEY_NONE
-}key_id;
+/* DISPLAY INTERFACE */
+    typedef enum {
+        KEY_0,
+        KEY_1,
+        KEY_2,
+        KEY_3,
+        KEY_4,
+        KEY_UP,
+        KEY_5,
+        KEY_7,
+        KEY_6,
+        KEY_8,
+        KEY_9,
+        KEY_DOWN,
+        KEY_CAL,
+        KEY_NONE
+    } key_id;
+
+    typedef enum DISP_MODE {
+        DISP_STO = 0x0010,
+        DISP_RCL = 0x0004,
+        DISP_FLTR = 0x0400,
+        DISP_REM = 0x8000,
+        DISP_VOLTS = 0x0008,
+        DISP_OHMS = 0x0800,
+        DISP_AMPS = 0x0080,
+        DISP_AC = 0x4000,
+        DISP_ZERO = 0x0100,
+        DISP_AUTO = 0x0200
+    } disp_mode;
 
 
-typedef enum DISP_MODE{
-    DISP_STO    = 0x0010,
-    DISP_RCL    = 0x0004,
-    DISP_FLTR   = 0x0400,
-    DISP_REM    = 0x8000,
-    DISP_VOLTS  = 0x0008,
-    DISP_OHMS   = 0x0800,
-    DISP_AMPS   = 0x0080,
-    DISP_AC     = 0x4000,
-    DISP_ZERO   = 0x0100,
-    DISP_AUTO   = 0x0200
-}disp_mode;
-
-
-void display_kyb_init(void);
-void display_setmode(disp_mode mode);
-void display_addmode(disp_mode mode);
-void display_clearmode(disp_mode mode);
-void display_puts(char* c);
-void display_putc(char c, int pos);
-void display_test();
-void display_clear();
-void display_adc_indicator(bool set_value);
-void display_adc_indicator_toggle();
-key_id keyboard_wait_for_key();
+    void display_kyb_init(void);
+    void display_setmode(disp_mode mode);
+    void display_addmode(disp_mode mode);
+    void display_clearmode(disp_mode mode);
+    void display_puts(char* c);
+    void display_putc(char c, int pos);
+    void display_test();
+    void display_clear();
+    void display_adc_indicator(bool set_value);
+    void display_adc_indicator_toggle();
+    key_id keyboard_wait_for_key();
 
 #ifdef	__cplusplus
 }

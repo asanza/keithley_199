@@ -67,11 +67,11 @@
       </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/adc.h</itemPath>
-        <itemPath>src/sys/sys.h</itemPath>
         <itemPath>src/sys/adcseq.h</itemPath>
         <itemPath>src/sys/disfmt.h</itemPath>
         <itemPath>src/sys/sysstate.h</itemPath>
         <itemPath>src/sys/syserr.h</itemPath>
+        <itemPath>src/sys/systasks.h</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.h</itemPath>
@@ -155,7 +155,7 @@
         <itemPath>src/sys/adcseq.c</itemPath>
         <itemPath>src/sys/disfmt.c</itemPath>
         <itemPath>src/sys/sysstate.c</itemPath>
-        <itemPath>src/sys/sys.c</itemPath>
+        <itemPath>src/sys/systasks.c</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.c</itemPath>

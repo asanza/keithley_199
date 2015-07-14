@@ -4,7 +4,7 @@
 #include <FreeRTOS.h>
 #include <task.h>
 #include <assert.h>
-#include <system.h>
+#include <systasks.h>
 #include <hal_i2c.h>
 #include <usb_uart.h>
 
@@ -16,8 +16,8 @@ int main()
     usb_uart_init();
     display_kyb_init();
     /* create system task */
-    SystemTaskCreate();
-    DIAG("--START: %s, %s", REPOVERSION, REPOBRANCH);
+    systask_create_main();
+    DIAG("START: %s, %s", REPOVERSION, REPOBRANCH);
     DIAG("Starting Scheduler");
     vTaskStartScheduler();
 }

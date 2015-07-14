@@ -34,7 +34,7 @@ void display_kyb_init(void){
     hal_io_keyboard_init();
     hal_spi_init_16bit();
     event_queue = xQueueCreate(EVENT_QUEUE_LENGTH, sizeof(key_id));
-    hal_timer_init(200,timer_handler);
+    hal_timer_init(REFRESH_PERIOD,timer_handler);
 }
 
 static void display_set(unsigned int segments, int position){
@@ -157,7 +157,7 @@ static key_id hal_disp_scan(){
                 self_test = false;
                 test_segment = 0;
                 test_delay = TEST_MAX_DELAY;
-                return;
+                return KEY_NONE;
             }
         }
         test_delay = 0;

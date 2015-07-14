@@ -2,15 +2,15 @@
  */
 
 #include <fitlinear.h>
-#include <system.h>
+#include <systasks.h>
 
-struct calibration_t{
-    adc_input input;
-    adc_range range;
-    double slope;
-    double offset;
-};
-    typedef struct calibration_t calibrator;
+//struct calibration_t{
+//    adc_input input;
+//    adc_range range;
+//    double slope;
+//    double offset;
+//};
+//    typedef struct calibration_t calibrator;
 
 //sys_error sys_dmm_calibrate(double* real_value, double* meas_value, int size,
 //            calibrator* cal){
