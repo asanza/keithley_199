@@ -9,9 +9,12 @@
 #define EVENT_QUEUE_LENGTH 1
 QueueHandle_t event_queue; // queue for keyboard events
 
+#define KYB_REPETITION_PERIOD_MS 30
+
 key_id display_wait_for_key(){
     key_id key;
     xQueueReceive(event_queue,&key,portMAX_DELAY);
+    vTaskDelay(KYB_REPETITION_PERIOD_MS/portTICK_PERIOD_MS);
     xQueueReset(event_queue);
     return key;
 }
