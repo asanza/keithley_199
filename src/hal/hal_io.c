@@ -120,7 +120,7 @@ static uint16_t chartable[] = {
     0x0894, 0x019E, 0x0D80, 0xA21A, 0x28A0, 0x203E, 0x1040,
     0xA226, 0x222A, 0x821A, 0xA238, 0xA23C, 0x002A, 0xA23E,
     0xA23A, 0x9240, 0x8200, 0x8E20, 0x920C, 0x8232, 0x0000,
-    0x4000, 0xA20E, 0x1222
+    0x4000, 0xA20E, 0x1222, 0xA200
 };
 
 uint16_t hal_io_displayport_map_char_to_segments(char c){
@@ -135,6 +135,7 @@ uint16_t hal_io_displayport_map_char_to_segments(char c){
         case '.': return chartable[42];
         case 'd': return chartable[43];
         case '?': return chartable[44];
+        case '=': return chartable[45];
     }
     if(c <= 0x39){
         return chartable[c - 22];
