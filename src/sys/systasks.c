@@ -29,6 +29,8 @@
 #include <ctype.h>
 #include "systasks.h"
 #include "sysstate.h"
+#include "store.h"
+#include "hal_adc.h"
 
 #define SYSTEM_TASK_STACK_SIZE      200
 #define SYSTEM_TASK_PRIORITY        3
@@ -56,7 +58,21 @@ static void SystemTask(void *pvParameters) {
         display_putc(toupper(temp[i]), i++);
     }
     vTaskDelay(1000/portTICK_PERIOD_MS); // show firmware version at startup.
-    bool shift_key = false;
+    display_clear();
+    // Reload Sysstate from eeprom.
+    dmm_state last_state;
+    if(settings_restore(LAST_SETTINGS, &last_state)){
+        DIAG("Bad Settings on Store. Loading defaults");
+        sys_state_set_defaults(&last_state);
+    }
+    switch(last_state.integration_period){
+        case INTEGRATION_50HZ: display_puts("FREQ=50 HZ");break;
+        case INTEGRATION_60HZ: display_puts("FREQ=60 HZ");break;
+        default: assert(0);
+    }
+    vTaskDelay(1000/portTICK_PERIOD_MS);
+    display_clear();
+    bool shift_key = false;    
     key_id key;
     while (1) {
         key = display_wait_for_key();
