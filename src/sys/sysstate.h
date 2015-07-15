@@ -51,6 +51,7 @@ typedef struct dmm_state_t{
 sys_error sys_state_set(const dmm_state* state);
 /** Get the actual dmm state */
 sys_error sys_state_get(dmm_state* state);
+void sys_state_set_defaults(dmm_state* state);
 
 #ifdef	__cplusplus
 }
