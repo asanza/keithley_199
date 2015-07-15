@@ -26,6 +26,7 @@
 #include <diag.h>
 #include <assert.h>
 #include <dispkyb.h>
+#include <ctype.h>
 #include "systasks.h"
 #include "sysstate.h"
 
@@ -48,11 +49,15 @@ static TaskHandle_t runningTask = NULL;
 static void SystemTask(void *pvParameters) {
     (void*) pvParameters;
     DIAG("Initializing Event System");
-    display_kyb_init();    
-    display_puts(" 888888888");
+    display_kyb_init();
+    int i = 0;
+    char* temp = REPOVERSION;
+    while(temp[i]!=0){
+        display_putc(toupper(temp[i]), i++);
+    }
+    vTaskDelay(1000/portTICK_PERIOD_MS); // show firmware version at startup.
     bool shift_key = false;
     key_id key;
-    int i;
     while (1) {
         key = display_wait_for_key();
         DIAG("Key Press: %d", key);
