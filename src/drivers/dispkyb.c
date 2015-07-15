@@ -13,22 +13,8 @@ QueueHandle_t event_queue; // queue for keyboard events
 
 key_id display_wait_for_key(){
     key_id key;
-    static key_id last_key = KEY_NONE;
-    static int rep_factor = 0;
-    bool repeat = false;
-    do{
-        xQueueReceive(event_queue,&key,portMAX_DELAY);
-        vTaskDelay(KYB_REPETITION_PERIOD_MS/portTICK_PERIOD_MS);
-        if(key==last_key){
-            repeat = true;
-            rep_factor ++;
-            if(key == KEY_NONE) rep_factor = 0;
-        }else{
-            last_key = key;
-            repeat = false;
-            rep_factor = 0;
-        }
-    }while((repeat && rep_factor < 20)||key == KEY_NONE);
+    xQueueReceive(event_queue,&key,portMAX_DELAY);
+    vTaskDelay(KYB_REPETITION_PERIOD_MS/portTICK_PERIOD_MS);
     return key;
 }
 
@@ -43,10 +29,11 @@ static unsigned int actual_character;
 static bool self_test = false;
 
 #define REFRESH_PERIOD 300 // uS
+#define KEY_HOLDOF_PERIOD 500 // mS
+#define KEY_REPEAT_PERIOD 100 //ms
 
 void display_kyb_init(void){
-    hal_io_displayport_init();
-    hal_io_keyboard_init();
+    hal_io_init();
     hal_spi_init_16bit();
     event_queue = xQueueCreate(EVENT_QUEUE_LENGTH, sizeof(key_id));
     hal_timer_init(REFRESH_PERIOD,timer_handler);
@@ -124,15 +111,14 @@ void display_test(){
 
 #define TEST_MAX_DELAY 5000
 static int test_segment = 0, test_delay = TEST_MAX_DELAY;
-static key_id scan_key = KEY_NONE;
-static key_id last_key = KEY_NONE;
+static key_id key_pressed = KEY_NONE;
+static key_id last_key_pressed = KEY_NONE;
 static key_id hal_disp_scan(){
-    key_id key_pressed = KEY_NONE;
     if(actual_character >= NUMBER_OF_CHARACTERS){
         actual_character = 0;
-        if(scan_key == KEY_NONE)
-            last_key = KEY_NONE;
-        scan_key = KEY_NONE;
+        if(key_pressed == KEY_NONE)
+            last_key_pressed = KEY_NONE;
+        key_pressed = KEY_NONE;
     }
     if(hal_io_keyboard_get_channel() == 1){
         switch(actual_character){
@@ -160,14 +146,12 @@ static key_id hal_disp_scan(){
         }
     }
     
-    if(key_pressed != KEY_NONE){
-        last_key = key_pressed;
-        scan_key = key_pressed;
-    }
+    if(key_pressed != KEY_NONE)
+        last_key_pressed = key_pressed;
 
     display_set(screen[actual_character], actual_character++);
     if(self_test == false )
-        return last_key;
+        return last_key_pressed;
 
     int i = 0;
     screen[NUMBER_OF_CHARACTERS - 1] = 0xFFFF;
@@ -195,9 +179,32 @@ static key_id hal_disp_scan(){
     return KEY_NONE;
 }
 
+static key_id last_key_interrupt = KEY_NONE;
+static int holdoff_counter = 0;
+static int rept_counter = 0;
 void timer_handler(void){
     BaseType_t xHigherPriorityTaskWoken;
     key_id key = hal_disp_scan();
-    xQueueSendToBackFromISR(event_queue,&key,&xHigherPriorityTaskWoken);
+    if(key != last_key_interrupt){
+        if(key != KEY_NONE)
+            xQueueSendToBackFromISR(event_queue,&key,&xHigherPriorityTaskWoken);
+        last_key_interrupt = key;
+        holdoff_counter = 0;
+        rept_counter = 0;
+    }else{
+        if(key != KEY_NONE){
+            /* check if key is constantly pressed.*/
+            holdoff_counter ++;
+            if(holdoff_counter > KEY_HOLDOF_PERIOD * 1000 / REFRESH_PERIOD){
+                holdoff_counter --; // prevent overflow
+                /* if key pressed more than KEY_HOLDOFF_PERIOD, repeat key */
+                if(rept_counter++ > KEY_REPEAT_PERIOD*1000/REFRESH_PERIOD){
+                    xQueueSendToBackFromISR(event_queue,&key,&xHigherPriorityTaskWoken);
+                    rept_counter = 0;
+                    hal_io_toggle_debugpin();
+                }                
+            }
+        }
+    }
     portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }

@@ -27,13 +27,23 @@
 extern "C" {
 #endif
 #include <stdint.h>
-void hal_io_displayport_init();
+    typedef enum{
+    SYSERR_LED,
+            SYSOK_LED,
+            AUX_LED
+}IO_LED;
+
 void hal_io_displayport_write(uint16_t segments);
 uint16_t hal_io_get_segment(int segment);
-void hal_io_keyboard_init(void);
 int hal_io_keyboard_get_channel(void);
 uint16_t hal_io_displayport_map_char_to_segments(char c);
+void hal_io_toggle_led(IO_LED led);
+void hal_io_set_led(IO_LED led);
+void hal_io_clear_led(IO_LED led);
 
+void hal_io_set_debugpin();
+void hal_io_clear_debugpin();
+void hal_io_toggle_debugpin();
 #ifdef	__cplusplus
 }
 #endif

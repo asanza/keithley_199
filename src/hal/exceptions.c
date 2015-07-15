@@ -10,7 +10,7 @@
  */
 
 // pin access functions
-#include <hal.h>
+#include <hal_io.h>
 
 // declared static in case exception condition would prevent
 // auto variable being created
