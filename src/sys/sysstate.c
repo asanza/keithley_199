@@ -34,25 +34,12 @@ static dmm_state state;
 
 sys_error sys_state_set(const dmm_state* _state){
   /* set multimeter state acordly */
-  adc_error err = adc_init(_state->integration_period, _state->input,
-                          _state->range);
+  adc_error err = adc_init(_state->dmm_settings.integration_period, _state->dmm_settings.input,
+                          _state->dmm_settings.range);
   if(err != ADC_ERROR_NONE) return SYSERR_UNSUPORTED;
   memcpy(&state, _state, sizeof(dmm_state));
 }
 
 sys_error sys_state_get(dmm_state* _state){
   memcpy(_state, &state, sizeof(dmm_state));
-}
-
-void sys_state_set_defaults(dmm_state* state){
-    state->auto_range = true;
-    state->cal_function = NULL;
-    state->channel = ADC_CHANNEL_0;
-    state->filter_enabled = false;
-    state->filter_resoln = 1;
-    state->formatter = NULL;
-    state->input = ADC_INPUT_VOLTAGE_DC;
-    state->integration_period = ADC_INTEGRATION_50HZ;
-    state->math = NULL;
-    state->range = ADC_RANGE_30;
 }

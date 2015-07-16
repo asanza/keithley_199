@@ -1,5 +1,5 @@
 /*
- * store.h
+ * store.c
  *
  * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
  *
@@ -20,40 +20,29 @@
  *
  * Created on July 15, 2015, 10:39 PM
  */
-#ifndef STORE_H
-#define	STORE_H
 
-#include "sysstate.h"
+#include <settings.h>
+#include <eefs.h>
+#include <stdbool.h>
 
-
-#ifdef	__cplusplus
-extern "C" {
-#endif
-
-/* storage addresses */
-typedef enum{
-    LAST_SETTINGS = 0x0A,
-            STORE_0,
-            STORE_1,
-            STORE_2,
-            STORE_3,
-            STORE_4,
-            STORE_5,
-            STORE_6,
-            STORE_7,
-            STORE_8,
-            STORE_9,
-            STORE_10
-}settings_location;    
-
-void settings_save(settings_location location, dmm_state state);
-/* return 0 if ok, 1 if error.*/
-int settings_restore(settings_location location, dmm_state* state);
-
-
-#ifdef	__cplusplus
+void settings_save(settings_location location, settings_t state){
+    eefs_object_save(location,&state, sizeof(settings_t));
 }
-#endif
 
-#endif	/* STORE_H */
+int settings_restore(settings_location location, settings_t* state){
+    EEFS_ERROR err = eefs_object_restore(location,state,sizeof(settings_t));
+    if(err != EEFS_OK) return 1;
+    return 0;
+}
 
+void settings_get_default(settings_t* state){
+    state->auto_range = true;
+    state->channel = ADC_CHANNEL_0;
+    state->filter_enabled = false;
+    state->filter_resoln = 1;
+    state->formatter = NULL;
+    state->input = ADC_INPUT_VOLTAGE_DC;
+    state->integration_period = ADC_INTEGRATION_50HZ;
+    state->math = NULL;
+    state->range = ADC_RANGE_30;
+}

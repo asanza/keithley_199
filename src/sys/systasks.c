@@ -29,7 +29,7 @@
 #include <ctype.h>
 #include "systasks.h"
 #include "sysstate.h"
-#include "store.h"
+#include "settings.h"
 
 #define SYSTEM_TASK_STACK_SIZE      200
 #define SYSTEM_TASK_PRIORITY        3
@@ -48,16 +48,16 @@ static TaskHandle_t systemTaskHandle = NULL;
 static TaskHandle_t runningTask = NULL;
 
 static void sys_init(void);
-static void sys_load_state(dmm_state* state);
+static void sys_load_state(settings_t* state);
 
 static void SystemTask(void *pvParameters) {
     (void*) pvParameters;
     sys_init();
     // Reload Sysstate from eeprom.hentai 
-    dmm_state last_state;
-    sys_load_state(&last_state);
+    settings_t last_settings;
+    sys_load_state(&last_settings);
     display_clear();
-    display_puts("** FUCK **");
+    display_puts("** TEST **");
     bool shift_key = false;    
     key_id key;
     while (1) {
@@ -126,15 +126,15 @@ static void sys_init(void){
     display_clear();
 }
 
-static void sys_load_state(dmm_state* state){
-        if(settings_restore(LAST_SETTINGS, state)){
+static void sys_load_state(settings_t* settings){
+        if(settings_restore(LAST_SETTINGS, settings)){
         DIAG("Bad Settings on Store. Loading defaults");
-        display_puts("MEM ERROR");
+        display_puts("SETT ERROR");
         vTaskDelay(1000/portTICK_PERIOD_MS);
         display_clear();
-        sys_state_set_defaults(state);
+        settings_get_default(settings);
     }
-    switch(state->integration_period){
+    switch(settings->integration_period){
         case ADC_INTEGRATION_50HZ: display_puts("FREQ=50 HZ");break;
         case ADC_INTEGRATION_60HZ: display_puts("FREQ=60 HZ");break;
         default: assert(0);
