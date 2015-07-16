@@ -73,7 +73,6 @@ int settings_restore(settings_location location, settings_t* settings);
 
 void calibration_save(settings_t settings, cal_values_t cal);
 int calibration_restore(settings_t settings, cal_values_t cal);
-void settings_get_default(settings_t* state);
 
 
 #ifdef	__cplusplus

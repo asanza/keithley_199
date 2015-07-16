@@ -25,17 +25,20 @@
 #include <eefs.h>
 #include <stdbool.h>
 
+static void settings_get_default(settings_t* state);
+
 void settings_save(settings_location location, settings_t state){
     eefs_object_save(location,&state, sizeof(settings_t));
 }
 
 int settings_restore(settings_location location, settings_t* state){
     EEFS_ERROR err = eefs_object_restore(location,state,sizeof(settings_t));
-    if(err != EEFS_OK) return 1;
-    return 0;
+    if(err == EEFS_OK) return 0;
+    settings_get_default(state);
+    return 1;
 }
 
-void settings_get_default(settings_t* state){
+static void settings_get_default(settings_t* state){
     state->auto_range = true;
     state->channel = ADC_CHANNEL_0;
     state->filter_enabled = false;

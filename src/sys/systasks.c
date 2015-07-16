@@ -132,7 +132,6 @@ static void sys_load_state(settings_t* settings){
         display_puts("SETT ERROR");
         vTaskDelay(1000/portTICK_PERIOD_MS);
         display_clear();
-        settings_get_default(settings);
     }
     switch(settings->integration_period){
         case ADC_INTEGRATION_50HZ: display_puts("FREQ=50 HZ");break;
