@@ -30,7 +30,6 @@
 #include "systasks.h"
 #include "sysstate.h"
 #include "store.h"
-#include "hal_adc.h"
 
 #define SYSTEM_TASK_STACK_SIZE      200
 #define SYSTEM_TASK_PRIORITY        3
@@ -48,30 +47,17 @@ static struct systask_t tasks[MAX_TASK_COUNT];
 static TaskHandle_t systemTaskHandle = NULL;
 static TaskHandle_t runningTask = NULL;
 
+static void sys_init(void);
+static void sys_load_state(dmm_state* state);
+
 static void SystemTask(void *pvParameters) {
     (void*) pvParameters;
-    DIAG("Initializing Event System");
-    display_kyb_init();
-    int i = 0;
-    char* temp = REPOVERSION;
-    while(temp[i]!=0){
-        display_putc(toupper(temp[i]), i++);
-    }
-    vTaskDelay(1000/portTICK_PERIOD_MS); // show firmware version at startup.
-    display_clear();
-    // Reload Sysstate from eeprom.
+    sys_init();
+    // Reload Sysstate from eeprom.hentai 
     dmm_state last_state;
-    if(settings_restore(LAST_SETTINGS, &last_state)){
-        DIAG("Bad Settings on Store. Loading defaults");
-        sys_state_set_defaults(&last_state);
-    }
-    switch(last_state.integration_period){
-        case INTEGRATION_50HZ: display_puts("FREQ=50 HZ");break;
-        case INTEGRATION_60HZ: display_puts("FREQ=60 HZ");break;
-        default: assert(0);
-    }
-    vTaskDelay(1000/portTICK_PERIOD_MS);
+    sys_load_state(&last_state);
     display_clear();
+    display_puts("** FUCK **");
     bool shift_key = false;    
     key_id key;
     while (1) {
@@ -126,4 +112,32 @@ void systask_add(systask_handler task, key_id key_switch) {
     }
     xTaskCreate(task, "TSK", SYSTEM_TASK_STACK_SIZE, NULL, SYSTEM_TASK_PRIORITY,
             &tasks[counter++].task_handler);
+}
+
+static void sys_init(void){
+    DIAG("Initializing System");
+    display_kyb_init();
+    int i = 0;
+    char* temp = REPOVERSION;
+    while(temp[i]!=0){
+        display_putc(toupper(temp[i]), i++);
+    }
+    vTaskDelay(1000/portTICK_PERIOD_MS); // show firmware version at startup.
+    display_clear();
+}
+
+static void sys_load_state(dmm_state* state){
+        if(settings_restore(LAST_SETTINGS, state)){
+        DIAG("Bad Settings on Store. Loading defaults");
+        display_puts("MEM ERROR");
+        vTaskDelay(1000/portTICK_PERIOD_MS);
+        display_clear();
+        sys_state_set_defaults(state);
+    }
+    switch(state->integration_period){
+        case ADC_INTEGRATION_50HZ: display_puts("FREQ=50 HZ");break;
+        case ADC_INTEGRATION_60HZ: display_puts("FREQ=60 HZ");break;
+        default: assert(0);
+    }
+    vTaskDelay(1000/portTICK_PERIOD_MS);
 }

@@ -33,4 +33,3 @@ int settings_restore(settings_location location, dmm_state* state){
     if(err != EEFS_OK) return 1;
     return 0;
 }
-

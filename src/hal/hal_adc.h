@@ -26,15 +26,17 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-/* input compare clock is 2.5MHz. 50000 are 20ms @2.5MHz */
-#define INTEGRATION_50HZ  50000
-    /* 60 Hz are 16ms @ 47 MHz */
-#define INTEGRATION_60HZ  41667
 
 
 int hal_adc_integration_sequence(unsigned char channel, uint32_t int_mux, uint32_t pause_mux, uint32_t rund_mux);
+/**
+ * @param period in us
+ */
 void hal_adc_init(unsigned int period);
 void hal_adc_send_mux(uint8_t channel, uint32_t mux);
+/**
+ * @param period in us.
+ */
 void hal_adc_set_integration_period(uint32_t period);
 
 

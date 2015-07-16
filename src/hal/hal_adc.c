@@ -53,15 +53,18 @@
 #include <peripheral/spi.h>
 #include <stdint.h>
 #include <assert.h>
-
+#ifdef TEST
+#include <os_test.h>
+#else
 #include <FreeRTOS.h>
 #include <queue.h>
+#include <task.h>
+#endif
 
-#include "task.h"
-#include "hal.h"
 
 #include "HardwareProfile.h"
 
+#define OSC_COMPARE_FREQ 2500000ULL //Long long required
 /* following are timming constants needed */
 #define STROBE_LOW_TIME 63 /**< How much time should strobe pin stay low  25uS @ 2.5MHz */
 #define START_WAIT_TIME 120  /**< wait time before first strobe is sended */
@@ -72,12 +75,20 @@
  * integration strobe is two strobe pulses with separation of exactly INTEGRATION
  * PERIOD ms */
 static int pulsecounter = 0;
+#ifdef TEST
+unsigned int integration_period;
+#else
 static unsigned int integration_period;
+#endif
 static QueueHandle_t data_sended;
 
 
 static void send_strobe_and_wait(unsigned int wait_time);
 static void adc_send_mux(char channel, uint32_t mux);
+
+static void hal_counter_init();
+static void hal_counter_restart();
+static uint32_t hal_counter_read();
 
 void hal_adc_send_mux(uint8_t channel, uint32_t mux){
     /* send this mux configuration */
@@ -121,8 +132,8 @@ int hal_adc_integration_sequence (uint8_t channel, uint32_t int_mux, uint32_t pa
 
 
 void hal_adc_set_integration_period(uint32_t period){
+    integration_period = period*OSC_COMPARE_FREQ/1000000ULL;
     CloseOC3();
-    integration_period = period;
     OpenOC3(OC_ON|OC_IDLE_CON|OC_TIMER_MODE32|OC_TIMER2_SRC|OC_CONTINUE_PULSE
             |OC_LOW_HIGH,period - STROBE_LOW_TIME, 0);
     ConfigIntOC3(OC_INT_PRIOR_3|OC_INT_ON);
@@ -148,10 +159,11 @@ static void hal_adc_sendword(char a, char b, char c, char d, char e);
  * the 20ms integration period, as timer interrupt have too much jitter. Timer
  * 23 (32bit) counts output compare pulses, 32 bit for better resolution. */
 void hal_adc_init(unsigned int period){
+    integration_period = period*OSC_COMPARE_FREQ/1000000ULL;
     OpenTimer23(T2_OFF|T2_GATE_OFF|T2_IDLE_CON|T2_PS_1_32|T2_SOURCE_INT,
-            period);
+            integration_period);
     OpenOC3(OC_ON|OC_IDLE_CON|OC_TIMER_MODE32|OC_TIMER2_SRC|OC_CONTINUE_PULSE
-            |OC_LOW_HIGH,period - STROBE_LOW_TIME, 0);
+            |OC_LOW_HIGH,integration_period - STROBE_LOW_TIME, 0);
     ConfigIntOC3(OC_INT_PRIOR_3|OC_INT_ON);
     PORTSetPinsDigitalOut(IOPORT_G, BIT_1);
     PPSOutput(1,RPG1,OC3);
@@ -163,16 +175,19 @@ void hal_adc_init(unsigned int period){
     PORTSetPinsDigitalOut(KMM_CLK);
     PORTSetPinsDigitalOut(KMM_DATA);
     PORTSetPinsDigitalOut(KMM_STRB);
-    integration_period = period;
 }
 
+#ifdef TEST
+void
+#else
 void __attribute__(( nomips16, interrupt(), vector(_OUTPUT_COMPARE_3_VECTOR)))
+#endif
 OC3_wrapper();
 
 /* The strobe pin is setted/cleared in hardware, by using the output compare.
  * we use the interrupt in order to transmit the control bytes between strobe
  * activations.*/
-OC3_handler(){
+void OC3_handler(){
     portBASE_TYPE xHigerPriorityTaskWoken;
     xQueueSendFromISR(data_sended,&pulsecounter, &xHigerPriorityTaskWoken);
     pulsecounter++;
@@ -210,4 +225,18 @@ static void adc_send_mux(char channel, uint32_t mux){
     hal_adc_sendbyte(val);
     val = (mux);
     hal_adc_sendbyte(val);
+}
+
+static void hal_counter_init(){
+    HW_32BIT_COUNTER_SET_INPUT();
+    HW_32BIT_COUNTER_START(0xFFFFFFFF);
+}
+
+
+static void hal_counter_restart(){
+    HW_32BIT_COUNTER_RESTART();
+}
+
+static uint32_t hal_counter_read(){
+    return HW_32BIT_COUNTER_READ();
 }

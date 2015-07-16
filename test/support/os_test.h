@@ -33,6 +33,12 @@ BaseType_t xQueueReceive( QueueHandle_t xQueue, void * const pvBuffer, TickType_
 
 BaseType_t xQueuePeekFromISR(QueueHandle_t xQueue, void * const pvBuffer);
 
+void vTaskDelay(const TickType_t delay);
+
 void uart3_int_wrapper(void);
+
+void portEND_SWITCHING_ISR(portBASE_TYPE value);
+
+void OC3_wrapper(void);
 
 #endif

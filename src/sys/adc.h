@@ -19,8 +19,8 @@ extern "C" {
 #define ADC_MIN_VALUE -3.03
 
 typedef enum{
-    ADC_INTEGRATION_50HZ = 50000, /**< 20mS @ 2.5MHz */
-    ADC_INTEGRATION_60HZ = 41667, /**< 16mS @ 2.5MHz */
+    ADC_INTEGRATION_50HZ = 20000, /**< 20mS or 50Hz */
+    ADC_INTEGRATION_60HZ = 16667, /**< 16mS or 60Hz  */
 }adc_integration_period;
 
 typedef enum {

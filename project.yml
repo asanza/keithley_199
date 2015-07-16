@@ -10,7 +10,7 @@
   :build_root: build
 #  :release_build: FALSE
   :test_file_prefix: test_
- 
+
 #:release_build:
 # :output: MyPicApp.out
 # :use_assembly: FALSE
@@ -39,10 +39,10 @@
 #    - CMOCK_MEM_INDEX_TYPE=uint16_t
 #    - CMOCK_MEM_PTR_AS_INT=uint16_t
 #    - CMOCK_MEM_ALIGN=1
- 
+
 #   - CMOCK_MEM_DYNAMIC
 #   - CMOCK_MEM_SIZE=512
- 
+
 #    - CMOCK_MEM_STATIC
 #    - CMOCK_MEM_SIZE=1024
     - UNITY_INCLUDE_DOUBLE
