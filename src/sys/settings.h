@@ -33,8 +33,7 @@ extern "C" {
     
 /* storage addresses */
 typedef enum{
-    LAST_SETTINGS = 0x0A,
-            SETTINGS_0,
+            SETTINGS_0= 0x0A,
             SETTINGS_1,
             SETTINGS_2,
             SETTINGS_3,
@@ -44,7 +43,8 @@ typedef enum{
             SETTINGS_7,
             SETTINGS_8,
             SETTINGS_9,
-            SETTINGS_10
+            SETTINGS_10,
+            SETTINGS_LAST
 }settings_location;    
 
 typedef double(*conv_func)(double val, void* param, size_t param_size);
@@ -72,7 +72,7 @@ void settings_save(settings_location location, settings_t settings);
 int settings_restore(settings_location location, settings_t* settings);
 
 void calibration_save(settings_t settings, cal_values_t cal);
-int calibration_restore(settings_t settings, cal_values_t cal);
+int calibration_restore(settings_t settings, cal_values_t* cal);
 
 
 #ifdef	__cplusplus

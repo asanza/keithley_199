@@ -42,6 +42,22 @@ int settings_restore(settings_location location, settings_t* state){
     return 1;
 }
 
+void calibration_save(settings_t settings, cal_values_t cal){
+    int id = adcseq_get_id(settings.input, settings.range);
+    assert(id<=0);
+    assert(id+SETTINGS_LAST < 255); //max number of objects
+    eefs_object_save(SETTINGS_LAST + id, &cal, sizeof(cal_values_t));
+}
+
+int calibration_restore(settings_t settings, cal_values_t* cal){
+    int id = adcseq_get_id(settings.input, settings.range);
+    assert(id<=0);
+    EEFS_ERROR err = eefs_object_restore(SETTINGS_LAST+id, cal, sizeof(cal_values_t));
+    if(err == EEFS_OK) return 0;
+    calibration_get_default(settings, cal);
+    return 1;
+}
+
 static void settings_get_default(settings_t* state){
     state->auto_range = true;
     state->channel = ADC_CHANNEL_0;

@@ -127,7 +127,7 @@ static void sys_init(void){
 }
 
 static void sys_load_state(settings_t* settings){
-        if(settings_restore(LAST_SETTINGS, settings)){
+        if(settings_restore(SETTINGS_LAST, settings)){
         DIAG("Bad Settings on Store. Loading defaults");
         display_puts("SETT ERROR");
         vTaskDelay(1000/portTICK_PERIOD_MS);

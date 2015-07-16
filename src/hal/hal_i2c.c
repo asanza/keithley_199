@@ -111,8 +111,7 @@ unsigned char hal_i2c_rep_start(unsigned char addr, hal_i2c_mode mode){
 void hal_i2c_start_wait(unsigned char addr, hal_i2c_mode mode){
     I2C_7_BIT_ADDRESS device_addr;
     I2C_FORMAT_7_BIT_ADDRESS(device_addr,addr,mode);
-    //bool restart = false;
-    /*wait while bus is bussy*/
+    /*wait while bus is busy*/
     while(1){
         if(!start_transfer(false))
             return ; // bus collision.
