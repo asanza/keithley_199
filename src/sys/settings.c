@@ -25,7 +25,11 @@
 #include <eefs.h>
 #include <stdbool.h>
 
+#include <adcseq.h>
+#include <assert.h>
+
 static void settings_get_default(settings_t* state);
+static void calibration_get_default(settings_t settings, cal_values_t* cal);
 
 void settings_save(settings_location location, settings_t state){
     eefs_object_save(location,&state, sizeof(settings_t));
@@ -48,4 +52,13 @@ static void settings_get_default(settings_t* state){
     state->integration_period = ADC_INTEGRATION_50HZ;
     state->math = NULL;
     state->range = ADC_RANGE_30;
+}
+
+/* load calibration according to settings */
+static void calibration_get_default(settings_t settings, cal_values_t* cal){
+    /* look if they are supported */
+    int id = adcseq_get_id(settings.input, settings.range);
+    assert(id >= 0);
+    cal->gain = 1;
+    cal->offset = 0;
 }

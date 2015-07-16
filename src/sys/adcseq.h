@@ -32,8 +32,14 @@ extern "C" {
 typedef struct hal_adc_integration_sequence_t adc_sequence;
 void adcseq_reset(adc_sequence* sequence);
 uint32_t adcseq_next(adc_sequence* sequence);
+/* get the hardware adc settings for the selected input and range. 
+ * Return null if selected input and range are not supported in the 
+ * hardware. */
 adc_sequence* adcseq_get(adc_input input, adc_range range);
 
+/** Get a unique identifier for each supported hardware configuration, or -1 if
+ * hardware configuration is not supported. */
+int adcseq_get_id(adc_input input, adc_range range);
 
 #ifdef	__cplusplus
 }

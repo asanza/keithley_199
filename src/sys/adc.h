@@ -47,7 +47,7 @@ typedef enum {
 }adc_input;
 
 typedef enum {
-    ADC_RANGE_30m,
+    ADC_RANGE_30m = 0x00,
         ADC_RANGE_300m,
         ADC_RANGE_3,
         ADC_RANGE_30,

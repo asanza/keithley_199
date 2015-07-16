@@ -6,7 +6,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
-
+#include <assert.h>
 #include "adcseq.h"
 
 struct hal_adc_integration_sequence_t{
@@ -148,6 +148,21 @@ static adc_sequence* get_cdc_seq(adc_range range);
 static adc_sequence* get_cac_seq(adc_range range);
 static adc_sequence* get_res4w_seq(adc_range range);
 //static hal_adc_sequence* get_vdc_seq(adc_range range);
+
+
+int adcseq_get_id(adc_input input, adc_range range){
+    assert(input < ADC_NUMBER_OF_INPUTS);
+    assert(range < ADC_RANGE_COUNT);
+    int i,j,id=-1; 
+    for(i = 0; i <= input; i++){
+        for(j=0; j<ADC_RANGE_COUNT; j++){
+            adc_sequence* s = adcseq_get(input, range);
+            if(!s) continue;
+            id++;
+        }
+    }
+    return id;
+}
 
 adc_sequence* adcseq_get(adc_input input, adc_range range){
     switch(input){
