@@ -37,7 +37,7 @@
 #include <stdint.h>
 #include <assert.h>
 #include "adc.h"
-#include "adcseq.h"
+#include "adcctrl.h"
 
 #define SENSE_100K_BIT         (1<<28)
 #define SIG_x10_BIT            (1<<22)
@@ -63,11 +63,11 @@
 static adc_range range;
 static adc_input input;
 
-static double adc_do_measurement(unsigned char channel, adc_sequence* sequence);
+static double adc_do_measurement(unsigned char channel, adc_control_sequence* sequence);
 
 
 double adc_read_value(adc_channel channel){
-    adc_sequence* seq = adcseq_get(input, range);
+    adc_control_sequence* seq = adcctrl_get_sequence(input, range);
     assert(seq);
     double value = adc_do_measurement(channel, seq);
     if(value >= ADC_MAX_VALUE) value = ADC_MAX_VALUE;
@@ -93,14 +93,14 @@ adc_range adc_get_range(void){
 }
 
 adc_error adc_set_range(adc_range scale){
-    adc_sequence* seq = adcseq_get(input,scale);
+    adc_control_sequence* seq = adcctrl_get_sequence(input,scale);
     if(!seq) return ADC_ERROR_NOT_SUPPORTED;
     range = scale;
     return ADC_ERROR_NONE;
 }
 
 adc_error adc_set_input(adc_input input_in, adc_range range_in){
-    adc_sequence* seq = adcseq_get(input_in,range_in);
+    adc_control_sequence* seq = adcctrl_get_sequence(input_in,range_in);
     if(!seq) return ADC_ERROR_NOT_SUPPORTED;
     input = input_in;
     range = range_in;
@@ -126,7 +126,7 @@ adc_error adc_set_integration_period(adc_integration_period period){
 adc_error adc_init(adc_integration_period period, adc_input input_, adc_range range_){
     if(adc_integration_period_supported(period)!=ADC_ERROR_NONE)
         return ADC_ERROR_NOT_SUPPORTED;
-    adc_sequence* seq = adcseq_get(input_,range_);
+    adc_control_sequence* seq = adcctrl_get_sequence(input_,range_);
     if(!seq) return ADC_ERROR_NOT_SUPPORTED;
     input  = input_;
     range = range_;
@@ -134,7 +134,7 @@ adc_error adc_init(adc_integration_period period, adc_input input_, adc_range ra
     return ADC_ERROR_NONE;
 }
 
-static uint32_t do_sequence(unsigned char channel, adc_sequence* sequence){
+static uint32_t do_sequence(unsigned char channel, adc_control_sequence* sequence){
     uint32_t start_int_mux_cfg = hal_adcseq_next(sequence);
     /* send the start integration mux configuration */
     while(IS_RUN_DOWN_SLOPE(start_int_mux_cfg)||IS_PRE_INT_PULSE(start_int_mux_cfg)){
@@ -154,9 +154,9 @@ static uint32_t do_sequence(unsigned char channel, adc_sequence* sequence){
 }
 
 
-double adc_do_measurement(unsigned char channel, adc_sequence* sequence){
+double adc_do_measurement(unsigned char channel, adc_control_sequence* sequence){
     assert(sequence);
-    adcseq_reset(sequence); // always start at sequence start point.
+    adcctrl_reset(sequence); // always start at sequence start point.
     int signal_count, sigzero_count, ref_count, refzero_count;
     signal_count = do_sequence(channel, sequence);
     sigzero_count = do_sequence(channel, sequence);

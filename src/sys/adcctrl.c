@@ -7,7 +7,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <assert.h>
-#include "adcseq.h"
+#include "adcctrl.h"
 
 struct hal_adc_integration_sequence_t{
     uint32_t actual_value;
@@ -17,7 +17,7 @@ struct hal_adc_integration_sequence_t{
 
 #define START_SEQUENCE(seq_name) const uint32_t seq_name##__[]=
 
-#define END_SEQUENCE(seq_name) ; static adc_sequence seq_name = { \
+#define END_SEQUENCE(seq_name) ; static adc_control_sequence seq_name = { \
                                             .actual_value = 0, \
                                             .size = sizeof(seq_name##__), \
                                             .mux_values = seq_name##__};
@@ -138,25 +138,20 @@ START_SEQUENCE(seq_3AAC){
             0x4535E855, 0x4535E854, 0x4515E8D2,
 }END_SEQUENCE(seq_3AAC)
 
-
-
-
-
-static adc_sequence* get_vdc_seq(adc_range range);
-static adc_sequence* get_vac_seq(adc_range range);
-static adc_sequence* get_cdc_seq(adc_range range);
-static adc_sequence* get_cac_seq(adc_range range);
-static adc_sequence* get_res4w_seq(adc_range range);
+static adc_control_sequence* get_vdc_seq(adc_range range);
+static adc_control_sequence* get_vac_seq(adc_range range);
+static adc_control_sequence* get_cdc_seq(adc_range range);
+static adc_control_sequence* get_cac_seq(adc_range range);
+static adc_control_sequence* get_res4w_seq(adc_range range);
 //static hal_adc_sequence* get_vdc_seq(adc_range range);
 
-
-int adcseq_get_id(adc_input input, adc_range range){
+int adcctrl_get_sequence_id(adc_input input, adc_range range){
     assert(input < ADC_NUMBER_OF_INPUTS);
     assert(range < ADC_RANGE_COUNT);
     int i,j,id=-1; 
     for(i = 0; i <= input; i++){
         for(j=0; j<ADC_RANGE_COUNT; j++){
-            adc_sequence* s = adcseq_get(input, range);
+            adc_control_sequence* s = adcctrl_get_sequence(input, range);
             if(!s) continue;
             id++;
         }
@@ -164,7 +159,7 @@ int adcseq_get_id(adc_input input, adc_range range){
     return id;
 }
 
-adc_sequence* adcseq_get(adc_input input, adc_range range){
+adc_control_sequence* adcctrl_get_sequence(adc_input input, adc_range range){
     switch(input){
         case ADC_INPUT_VOLTAGE_DC: return get_vdc_seq(range);
         case ADC_INPUT_VOLTAGE_AC: return get_vac_seq(range);
@@ -175,13 +170,13 @@ adc_sequence* adcseq_get(adc_input input, adc_range range){
     return NULL;
 }
 
-adc_sequence* get_res4w_seq(adc_range range){
+adc_control_sequence* get_res4w_seq(adc_range range){
     switch(range){
         case ADC_RANGE_300: return NULL;
     }
 }
 
-adc_sequence* get_vac_seq(adc_range range){
+adc_control_sequence* get_vac_seq(adc_range range){
     switch(range){
         case ADC_RANGE_300m: seq_300mVAC.actual_value = 0; return &seq_300mVAC;
         case ADC_RANGE_3: seq_3VAC.actual_value = 0; return &seq_3VAC;
@@ -191,7 +186,7 @@ adc_sequence* get_vac_seq(adc_range range){
     return NULL;
 }
 
-adc_sequence* get_cdc_seq(adc_range range){
+adc_control_sequence* get_cdc_seq(adc_range range){
     switch(range){
         case ADC_RANGE_30m: seq_30mADC.actual_value = 0; return &seq_30mADC;
         case ADC_RANGE_3: seq_3ADC.actual_value = 0; return &seq_3ADC;
@@ -199,7 +194,7 @@ adc_sequence* get_cdc_seq(adc_range range){
     return NULL;
 }
 
-adc_sequence* get_cac_seq(adc_range range){
+adc_control_sequence* get_cac_seq(adc_range range){
     switch(range){
         case ADC_RANGE_30m: seq_30mAAC.actual_value = 0; return &seq_30mAAC;
         case ADC_RANGE_3: seq_3AAC.actual_value = 0; return &seq_3AAC;
@@ -207,7 +202,7 @@ adc_sequence* get_cac_seq(adc_range range){
     return NULL;
 }
 
-adc_sequence* get_vdc_seq(adc_range range){
+adc_control_sequence* get_vdc_seq(adc_range range){
     switch(range){
         case ADC_RANGE_300m: seq_300mV.actual_value = 0; return &seq_300mV;
         case ADC_RANGE_3: seq_3V.actual_value = 0; return &seq_3V;
@@ -217,7 +212,7 @@ adc_sequence* get_vdc_seq(adc_range range){
     return NULL;
 }
 
-uint32_t hal_adcseq_next(adc_sequence* sequence){
+uint32_t hal_adcseq_next(adc_control_sequence* sequence){
     uint32_t value;
     if(sequence->actual_value<sequence->size){
         value = sequence->mux_values[sequence->actual_value];
@@ -230,6 +225,6 @@ uint32_t hal_adcseq_next(adc_sequence* sequence){
     return value;
 }
 
-void adcseq_reset(adc_sequence* sequence){
+void adcctrl_reset(adc_control_sequence* sequence){
     sequence->actual_value = 0;
 }

@@ -48,14 +48,14 @@ static TaskHandle_t systemTaskHandle = NULL;
 static TaskHandle_t runningTask = NULL;
 
 static void sys_init(void);
-static void sys_load_state(settings_t* state);
+static void load_settings(settings_t* state);
 
 static void SystemTask(void *pvParameters) {
     (void*) pvParameters;
     sys_init();
     // Reload Sysstate from eeprom.hentai 
     settings_t last_settings;
-    sys_load_state(&last_settings);
+    load_settings(&last_settings);
     display_clear();
     display_puts("** TEST **");
     bool shift_key = false;    
@@ -126,7 +126,7 @@ static void sys_init(void){
     display_clear();
 }
 
-static void sys_load_state(settings_t* settings){
+static void load_settings(settings_t* settings){
         if(settings_restore(SETTINGS_LAST, settings)){
         DIAG("Bad Settings on Store. Loading defaults");
         display_puts("SETT ERROR");
