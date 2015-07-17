@@ -183,6 +183,7 @@
     <Elem>src/utils</Elem>
     <Elem>src/scpi-parser/libscpi/src</Elem>
     <Elem>src/scpi-parser/libscpi/inc/scpi</Elem>
+    <Elem>src/tasks</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

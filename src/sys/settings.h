@@ -71,8 +71,8 @@ void settings_save(settings_location location, settings_t settings);
 /* return 0 if ok, 1 if error.*/
 int settings_restore(settings_location location, settings_t* settings);
 
-void calibration_save(settings_t settings, cal_values_t cal);
-int calibration_restore(settings_t settings, cal_values_t* cal);
+void calibration_save(const settings_t* settings, const cal_values_t* cal);
+int calibration_restore(const settings_t* settings, cal_values_t* cal);
 
 
 #ifdef	__cplusplus

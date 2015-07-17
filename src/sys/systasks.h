@@ -12,11 +12,8 @@
 extern "C" {
 #endif
 
-#include <dispkyb.h>
-    
-    typedef void(*systask_handler)(void*);
-    void systask_create_main(void);
-    void systask_add(systask_handler task, key_id key_switch);
+    void systask_init(void);
+
     
 #ifdef	__cplusplus
 }

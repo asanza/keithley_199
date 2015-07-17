@@ -32,50 +32,62 @@
 #include "settings.h"
 
 #define SYSTEM_TASK_STACK_SIZE      200
+#define TASK_STACK_SIZE             200
 #define SYSTEM_TASK_PRIORITY        3
-#define MAX_TASK_COUNT              6
-
 #define MESSAGE_DELAY 500
+#define TASK_PRIORITY               3
 
-static struct systask_t tasks[MAX_TASK_COUNT];
+typedef enum{
+    TASK_MULTIMETER,
+            TASK_RESISTANCE_4W,
+            TASK_CALIBRATION,
+            TASK_COUNT
+}dmm_task_t;
 
-static TaskHandle_t systemTaskHandle = NULL;
+extern void task_multimeter(void* params);
+extern void task_resistance_4w(void* params);
+extern void task_calibration(void* params);
+
+static TaskHandle_t task_list[TASK_COUNT];
 static TaskHandle_t runningTask = NULL;
-
 static void sys_init(void);
 static void load_settings(settings_t* state);
+static void start_task(dmm_task_t task);
+static void stop_running_task();
+static void switch_sys_function(const settings_t* settings);
 
 static void SystemTask(void *pvParameters) {
     (void*) pvParameters;
     sys_init();
     // Reload Sysstate from eeprom.
-    settings_t last_settings;
-    load_settings(&last_settings);
+    settings_t settings;
+    load_settings(&settings);
     display_clear();
     bool shift_key = false; 
     bool repeat_key = true;
     key_id key;
+    switch_sys_function(&settings);
     while (1) {
         switch (display_wait_for_key()) {
             DIAG("Key Pressed");
             /* suspend tasks */
-            //system_suspend_runing_task();
-            case KEY_0:; //sys_state_set_mode(ADC_INPUT_VOLTAGE_DC); continue
-            case KEY_1:; //sys_state_set_mode(ADC_INPUT_RESISTANCE_2W); continue;
-            case KEY_2:; //sys_state_set_mode(ADC_INPUT_CURRENT_DC); continue;
-            case KEY_3:; //sys_state_toggle_acdc(); continue;
+            stop_running_task();
+            case KEY_0:;
+            case KEY_1:;
+            case KEY_2:;
+            case KEY_3:;
             case KEY_4:; //continue;
             case KEY_5:; //continue;
-            case KEY_6:; //sys_state_down_scale(); continue;
-            case KEY_7:; //sys_state_up_scale(); continue;
+            case KEY_6:;
+            case KEY_7:;
             case KEY_8:; //continue;
             case KEY_9:; //continue;
             case KEY_UP:; //continue;
             case KEY_DOWN: shift_key = true;
                 continue;
             case KEY_CAL:
-                //vTaskSuspend(measTaskHandle);
-                //vTaskStart(doCalTaskHandle);
+                stop_running_task();
+                start_task(TASK_CALIBRATION);
                 continue;
             case KEY_NONE:
                 repeat_key = true;
@@ -86,21 +98,28 @@ static void SystemTask(void *pvParameters) {
     }
 }
 
-void systask_create_main(void) {
-    if (!systemTaskHandle)
+void systask_init(void) {
         xTaskCreate(SystemTask, "SYS", SYSTEM_TASK_STACK_SIZE, NULL,
-            SYSTEM_TASK_PRIORITY, &systemTaskHandle);
+            SYSTEM_TASK_PRIORITY, NULL);
+        xTaskCreate(task_multimeter, "DMM", TASK_STACK_SIZE, NULL, TASK_PRIORITY,
+                &task_list[TASK_MULTIMETER]);
+        xTaskCreate(task_calibration, "CAL", TASK_STACK_SIZE, NULL, TASK_PRIORITY,
+                &task_list[TASK_CALIBRATION]);
+        xTaskCreate(task_resistance_4w, "R4W", TASK_STACK_SIZE, NULL, TASK_PRIORITY,
+                &task_list[TASK_RESISTANCE_4W]);
+        int i;
+        for(i = 0; i < TASK_COUNT; i++){
+            vTaskSuspend(task_list[i]);
+        }
 }
 
-void systask_add(systask_handler task, key_id key_switch) {
-    static int counter = 0;
-    assert(counter < MAX_TASK_COUNT);
-    int i = 0;
-    for (i = 0; i < counter; i++) {
-        assert(key_switch != tasks[i].key_switch); // check if not used before
-    }
-    xTaskCreate(task, "TSK", SYSTEM_TASK_STACK_SIZE, NULL, SYSTEM_TASK_PRIORITY,
-            &tasks[counter++].task_handler);
+static void start_task(dmm_task_t task){
+    vTaskResume(task_list[task]);
+    runningTask = task_list[task];
+}
+static void stop_running_task(){
+    if(runningTask!=NULL)
+        vTaskSuspend(runningTask);
 }
 
 static void sys_init(void){
@@ -128,4 +147,25 @@ static void load_settings(settings_t* settings){
         default: assert(0);
     }
     vTaskDelay(MESSAGE_DELAY/portTICK_PERIOD_MS);
+}
+
+static void switch_sys_function(const settings_t* settings){
+    stop_running_task();
+    cal_values_t cal;
+    calibration_restore(settings, &cal);
+    system_set_configuration(settings,&cal);
+    switch(settings->input){
+        case ADC_INPUT_CURRENT_DC:
+        case ADC_INPUT_CURRENT_AC:
+        case ADC_INPUT_RESISTANCE_2W:
+        case ADC_INPUT_VOLTAGE_DC:
+        case ADC_INPUT_VOLTAGE_AC:
+            start_task(TASK_MULTIMETER);
+            break;
+        case ADC_INPUT_RESISTANCE_4W:
+            start_task(TASK_RESISTANCE_4W);
+            break;
+        default:
+            assert(0);
+    }
 }
