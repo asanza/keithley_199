@@ -170,13 +170,13 @@ adc_control_sequence* adcctrl_get_sequence(adc_input input, adc_range range){
     return NULL;
 }
 
-adc_control_sequence* get_res4w_seq(adc_range range){
+static adc_control_sequence* get_res4w_seq(adc_range range){
     switch(range){
         case ADC_RANGE_300: return NULL;
     }
 }
 
-adc_control_sequence* get_vac_seq(adc_range range){
+static adc_control_sequence* get_vac_seq(adc_range range){
     switch(range){
         case ADC_RANGE_300m: seq_300mVAC.actual_value = 0; return &seq_300mVAC;
         case ADC_RANGE_3: seq_3VAC.actual_value = 0; return &seq_3VAC;
@@ -186,7 +186,7 @@ adc_control_sequence* get_vac_seq(adc_range range){
     return NULL;
 }
 
-adc_control_sequence* get_cdc_seq(adc_range range){
+static adc_control_sequence* get_cdc_seq(adc_range range){
     switch(range){
         case ADC_RANGE_30m: seq_30mADC.actual_value = 0; return &seq_30mADC;
         case ADC_RANGE_3: seq_3ADC.actual_value = 0; return &seq_3ADC;
@@ -194,7 +194,7 @@ adc_control_sequence* get_cdc_seq(adc_range range){
     return NULL;
 }
 
-adc_control_sequence* get_cac_seq(adc_range range){
+static adc_control_sequence* get_cac_seq(adc_range range){
     switch(range){
         case ADC_RANGE_30m: seq_30mAAC.actual_value = 0; return &seq_30mAAC;
         case ADC_RANGE_3: seq_3AAC.actual_value = 0; return &seq_3AAC;
@@ -202,7 +202,7 @@ adc_control_sequence* get_cac_seq(adc_range range){
     return NULL;
 }
 
-adc_control_sequence* get_vdc_seq(adc_range range){
+static adc_control_sequence* get_vdc_seq(adc_range range){
     switch(range){
         case ADC_RANGE_300m: seq_300mV.actual_value = 0; return &seq_300mV;
         case ADC_RANGE_3: seq_3V.actual_value = 0; return &seq_3V;
@@ -212,7 +212,7 @@ adc_control_sequence* get_vdc_seq(adc_range range){
     return NULL;
 }
 
-uint32_t hal_adcseq_next(adc_control_sequence* sequence){
+uint32_t adcctrl_get_next_sequence(adc_control_sequence* sequence){
     uint32_t value;
     if(sequence->actual_value<sequence->size){
         value = sequence->mux_values[sequence->actual_value];

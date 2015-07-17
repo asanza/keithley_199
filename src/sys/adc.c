@@ -13,8 +13,8 @@
  * the data shifted from the digital board on the output of the shift registers).
  *
  * The values sended to the shift registers (from now on adc sequences) should
- * be precicely timed, as the integration period should be exactly the same always.
- * this is done by precicely controlling the strobe signal, to be sended with no
+ * be precisely timed, as the integration period should be exactly the same always.
+ * this is done by precisely controlling the strobe signal, to be sent with no
  * jitter (which is not easy in a microcontroller).
  *
  * When the problem with the jitter is under control, the rest is to send the
@@ -24,7 +24,7 @@
  * calculated from the formula: Vout = VREF*(signal-zero)/(ref - zero).
  *
  * The sequences I use to do all these measurements where reverse engineered from
- * a working k199 and can be seen in adcseq.c.
+ * a working k199 and can be seen in adcctrl.c.
  *
  * This file implements the high level abstraction of the adc, where we can set
  * the desired input and range and integration period, and we get a nice number
@@ -107,25 +107,11 @@ adc_error adc_set_input(adc_input input_in, adc_range range_in){
     return ADC_ERROR_NONE;
 }
 
-static adc_error adc_integration_period_supported(adc_integration_period period){
-    switch(period){
-        case ADC_INTEGRATION_60HZ:
-        case ADC_INTEGRATION_50HZ:
-            return ADC_ERROR_NONE;
-        default:
-            return ADC_ERROR_NOT_SUPPORTED;
-    }
-}
-
 adc_error adc_set_integration_period(adc_integration_period period){
-    if(adc_integration_period_supported(period)!=ADC_ERROR_NONE)
-        return ADC_ERROR_NOT_SUPPORTED;
     hal_adc_set_integration_period((uint32_t)period);
 }
 
 adc_error adc_init(adc_integration_period period, adc_input input_, adc_range range_){
-    if(adc_integration_period_supported(period)!=ADC_ERROR_NONE)
-        return ADC_ERROR_NOT_SUPPORTED;
     adc_control_sequence* seq = adcctrl_get_sequence(input_,range_);
     if(!seq) return ADC_ERROR_NOT_SUPPORTED;
     input  = input_;
@@ -135,18 +121,18 @@ adc_error adc_init(adc_integration_period period, adc_input input_, adc_range ra
 }
 
 static uint32_t do_sequence(unsigned char channel, adc_control_sequence* sequence){
-    uint32_t start_int_mux_cfg = hal_adcseq_next(sequence);
+    uint32_t start_int_mux_cfg = adcctrl_get_next_sequence(sequence);
     /* send the start integration mux configuration */
     while(IS_RUN_DOWN_SLOPE(start_int_mux_cfg)||IS_PRE_INT_PULSE(start_int_mux_cfg)){
         /* if still in run down or pre-int get the next mux */
         hal_adc_send_mux(channel, start_int_mux_cfg);
-        start_int_mux_cfg = hal_adcseq_next(sequence);
+        start_int_mux_cfg = adcctrl_get_next_sequence(sequence);
     }
     /* send the start integration command */
     assert(IS_START_INTEGRATION(start_int_mux_cfg));
-    uint32_t stop_int_mux_cfg = hal_adcseq_next(sequence);
+    uint32_t stop_int_mux_cfg = adcctrl_get_next_sequence(sequence);
     assert(IS_STOP_INTEGRATION(stop_int_mux_cfg));
-    uint32_t run_down_mux_cfg = hal_adcseq_next(sequence);
+    uint32_t run_down_mux_cfg = adcctrl_get_next_sequence(sequence);
     assert(IS_RUN_DOWN_SLOPE( run_down_mux_cfg));
     /* here comes the signal integration */
     return hal_adc_integration_sequence(channel, start_int_mux_cfg,
