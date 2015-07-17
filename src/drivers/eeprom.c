@@ -72,6 +72,8 @@ void eeprom_write_byte(uint16_t address, uint8_t byte){
     hal_i2c_write(byte);
     hal_i2c_stop();
     /* wait for write to be executed */
-    while(hal_i2c_start(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE));
+    while(hal_i2c_start(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE)){
+        hal_i2c_stop();
+    }
     hal_i2c_stop();
 }

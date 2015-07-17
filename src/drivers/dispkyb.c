@@ -186,8 +186,7 @@ void timer_handler(void){
     BaseType_t xHigherPriorityTaskWoken;
     key_id key = hal_disp_scan();
     if(key != last_key_interrupt){
-        if(key != KEY_NONE)
-            xQueueSendToBackFromISR(event_queue,&key,&xHigherPriorityTaskWoken);
+        xQueueSendToBackFromISR(event_queue,&key,&xHigherPriorityTaskWoken);
         last_key_interrupt = key;
         holdoff_counter = 0;
         rept_counter = 0;

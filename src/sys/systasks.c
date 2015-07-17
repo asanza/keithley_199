@@ -35,6 +35,8 @@
 #define SYSTEM_TASK_PRIORITY        3
 #define MAX_TASK_COUNT              6
 
+#define MESSAGE_DELAY 500
+
 struct systask_t {
     TaskHandle_t task_handler;
     dmm_state context;
@@ -122,7 +124,7 @@ static void sys_init(void){
     while(temp[i]!=0){
         display_putc(toupper(temp[i]), i++);
     }
-    vTaskDelay(1000/portTICK_PERIOD_MS); // show firmware version at startup.
+    vTaskDelay(MESSAGE_DELAY/portTICK_PERIOD_MS); // show firmware version at startup.
     display_clear();
 }
 
@@ -130,7 +132,7 @@ static void load_settings(settings_t* settings){
         if(settings_restore(SETTINGS_LAST, settings)){
         DIAG("Bad Settings on Store. Loading defaults");
         display_puts("SETT ERROR");
-        vTaskDelay(1000/portTICK_PERIOD_MS);
+        vTaskDelay(MESSAGE_DELAY/portTICK_PERIOD_MS);
         display_clear();
     }
     switch(settings->integration_period){
@@ -138,5 +140,5 @@ static void load_settings(settings_t* settings){
         case ADC_INTEGRATION_60HZ: display_puts("FREQ=60 HZ");break;
         default: assert(0);
     }
-    vTaskDelay(1000/portTICK_PERIOD_MS);
+    vTaskDelay(MESSAGE_DELAY/portTICK_PERIOD_MS);
 }
