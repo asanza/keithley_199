@@ -37,13 +37,6 @@
 
 #define MESSAGE_DELAY 500
 
-struct systask_t {
-    TaskHandle_t task_handler;
-    settings_t settings;
-    bool shift;
-    key_id key_switch;
-};
-
 static struct systask_t tasks[MAX_TASK_COUNT];
 
 static TaskHandle_t systemTaskHandle = NULL;
@@ -55,46 +48,41 @@ static void load_settings(settings_t* state);
 static void SystemTask(void *pvParameters) {
     (void*) pvParameters;
     sys_init();
-    // Reload Sysstate from eeprom.hentai 
+    // Reload Sysstate from eeprom.
     settings_t last_settings;
     load_settings(&last_settings);
     display_clear();
-    bool shift_key = false;    
+    bool shift_key = false; 
+    bool repeat_key = true;
     key_id key;
     while (1) {
-        key = display_wait_for_key();
-        DIAG("Key Press: %d", key);
-        /*for (i = 0; i < MAX_TASK_COUNT; i++) {
-            if (tasks[i].task_handler == NULL) continue;
-            if (tasks[i].key_switch != key) continue;
-            if (shift_key != tasks[i].key_switch) continue;
-            sys_state_set(&tasks[i].context);
-            vTaskSuspend(runningTask);
-            vTaskResume(tasks[i].task_handler);
-            runningTask = tasks[i].task_handler;
-        }
         switch (display_wait_for_key()) {
             DIAG("Key Pressed");
-            case KEY_7:; //sys_state_up_scale(); continue;
-            case KEY_6:; //sys_state_down_scale(); continue;
-            case KEY_3:; //sys_state_toggle_acdc(); continue;
+            /* suspend tasks */
+            //system_suspend_runing_task();
+            case KEY_0:; //sys_state_set_mode(ADC_INPUT_VOLTAGE_DC); continue
             case KEY_1:; //sys_state_set_mode(ADC_INPUT_RESISTANCE_2W); continue;
-            case KEY_0:; //sys_state_set_mode(ADC_INPUT_VOLTAGE_DC); continue;
             case KEY_2:; //sys_state_set_mode(ADC_INPUT_CURRENT_DC); continue;
+            case KEY_3:; //sys_state_toggle_acdc(); continue;
             case KEY_4:; //continue;
-            case KEY_UP:; //continue;
             case KEY_5:; //continue;
+            case KEY_6:; //sys_state_down_scale(); continue;
+            case KEY_7:; //sys_state_up_scale(); continue;
             case KEY_8:; //continue;
             case KEY_9:; //continue;
+            case KEY_UP:; //continue;
             case KEY_DOWN: shift_key = true;
                 continue;
             case KEY_CAL:
                 //vTaskSuspend(measTaskHandle);
                 //vTaskStart(doCalTaskHandle);
                 continue;
+            case KEY_NONE:
+                repeat_key = true;
+                break;
             default:
                 Nop();
-        }*/
+        }
     }
 }
 
