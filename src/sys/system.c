@@ -1,7 +1,7 @@
 /*
- * sysstate.h
+ * sysstate.c
  *
- * Copyright (c) ${year}, Diego F. Asanza. All rights reserved.
+ * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,30 +18,28 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  *
- * Created on January 24, 2015, 8:04 PM
+ * Created on January 23, 2015, 9:04 PM
  */
-#ifndef SYSSTATE_H
-#define	SYSSTATE_H
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
+#include <hal.h>
 #include <adc.h>
-#include <syserr.h>
+#include <assert.h>
 #include <stddef.h>
-#include <settings.h>
+#include <string.h>
+#include "system.h"
 
-typedef struct dmm_state_t{
-    settings_t dmm_settings;
-}__attribute__((__packed__)) dmm_state;
-
-/** Set the dmm state */
-sys_error sys_state_set(const dmm_state* state);
-/** Get the actual dmm state */
-sys_error sys_state_get(dmm_state* state);
-
-#ifdef	__cplusplus
+static adc_channel channel = 0;
+cal_values_t calval;
+void system_set_configuration(const settings_t* settings, const cal_values_t* cal){
+    adc_error err = adc_init(settings->integration_period, settings->input, 
+            settings->range);
+    assert(err != ADC_ERROR_NONE);
+    channel = settings->channel;
+    calval.gain = cal->gain;
+    calval.offset = cal->offset;
 }
-#endif
 
-#endif	/* SYSSTATE_H */
+double system_read_input(void){
+    double value = calval.gain*adc_read_value(channel)+calval.offset;
+    return value;
+}

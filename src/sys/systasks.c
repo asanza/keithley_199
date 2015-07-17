@@ -28,7 +28,7 @@
 #include <dispkyb.h>
 #include <ctype.h>
 #include "systasks.h"
-#include "sysstate.h"
+#include "system.h"
 #include "settings.h"
 
 #define SYSTEM_TASK_STACK_SIZE      200
@@ -39,7 +39,7 @@
 
 struct systask_t {
     TaskHandle_t task_handler;
-    dmm_state context;
+    settings_t settings;
     bool shift;
     key_id key_switch;
 };
@@ -59,7 +59,6 @@ static void SystemTask(void *pvParameters) {
     settings_t last_settings;
     load_settings(&last_settings);
     display_clear();
-    display_puts("** TEST **");
     bool shift_key = false;    
     key_id key;
     while (1) {

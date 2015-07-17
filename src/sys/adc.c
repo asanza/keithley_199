@@ -140,7 +140,7 @@ static uint32_t do_sequence(unsigned char channel, adc_control_sequence* sequenc
 }
 
 
-double adc_do_measurement(unsigned char channel, adc_control_sequence* sequence){
+static double adc_do_measurement(unsigned char channel, adc_control_sequence* sequence){
     assert(sequence);
     adcctrl_reset(sequence); // always start at sequence start point.
     int signal_count, sigzero_count, ref_count, refzero_count;

@@ -1,7 +1,7 @@
 /*
- * sysstate.c
+ * system.h
  *
- * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
+ * Copyright (c) ${year}, Diego F. Asanza. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,28 +18,31 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  *
- * Created on January 23, 2015, 9:04 PM
+ * Created on January 24, 2015, 8:04 PM
  */
+#ifndef SYSTEM_H
+#define	SYSTEM_H
 
-#include <hal.h>
+#ifdef	__cplusplus
+extern "C" {
+#endif
 #include <adc.h>
-#include <assert.h>
-#include <systasks.h>
+#include <syserr.h>
 #include <stddef.h>
-#include <string.h>
-#include "sysstate.h"
+#include <settings.h>
 
-/** actual (physical) dmm state */
-static dmm_state state;
+/**
+ * configure the hardware to perform a measurement. 
+ * @param settings desired hardware configuration
+ * @param cal  calibration parameters
+ */
+void system_set_configuration(const settings_t *settings,const cal_values_t* cal);
 
-sys_error sys_state_set(const dmm_state* _state){
-  /* set multimeter state acordly */
-  adc_error err = adc_init(_state->dmm_settings.integration_period, _state->dmm_settings.input,
-                          _state->dmm_settings.range);
-  if(err != ADC_ERROR_NONE) return SYSERR_UNSUPORTED;
-  memcpy(&state, _state, sizeof(dmm_state));
+/** read the value at the input with the configuration set with system set configuration. */
+double system_read_input(void);
+
+#ifdef	__cplusplus
 }
+#endif
 
-sys_error sys_state_get(dmm_state* _state){
-  memcpy(_state, &state, sizeof(dmm_state));
-}
+#endif	/* SYSSTATE_H */
