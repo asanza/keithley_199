@@ -71,15 +71,37 @@ static void SystemTask(void *pvParameters) {
         /* suspend tasks */
         stop_running_task();
         switch (key) {
-            case KEY_0:;
-            case KEY_1:;
-            case KEY_2:;
-            case KEY_3:;
-            case KEY_4:; //continue;
-            case KEY_5:; //continue;
-            case KEY_6:;
-            case KEY_7:;
-            case KEY_8:; //continue;
+            case KEY_0:continue;
+            case KEY_1:continue;
+            case KEY_2:continue;
+            case KEY_3:continue;
+            case KEY_4:
+                shift_key = !shift_key;
+                if(shift_key)
+                    display_setmode(DISP_ZERO);
+                else
+                    display_clearmode(DISP_ZERO);
+                continue;
+            case KEY_5:continue;
+            case KEY_6:
+                if(!shift_key)
+                    settings_set_input(ADC_INPUT_RESISTANCE_2W);
+                switch_sys_function();
+                continue;
+            case KEY_7:
+                if(!shift_key)
+                    settings_set_input(ADC_INPUT_VOLTAGE_DC);
+                else
+                    settings_set_input(ADC_INPUT_VOLTAGE_AC);
+                switch_sys_function();
+                continue;
+            case KEY_8:
+                if(!shift_key)
+                    settings_set_input(ADC_INPUT_CURRENT_DC);
+                else
+                    settings_set_input(ADC_INPUT_CURRENT_AC);
+                switch_sys_function();
+                continue;
             case KEY_9:; //continue;
             case KEY_UP:; //continue;
             case KEY_DOWN:
@@ -154,11 +176,17 @@ static void switch_sys_function(){
     if(!calibration_restore()){
         display_puts("CAL ERROR");
         vTaskDelay(MESSAGE_DELAY/portTICK_PERIOD_MS);
+        display_clear();
     }
 
-    system_set_configuration(settings_get_input(), settings_get_range(),
+    if(system_set_configuration(settings_get_input(), settings_get_range(),
             settings_get_integration_period(), settings_get_channel(), 
-            calibration_gain(), calibration_offset());
+            calibration_gain(), calibration_offset())){
+        display_puts("NOT IMPL");
+        vTaskDelay(MESSAGE_DELAY/portTICK_PERIOD_MS);
+        display_clear();
+    }
+    
     switch(settings_get_input()){
         case ADC_INPUT_CURRENT_DC:
         case ADC_INPUT_CURRENT_AC:

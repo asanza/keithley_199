@@ -31,13 +31,14 @@
 static adc_channel channel = 0;
 double gain;
 double offset;
-void system_set_configuration(adc_input input, adc_range range, 
+int system_set_configuration(adc_input input, adc_range range, 
         adc_integration_period period, adc_channel _channel, double _gain, double _offset){
     adc_error err = adc_init(period, input,range);
-    assert(err == ADC_ERROR_NONE);
+    if(err != ADC_ERROR_NONE) return -1;
     channel = _channel;
     gain = _gain;
     offset = _offset;
+    return 0;
 }
 
 double system_read_input(void){

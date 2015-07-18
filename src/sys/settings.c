@@ -92,6 +92,11 @@ adc_channel settings_get_channel(){
     return actual_settings->channel;
 }
 
+void settings_set_input(adc_input input){
+    assert(input < ADC_NUMBER_OF_INPUTS);
+    actual_settings = &settings[input];
+}
+
 double calibration_gain(){
     return cal.gain;
 }
@@ -99,6 +104,7 @@ double calibration_gain(){
 double calibration_offset(){
     return cal.offset;
 }
+
 void settings_set_range(adc_range range){
     /* check if range valid */
     int id = adcctrl_get_sequence_id(actual_settings->input, range);

@@ -35,8 +35,9 @@ extern "C" {
  * configure the hardware to perform a measurement. 
  * @param settings desired hardware configuration
  * @param cal  calibration parameters
+ * @return -1 in case of error.
  */
-void system_set_configuration(adc_input input, adc_range range, 
+int system_set_configuration(adc_input input, adc_range range, 
         adc_integration_period period, adc_channel channel, double gain, double offset);
 
 /** read the value at the input with the configuration set with system set configuration. */
