@@ -67,11 +67,11 @@
       </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/adc.h</itemPath>
-        <itemPath>src/sys/adcseq.h</itemPath>
         <itemPath>src/sys/disfmt.h</itemPath>
-        <itemPath>src/sys/sysstate.h</itemPath>
         <itemPath>src/sys/syserr.h</itemPath>
         <itemPath>src/sys/systasks.h</itemPath>
+        <itemPath>src/sys/settings.h</itemPath>
+        <itemPath>src/sys/adcctrl.h</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.h</itemPath>
@@ -86,10 +86,6 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="app" displayName="app" projectFiles="true">
-        <itemPath>src/app/main.c</itemPath>
-        <itemPath>src/app/dmmtask.c</itemPath>
-      </logicalFolder>
       <logicalFolder name="dmm" displayName="dmm" projectFiles="true">
         <itemPath>src/dmm/calTask.c</itemPath>
         <itemPath>src/dmm/dmmTask.c</itemPath>
@@ -131,7 +127,6 @@
         <itemPath>src/hal/system.c</itemPath>
         <itemPath>src/hal/exceptions.c</itemPath>
         <itemPath>src/hal/isrWrappers.S</itemPath>
-        <itemPath>src/hal/counter.c</itemPath>
         <itemPath>src/hal/hal_adc.c</itemPath>
         <itemPath>src/hal/hal_uart.c</itemPath>
         <itemPath>src/hal/hal_i2c.c</itemPath>
@@ -152,10 +147,17 @@
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <itemPath>src/sys/adc.c</itemPath>
         <itemPath>src/sys/calibrator.c</itemPath>
-        <itemPath>src/sys/adcseq.c</itemPath>
         <itemPath>src/sys/disfmt.c</itemPath>
-        <itemPath>src/sys/sysstate.c</itemPath>
         <itemPath>src/sys/systasks.c</itemPath>
+        <itemPath>src/sys/adcctrl.c</itemPath>
+        <itemPath>src/sys/settings.c</itemPath>
+        <itemPath>src/sys/system.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
+        <itemPath>src/tasks/task_calibration.c</itemPath>
+        <itemPath>src/tasks/task_multimeter.c</itemPath>
+        <itemPath>src/tasks/main.c</itemPath>
+        <itemPath>src/tasks/task_resistance_4w.c</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.c</itemPath>
