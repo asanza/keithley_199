@@ -136,12 +136,12 @@ static void sys_init(void){
 
 static void load_settings(settings_t* settings){
     if(settings_restore()){
-        settings_get(ADC_INPUT_VOLTAGE_DC, settings);
         DIAG("Bad Settings on Store. Loading defaults");
         display_puts("SETT ERROR");
         vTaskDelay(MESSAGE_DELAY/portTICK_PERIOD_MS);
         display_clear();
     }
+    settings_get(ADC_INPUT_VOLTAGE_DC, settings);
     switch(settings_integration_period(settings)){
         case ADC_INTEGRATION_50HZ: display_puts("FREQ=50 HZ");break;
         case ADC_INTEGRATION_60HZ: display_puts("FREQ=60 HZ");break;
