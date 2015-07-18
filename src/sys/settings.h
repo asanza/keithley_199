@@ -33,7 +33,7 @@ extern "C" {
     
 /* storage addresses */
 typedef enum{
-            SETTINGS_0= 0x0A,
+            SETTINGS_0,
             SETTINGS_1,
             SETTINGS_2,
             SETTINGS_3,
@@ -50,26 +50,17 @@ typedef enum{
 typedef double(*conv_func)(double val, void* param, size_t param_size);
 typedef void(*out_fmt)(double val, char* buff, size_t size);
 
-typedef struct _settings_t{
-    adc_input               input               :4 ;
-    adc_channel             channel             :8 ; /* which channel is selected on the scanner */
-    adc_integration_period  integration_period  :16; /* integration period used */
-    adc_range               range               :4 ; /* selected range */
-    bool                    auto_range          :1 ; /* auto_range selected */
-    bool                    filter_enabled      :1 ; /* filter */
-    uint8_t                 filter_resoln       :8 ; /* filter resolution */
-    conv_func               math;                    /* selected math function */
-    out_fmt                 formatter;               /* selected output format */
-} settings_t;
+typedef struct _settings_t settings_t;
+typedef struct _calibration_t calibration;
 
-typedef struct _cal_values_t{
-    double gain;
-    double offset;
-}cal_values_t;
 
-void settings_save(settings_location location, settings_t settings);
+/* make sure that input, range combination are valid. */
+void settings_set_input(settings_t* settings, adc_input input);
+void settings_set_range(settings_t* settings, adc_range range);
+
+void settings_save(settings_location location);
 /* return 0 if ok, 1 if error.*/
-int settings_restore(settings_location location, settings_t* settings);
+int settings_get(adc_input input, settings_t* settings);
 
 void calibration_save(const settings_t* settings, const cal_values_t* cal);
 int calibration_restore(const settings_t* settings, cal_values_t* cal);

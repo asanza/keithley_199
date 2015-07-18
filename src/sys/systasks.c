@@ -83,15 +83,15 @@ static void SystemTask(void *pvParameters) {
             case KEY_8:; //continue;
             case KEY_9:; //continue;
             case KEY_UP:; //continue;
-            case KEY_DOWN: shift_key = true;
-                continue;
+            case KEY_DOWN:
+                break;
             case KEY_CAL:
                 stop_running_task();
                 start_task(TASK_CALIBRATION);
                 continue;
             case KEY_NONE:
                 repeat_key = true;
-                break;
+                continue;
             default:
                 Nop();
         }
