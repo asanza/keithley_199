@@ -77,31 +77,40 @@ static void SystemTask(void *pvParameters) {
             case KEY_3:continue;
             case KEY_4:
                 shift_key = !shift_key;
-                if(shift_key)
+                if(shift_key){
                     display_setmode(DISP_ZERO);
+                }
                 else
                     display_clearmode(DISP_ZERO);
                 continue;
-            case KEY_5:continue;
-            case KEY_6:
-                if(!shift_key)
+            case KEY_5:
+                if(shift_key){
                     settings_set_input(ADC_INPUT_RESISTANCE_2W);
+                }else{
+                    settings_set_input(ADC_INPUT_RESISTANCE_4W);
+                }
+                shift_key = false;
+                switch_sys_function();
+                continue;
+            case KEY_6:
+                if(shift_key){
+                    settings_set_input(ADC_INPUT_VOLTAGE_AC);
+                    shift_key = false;
+                }
+                else
+                    settings_set_input(ADC_INPUT_VOLTAGE_DC);
                 switch_sys_function();
                 continue;
             case KEY_7:
-                if(!shift_key)
-                    settings_set_input(ADC_INPUT_VOLTAGE_DC);
-                else
-                    settings_set_input(ADC_INPUT_VOLTAGE_AC);
-                switch_sys_function();
-                continue;
-            case KEY_8:
-                if(!shift_key)
-                    settings_set_input(ADC_INPUT_CURRENT_DC);
-                else
+                if(shift_key){
                     settings_set_input(ADC_INPUT_CURRENT_AC);
+                    shift_key = false;
+                }
+                else
+                    settings_set_input(ADC_INPUT_CURRENT_DC);
                 switch_sys_function();
                 continue;
+            case KEY_8:continue;   
             case KEY_9:; //continue;
             case KEY_UP:; //continue;
             case KEY_DOWN:
