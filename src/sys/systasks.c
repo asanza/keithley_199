@@ -85,9 +85,9 @@ static void SystemTask(void *pvParameters) {
                 continue;
             case KEY_5:
                 if(shift_key){
-                    settings_set_input(ADC_INPUT_RESISTANCE_2W);
-                }else{
                     settings_set_input(ADC_INPUT_RESISTANCE_4W);
+                }else{
+                    settings_set_input(ADC_INPUT_RESISTANCE_2W);
                 }
                 shift_key = false;
                 switch_sys_function();
