@@ -31,13 +31,13 @@
 static adc_channel channel = 0;
 double gain;
 double offset;
-void system_set_configuration(const settings_t* settings, const calibration_t* cal){
-    adc_error err = adc_init(settings_integration_period(settings), settings_input(settings), 
-            settings_range(settings));
-    assert(err != ADC_ERROR_NONE);
-    channel = settings_channel(settings);
-    gain = calibration_gain(cal);
-    offset = calibration_offset(cal);
+void system_set_configuration(adc_input input, adc_range range, 
+        adc_integration_period period, adc_channel _channel, double _gain, double _offset){
+    adc_error err = adc_init(period, input,range);
+    assert(err == ADC_ERROR_NONE);
+    channel = _channel;
+    gain = _gain;
+    offset = _offset;
 }
 
 double system_read_input(void){

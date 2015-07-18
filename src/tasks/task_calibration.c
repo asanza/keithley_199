@@ -21,6 +21,9 @@
  * Created on July 17, 2015, 10:46 PM
  */
 
+#include<diag.h>
+
 void task_calibration(void* params){
-    
+       DIAG("Loaded");
+    while(1); 
 }

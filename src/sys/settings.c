@@ -28,8 +28,9 @@
 #include <adcctrl.h>
 #include <assert.h>
 #include <string.h>
+#include <diag.h>
 
-struct _settings_t{
+typedef struct _settings_t{
     adc_input               input               :4 ;
     adc_channel             channel             :8 ; /* which channel is selected on the scanner */
     adc_integration_period  integration_period  :16; /* integration period used */
@@ -39,19 +40,21 @@ struct _settings_t{
     uint8_t                 filter_resoln       :8 ; /* filter resolution */
     conv_func               math;                    /* selected math function */
     out_fmt                 formatter;               /* selected output format */
-}__attribute__((__packed__));
+} __attribute__((__packed__)) settings_t;
 
-struct _calibration_t{
+typedef struct _calibration_t{
     double gain;
     double offset;
-};
+}calibration_t;
 
 #define SETTINGS_START_ADDRESS  0x0A
+static calibration_t cal;
 
 /* each input has its settings */
 static settings_t settings[ADC_NUMBER_OF_INPUTS];
+static settings_t* actual_settings = settings;
+
 static void settings_set_default();
-static void calibration_get_default(const settings_t* settings, calibration_t* cal);
 
 void settings_save(settings_location location){
     int i;
@@ -60,70 +63,69 @@ void settings_save(settings_location location){
         eefs_object_save(addr + i,&settings[i], sizeof(settings_t));
 }
 
-int settings_restore(){
+int settings_restore(settings_location location) {
     int i, j;
-    for(j=0; j < SETTINGS_LAST; j++){
-        int addr = SETTINGS_START_ADDRESS + j*sizeof(settings);
-        for(i = 0; i < ADC_NUMBER_OF_INPUTS; i++){
-            EEFS_ERROR err = eefs_object_restore(addr+i, &settings[i],sizeof(settings_t));
-            if(err != EEFS_OK){
-                settings_set_default();
-                return 1;
-            }
+    int addr = SETTINGS_START_ADDRESS + location * sizeof (settings);
+    for (i = 0; i < ADC_NUMBER_OF_INPUTS; i++) {
+        EEFS_ERROR err = eefs_object_restore(addr + i, &settings[i], sizeof (settings_t));
+        if (err != EEFS_OK) {
+            settings_set_default();
+            return 1;
         }
     }
     return 0;
 }
 
-void settings_get(adc_input input, settings_t* settings_){
-    settings_ = &settings[input];
+adc_integration_period settings_get_integration_period(){
+    return actual_settings->integration_period;
 }
 
-adc_integration_period settings_integration_period(const settings_t* settings){
-    return settings->integration_period;
+adc_input settings_get_input(){
+    return actual_settings->input;
 }
 
-adc_input settings_input(const settings_t* settings){
-    return settings->input;
-}
-adc_range settings_range(const settings_t* settings){
-    return settings->range;
-}
-adc_channel settings_channel(const settings_t* settings){
-    return settings->channel;
+adc_range settings_get_range(){
+    return actual_settings->range;
 }
 
-double calibration_gain(const calibration_t* cal){
-    return cal->gain;
-}
-double calibration_offset(const calibration_t* cal){
-    cal->offset;
+adc_channel settings_get_channel(){
+    return actual_settings->channel;
 }
 
-void settings_set_range(adc_input input, adc_range range){
+double calibration_gain(){
+    return cal.gain;
+}
+
+double calibration_offset(){
+    return cal.offset;
+}
+void settings_set_range(adc_range range){
     /* check if range valid */
-    int id = adcctrl_get_sequence_id(input, range);
+    int id = adcctrl_get_sequence_id(actual_settings->input, range);
     if(id < 0) return;
-    settings[input].range = range;
+    actual_settings->range = range;
 }
 
-void calibration_save(const settings_t* settings,const calibration_t* cal){
-    int id = adcctrl_get_sequence_id(settings->input, settings->range);
+void calibration_save(double gain, double offset){
+    int id = adcctrl_get_sequence_id(actual_settings->input, actual_settings->range);
     id = SETTINGS_START_ADDRESS + SETTINGS_LAST*sizeof(settings) + id;
     assert(id<=0);
     assert(id < 255); //max number of objects
+    cal.gain = gain;
+    cal.offset = offset;
     eefs_object_save(id, &cal, sizeof(calibration_t));
 }
 
-int calibration_restore(const settings_t* settings, calibration_t* cal){
-    int id = adcctrl_get_sequence_id(settings->input, settings->range);
-    id = SETTINGS_START_ADDRESS + SETTINGS_LAST*sizeof(settings) + id;
-    assert(id<=0);
-    assert(id<255);
-    EEFS_ERROR err = eefs_object_restore(id, cal, sizeof(calibration_t));
-    if(err == EEFS_OK) return 0;
-    calibration_get_default(settings, cal);
-    return 1;
+int calibration_restore(){
+    int id = adcctrl_get_sequence_id(actual_settings->input, actual_settings->range);
+    id = SETTINGS_START_ADDRESS + SETTINGS_LAST*ADC_NUMBER_OF_INPUTS + id;
+    assert(id >= 0);
+    assert(id < 255);
+    EEFS_ERROR err = eefs_object_restore(id, &cal, sizeof(calibration_t));
+    if(err == EEFS_OK) return 1;
+    cal.gain = 1;
+    cal.offset = 0;   
+    return 0;
 }
 
 static void settings_set_default(){
@@ -158,10 +160,11 @@ static void settings_set_default(){
 }
 
 /* load calibration according to settings */
-static void calibration_get_default(const settings_t* settings, calibration_t* cal){
+calibration_t* calibration_get_default(adc_input input){
     /* look if they are supported */
-    int id = adcctrl_get_sequence_id(settings->input, settings->range);
+    int id = adcctrl_get_sequence_id(settings[input].input, settings[input].range);
     assert(id >= 0);
-    cal->gain = 1;
-    cal->offset = 0;
+    cal.gain = 1;
+    cal.offset = 0;
+    return &cal;
 }

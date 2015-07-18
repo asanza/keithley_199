@@ -36,7 +36,8 @@ extern "C" {
  * @param settings desired hardware configuration
  * @param cal  calibration parameters
  */
-void system_set_configuration(const settings_t *settings,const calibration_t* cal);
+void system_set_configuration(adc_input input, adc_range range, 
+        adc_integration_period period, adc_channel channel, double gain, double offset);
 
 /** read the value at the input with the configuration set with system set configuration. */
 double system_read_input(void);

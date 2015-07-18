@@ -21,7 +21,9 @@
  * Created on July 17, 2015, 10:45 PM
  */
 
+#include <diag.h>
 
 void task_resistance_4w(void *params){
-    
+       DIAG("Loaded");
+    while(1); 
 }

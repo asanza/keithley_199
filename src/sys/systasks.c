@@ -26,7 +26,6 @@
 #include <diag.h>
 #include <assert.h>
 #include <dispkyb.h>
-#include <ctype.h>
 #include "systasks.h"
 #include "system.h"
 #include "settings.h"
@@ -51,27 +50,27 @@ extern void task_calibration(void* params);
 static TaskHandle_t task_list[TASK_COUNT];
 static TaskHandle_t runningTask = NULL;
 static void sys_init(void);
-static void load_settings(settings_t* state);
+static void load_settings();
 static void start_task(dmm_task_t task);
 static void stop_running_task();
-static void switch_sys_function(const settings_t* settings);
+static void switch_sys_function();
 
 static void SystemTask(void *pvParameters) {
     (void*) pvParameters;
     sys_init();
     // Reload Sysstate from eeprom.
-    settings_t* settings;
-    load_settings(settings);
+    load_settings();
     display_clear();
     bool shift_key = false; 
     bool repeat_key = true;
     key_id key;
-    switch_sys_function(settings);
+    switch_sys_function();
     while (1) {
-        switch (display_wait_for_key()) {
-            DIAG("Key Pressed");
-            /* suspend tasks */
-            stop_running_task();
+        key_id key = display_wait_for_key();
+        DIAG("Key Pressed: %d", key);
+        /* suspend tasks */
+        stop_running_task();
+        switch (key) {
             case KEY_0:;
             case KEY_1:;
             case KEY_2:;
@@ -84,9 +83,9 @@ static void SystemTask(void *pvParameters) {
             case KEY_9:; //continue;
             case KEY_UP:; //continue;
             case KEY_DOWN:
-                break;
+                continue;
             case KEY_CAL:
-                stop_running_task();
+                //stop_running_task();
                 start_task(TASK_CALIBRATION);
                 continue;
             case KEY_NONE:
@@ -134,15 +133,15 @@ static void sys_init(void){
     display_clear();
 }
 
-static void load_settings(settings_t* settings){
-    if(settings_restore()){
+static void load_settings(){
+    if(settings_restore(SETTINGS_0)){
         DIAG("Bad Settings on Store. Loading defaults");
         display_puts("SETT ERROR");
         vTaskDelay(MESSAGE_DELAY/portTICK_PERIOD_MS);
         display_clear();
     }
-    settings_get(ADC_INPUT_VOLTAGE_DC, settings);
-    switch(settings_integration_period(settings)){
+  
+    switch(settings_get_integration_period()){
         case ADC_INTEGRATION_50HZ: display_puts("FREQ=50 HZ");break;
         case ADC_INTEGRATION_60HZ: display_puts("FREQ=60 HZ");break;
         default: assert(0);
@@ -150,12 +149,17 @@ static void load_settings(settings_t* settings){
     vTaskDelay(MESSAGE_DELAY/portTICK_PERIOD_MS);
 }
 
-static void switch_sys_function(const settings_t* settings){
+static void switch_sys_function(){
     stop_running_task();
-    calibration_t* cal;
-    calibration_restore(settings, cal);
-    system_set_configuration(settings,cal);
-    switch(settings_input(settings)){
+    if(!calibration_restore()){
+        display_puts("CAL ERROR");
+        vTaskDelay(MESSAGE_DELAY/portTICK_PERIOD_MS);
+    }
+
+    system_set_configuration(settings_get_input(), settings_get_range(),
+            settings_get_integration_period(), settings_get_channel(), 
+            calibration_gain(), calibration_offset());
+    switch(settings_get_input()){
         case ADC_INPUT_CURRENT_DC:
         case ADC_INPUT_CURRENT_AC:
         case ADC_INPUT_RESISTANCE_2W:
