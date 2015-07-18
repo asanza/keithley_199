@@ -51,19 +51,25 @@ typedef double(*conv_func)(double val, void* param, size_t param_size);
 typedef void(*out_fmt)(double val, char* buff, size_t size);
 
 typedef struct _settings_t settings_t;
-typedef struct _calibration_t calibration;
+typedef struct _calibration_t calibration_t;
 
 
 /* make sure that input, range combination are valid. */
-void settings_set_input(settings_t* settings, adc_input input);
-void settings_set_range(settings_t* settings, adc_range range);
-
+void settings_get(adc_input input, settings_t* settings);
+void settings_set_range(adc_input input, adc_range range);
 void settings_save(settings_location location);
-/* return 0 if ok, 1 if error.*/
-int settings_get(adc_input input, settings_t* settings);
+int settings_restore();
 
-void calibration_save(const settings_t* settings, const cal_values_t* cal);
-int calibration_restore(const settings_t* settings, cal_values_t* cal);
+adc_integration_period settings_integration_period(const settings_t* settings);
+adc_input settings_input(const settings_t* settings);
+adc_range settings_range(const settings_t* settings);
+adc_channel settings_channel(const settings_t* settings);
+
+void calibration_save(const settings_t* settings, const calibration_t* cal);
+int calibration_restore(const settings_t* settings, calibration_t* cal);
+
+double calibration_gain(const calibration_t* cal);
+double calibration_offset(const calibration_t* cal);
 
 
 #ifdef	__cplusplus

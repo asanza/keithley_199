@@ -29,17 +29,18 @@
 #include "system.h"
 
 static adc_channel channel = 0;
-cal_values_t calval;
-void system_set_configuration(const settings_t* settings, const cal_values_t* cal){
-    adc_error err = adc_init(settings->integration_period, settings->input, 
-            settings->range);
+double gain;
+double offset;
+void system_set_configuration(const settings_t* settings, const calibration_t* cal){
+    adc_error err = adc_init(settings_integration_period(settings), settings_input(settings), 
+            settings_range(settings));
     assert(err != ADC_ERROR_NONE);
-    channel = settings->channel;
-    calval.gain = cal->gain;
-    calval.offset = cal->offset;
+    channel = settings_channel(settings);
+    gain = calibration_gain(cal);
+    offset = calibration_offset(cal);
 }
 
 double system_read_input(void){
-    double value = calval.gain*adc_read_value(channel)+calval.offset;
+    double value = gain*adc_read_value(channel)+offset;
     return value;
 }

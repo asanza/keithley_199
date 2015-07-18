@@ -60,13 +60,13 @@ static void SystemTask(void *pvParameters) {
     (void*) pvParameters;
     sys_init();
     // Reload Sysstate from eeprom.
-    settings_t settings;
-    load_settings(&settings);
+    settings_t* settings;
+    load_settings(settings);
     display_clear();
     bool shift_key = false; 
     bool repeat_key = true;
     key_id key;
-    switch_sys_function(&settings);
+    switch_sys_function(settings);
     while (1) {
         switch (display_wait_for_key()) {
             DIAG("Key Pressed");
@@ -135,13 +135,14 @@ static void sys_init(void){
 }
 
 static void load_settings(settings_t* settings){
-        if(settings_restore(SETTINGS_LAST, settings)){
+    if(settings_restore()){
+        settings_get(ADC_INPUT_VOLTAGE_DC, settings);
         DIAG("Bad Settings on Store. Loading defaults");
         display_puts("SETT ERROR");
         vTaskDelay(MESSAGE_DELAY/portTICK_PERIOD_MS);
         display_clear();
     }
-    switch(settings->integration_period){
+    switch(settings_integration_period(settings)){
         case ADC_INTEGRATION_50HZ: display_puts("FREQ=50 HZ");break;
         case ADC_INTEGRATION_60HZ: display_puts("FREQ=60 HZ");break;
         default: assert(0);
@@ -151,10 +152,10 @@ static void load_settings(settings_t* settings){
 
 static void switch_sys_function(const settings_t* settings){
     stop_running_task();
-    cal_values_t cal;
-    calibration_restore(settings, &cal);
-    system_set_configuration(settings,&cal);
-    switch(settings->input){
+    calibration_t* cal;
+    calibration_restore(settings, cal);
+    system_set_configuration(settings,cal);
+    switch(settings_input(settings)){
         case ADC_INPUT_CURRENT_DC:
         case ADC_INPUT_CURRENT_AC:
         case ADC_INPUT_RESISTANCE_2W:
