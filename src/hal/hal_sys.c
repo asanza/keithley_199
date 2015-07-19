@@ -1,4 +1,4 @@
-#include <hal.h>
+#include <hal_sys.h>
 #include "HardwareProfile.h"
 #include <peripheral/system.h>
 #include <peripheral/ports.h>

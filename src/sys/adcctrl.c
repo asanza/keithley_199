@@ -235,6 +235,7 @@ adc_range adcctrl_get_next_range(adc_input input, adc_range actual_range){
     for(i = actual_range; i < ADC_RANGE_COUNT; i++){
         if(adcctrl_get_sequence_id(input, i) >= 0){
             range = i;
+            break;
         }
     }
     return range;
@@ -243,9 +244,10 @@ adc_range adcctrl_get_next_range(adc_input input, adc_range actual_range){
 adc_range adcctrl_get_previous_range(adc_input input, adc_range actual_range){
     int i;
     adc_range range = actual_range;
-    for(i = actual_range; i < ADC_RANGE_30m; i--){
+    for(i = actual_range; i >= ADC_RANGE_30m; i--){
         if(adcctrl_get_sequence_id(input, i) >= 0){
             range = i;
+            break;
         }
     }
     return range;    

@@ -32,6 +32,7 @@ extern "C" {
 
 disp_mode fmt_get_disp_mode(adc_input mode);
 void fmt_format_string(char* buffer, adc_range scale, double value);
+void fmt_append_scale(char* buffer, adc_input mode, adc_range range);
 
 #ifdef	__cplusplus
 }

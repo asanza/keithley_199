@@ -16,17 +16,14 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
-#define SYS_CLK     80000000UL
-#define PB_CLK      80000000UL
-
-void hal_sys_init();
-
-void hal_usbuart_init();
-int hal_usbuart_receive(char* buffer, int size);
-void hal_usbuart_readline(char* buffer, int size);
-
-void hal_sys_idle();
-
+#include <hal_sys.h>
+#include <hal_adc.h>
+#include <hal_io.h>
+#include <hal_spi.h>
+#include <hal_sys.h>
+#include <hal_timer.h>
+#include <hal_uart.h>
+    
 #endif /*__LANGUAGE_ASSEMBLY*/
 #ifdef	__cplusplus
 }

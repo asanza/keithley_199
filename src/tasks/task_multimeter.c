@@ -24,22 +24,22 @@
 #include <diag.h>
 
 #include "settings.h"
-#include <FreeRTOS.h>
-#include "task.h"
-#include "portmacro.h"
 
 void task_multimeter(void *params){
     DIAG("Loaded");
+    char buff[10];
     while(1){
         adc_input val = settings_get_input();
         switch(val){
             case ADC_INPUT_VOLTAGE_AC: display_puts("VOLT AC"); break;
-            case ADC_INPUT_VOLTAGE_DC: display_puts("VOLT DC"); break;
+            //case ADC_INPUT_VOLTAGE_DC: display_puts("VOLT DC"); break;
             case ADC_INPUT_CURRENT_AC: display_puts("AMP AC"); break;
             case ADC_INPUT_CURRENT_DC: display_puts("AMP DC"); break;
             case ADC_INPUT_RESISTANCE_2W: display_puts("RES 2W"); break;
             case ADC_INPUT_RESISTANCE_4W: display_puts("RES 4W"); break;
         }
-        vTaskDelay(100/portTICK_PERIOD_MS);
+        double value = adc_read_value(settings_get_channel());
+        fmt_format_string(buff,settings_get_range(),value);
+        display_puts(buff);
     }
 }

@@ -66,7 +66,7 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
-#include <hal.h>
+#include <hal_sys.h>
 
 /*-----------------------------------------------------------
  * Application specific definitions.

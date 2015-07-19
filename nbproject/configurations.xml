@@ -50,6 +50,7 @@
         <itemPath>src/hal/hal_timer.h</itemPath>
         <itemPath>src/hal/hal_io.h</itemPath>
         <itemPath>src/hal/hal_adc.h</itemPath>
+        <itemPath>src/hal/hal_sys.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="libscpi" projectFiles="true">
         <itemPath>src/scpi-parser/libscpi/inc/scpi/config.h</itemPath>

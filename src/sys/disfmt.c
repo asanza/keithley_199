@@ -99,12 +99,12 @@ void fmt_format_string(char* buff,adc_range scale, double value){
       }
 }
 
-void fmt_append_scale(char* buffer, adc_input mode){
+void fmt_append_scale(char* buffer, adc_input mode, adc_range range){
     switch(mode){
         case ADC_INPUT_VOLTAGE_DC:
         case ADC_INPUT_VOLTAGE_AC:
         {
-            if(sys_state_get_scale()==ADC_RANGE_300m)
+            if(range==ADC_RANGE_300m)
                 strcat(buffer, "mV ");
             else
                 strcat(buffer, " V");
@@ -113,7 +113,7 @@ void fmt_append_scale(char* buffer, adc_input mode){
         case ADC_INPUT_CURRENT_DC:
         case ADC_INPUT_CURRENT_AC:
         {
-            if(sys_state_get_scale()==ADC_RANGE_30m)
+            if(range==ADC_RANGE_30m)
                 strcat(buffer,"mA");
             else
                 strcat(buffer," A");
@@ -122,7 +122,7 @@ void fmt_append_scale(char* buffer, adc_input mode){
         case ADC_INPUT_RESISTANCE_2W:
         case ADC_INPUT_RESISTANCE_4W:
         {
-            switch(sys_state_get_scale()){
+            switch(range){
                 case ADC_RANGE_300: strcat(buffer," o");break;
                 case ADC_RANGE_3K:
                 case ADC_RANGE_30K:
