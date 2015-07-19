@@ -49,7 +49,7 @@ extern void task_resistance_4w(void* params);
 extern void task_calibration(void* params);
 
 static TaskHandle_t task_list[TASK_COUNT];
-static TaskHandle_t runningTask = NULL;
+static dmm_task_t runningTask = TASK_COUNT;
 static void sys_init(void);
 static void load_settings();
 static void start_task(dmm_task_t task);
@@ -68,8 +68,6 @@ static void SystemTask(void *pvParameters) {
     while (1) {
         key_id key = display_wait_for_key();
         DIAG("Key Pressed: %d", key);
-        /* suspend tasks */
-        stop_running_task();
         switch (key) {
             case KEY_0:continue;
             case KEY_1:continue;
@@ -147,12 +145,15 @@ void systasks_init(void) {
         }
 }
 static void start_task(dmm_task_t task){
+    DIAG("restarting task: %d", task);
     vTaskResume(task_list[task]);
-    runningTask = task_list[task];
+    runningTask = task;
 }
 static void stop_running_task(){
-    if(runningTask!=NULL)
-        vTaskSuspend(runningTask);
+    if(runningTask < TASK_COUNT){
+        DIAG("Stopping Task: %d", runningTask);
+        vTaskSuspend(task_list[runningTask]);
+    }
 }
 static void sys_init(void){
     DIAG("Initializing System");

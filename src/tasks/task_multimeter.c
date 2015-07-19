@@ -24,22 +24,29 @@
 #include <diag.h>
 
 #include "settings.h"
+#include "FreeRTOS.h"
+#include "task.h"
+#include "disfmt.h"
 
 void task_multimeter(void *params){
     DIAG("Loaded");
     char buff[10];
     while(1){
         adc_input val = settings_get_input();
+//        DIAG("Running");
         switch(val){
-            case ADC_INPUT_VOLTAGE_AC: display_puts("VOLT AC"); break;
+            case ADC_INPUT_VOLTAGE_AC: display_puts("VOLT AC"); continue;
             //case ADC_INPUT_VOLTAGE_DC: display_puts("VOLT DC"); break;
-            case ADC_INPUT_CURRENT_AC: display_puts("AMP AC"); break;
-            case ADC_INPUT_CURRENT_DC: display_puts("AMP DC"); break;
-            case ADC_INPUT_RESISTANCE_2W: display_puts("RES 2W"); break;
-            case ADC_INPUT_RESISTANCE_4W: display_puts("RES 4W"); break;
+            case ADC_INPUT_CURRENT_AC: display_puts("AMP  AC"); continue;
+            //case ADC_INPUT_CURRENT_DC: display_puts("AMP DC"); continue;
+            case ADC_INPUT_RESISTANCE_2W: display_puts("RES 2W"); continue;
+            case ADC_INPUT_RESISTANCE_4W: display_puts("RES 4W"); continue;
+            default: break;
         }
         double value = adc_read_value(settings_get_channel());
         fmt_format_string(buff,settings_get_range(),value);
+        fmt_append_scale(buff,settings_get_input(), settings_get_range());
         display_puts(buff);
+        hal_disp_adci_toggle();
     }
 }
