@@ -110,6 +110,9 @@ adc_control_sequence* adcctrl_get_sequence(adc_input input, adc_range range);
  * hardware configuration is not supported. */
 int adcctrl_get_sequence_id(adc_input input, adc_range range);
 
+adc_range adcctrl_get_next_range(adc_input input, adc_range actual_range);
+adc_range adcctrl_get_previous_range(adc_input input, adc_range actual_range);
+
 #ifdef	__cplusplus
 }
 #endif

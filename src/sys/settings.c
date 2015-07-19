@@ -97,15 +97,20 @@ void settings_set_input(adc_input input){
     actual_settings = &settings[input];
 }
 
-void settings_range_up(){
-    assert(0);
+void settings_range_up(void){
+    /* get the next range for this input */
+    adc_range range = adcctrl_get_next_range(actual_settings->input, actual_settings->range);
+    if(range == actual_settings->range) return;
+    actual_settings->range = range;
 }
 
-void settings_range_down(){
-    assert(0);
+void settings_range_down(void){
+    adc_range range = adcctrl_get_previous_range(actual_settings->input, actual_settings->range);
+    if(range == actual_settings->range) return;
+    actual_settings->range = range;
 }
 
-double calibration_gain(){
+double calibration_gain(void){
     return cal.gain;
 }
 
