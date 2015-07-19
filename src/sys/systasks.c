@@ -60,7 +60,6 @@ static void SystemTask(void *pvParameters) {
     sys_init();
     // Reload Sysstate from eeprom.
     load_settings();
-    display_clear();
     bool shift_key = false; 
     bool repeat_key = true;
     key_id key;
@@ -112,11 +111,15 @@ static void SystemTask(void *pvParameters) {
                 continue;
             case KEY_8:continue;   
             case KEY_9:; //continue;
-            case KEY_UP:; //continue;
+            case KEY_UP:
+                settings_range_up();
+                switch_sys_function();
+                continue;
             case KEY_DOWN:
+                settings_range_down();
+                switch_sys_function();
                 continue;
             case KEY_CAL:
-                //stop_running_task();
                 start_task(TASK_CALIBRATION);
                 continue;
             case KEY_NONE:
@@ -142,7 +145,6 @@ void systask_init(void) {
             vTaskSuspend(task_list[i]);
         }
 }
-
 static void start_task(dmm_task_t task){
     vTaskResume(task_list[task]);
     runningTask = task_list[task];
@@ -151,7 +153,6 @@ static void stop_running_task(){
     if(runningTask!=NULL)
         vTaskSuspend(runningTask);
 }
-
 static void sys_init(void){
     DIAG("Initializing System");
     display_kyb_init();
@@ -163,7 +164,6 @@ static void sys_init(void){
     vTaskDelay(MESSAGE_DELAY/portTICK_PERIOD_MS); // show firmware version at startup.
     display_clear();
 }
-
 static void load_settings(){
     if(settings_restore(SETTINGS_0)){
         DIAG("Bad Settings on Store. Loading defaults");
@@ -178,8 +178,8 @@ static void load_settings(){
         default: assert(0);
     }
     vTaskDelay(MESSAGE_DELAY/portTICK_PERIOD_MS);
+    display_clear();
 }
-
 static void switch_sys_function(){
     stop_running_task();
     if(!calibration_restore()){

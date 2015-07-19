@@ -9,12 +9,11 @@
 #define EVENT_QUEUE_LENGTH 1
 QueueHandle_t event_queue; // queue for keyboard events
 
-#define KYB_REPETITION_PERIOD_MS 30
+#define KYB_REPETITION_PERIOD_MS 60
 
 key_id display_wait_for_key(){
     key_id key;
     xQueueReceive(event_queue,&key,portMAX_DELAY);
-    vTaskDelay(KYB_REPETITION_PERIOD_MS/portTICK_PERIOD_MS);
     return key;
 }
 
@@ -200,7 +199,6 @@ void timer_handler(void){
                 if(rept_counter++ > KEY_REPEAT_PERIOD*1000/REFRESH_PERIOD){
                     xQueueSendToBackFromISR(event_queue,&key,&xHigherPriorityTaskWoken);
                     rept_counter = 0;
-                    hal_io_toggle_debugpin();
                 }                
             }
         }

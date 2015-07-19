@@ -97,6 +97,14 @@ void settings_set_input(adc_input input){
     actual_settings = &settings[input];
 }
 
+void settings_range_up(){
+    assert(0);
+}
+
+void settings_range_down(){
+    assert(0);
+}
+
 double calibration_gain(){
     return cal.gain;
 }

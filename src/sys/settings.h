@@ -64,7 +64,10 @@ void settings_set_integration_period(adc_integration_period period);
 adc_integration_period settings_get_integration_period();
 
 void settings_set_channel(adc_channel channel);
-adc_channel settings_get_channel();
+adc_channel settings_get_channel(void);
+
+void settings_range_up(void);
+void settings_range_down(void);
 
 void calibration_save(double gain, double offset);
 int calibration_restore();
