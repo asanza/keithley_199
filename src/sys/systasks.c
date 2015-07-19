@@ -148,6 +148,7 @@ static void start_task(dmm_task_t task){
     DIAG("restarting task: %d", task);
     vTaskResume(task_list[task]);
     runningTask = task;
+    display_clear();
 }
 static void stop_running_task(){
     if(runningTask < TASK_COUNT){

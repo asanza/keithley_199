@@ -122,7 +122,7 @@ int hal_adc_integration_sequence (uint8_t channel, uint32_t int_mux, uint32_t pa
     adc_send_mux(channel, rund_mux);
     send_strobe_and_wait(START_WAIT_TIME);
     /* wait until all adc pulses are received */
-    vTaskDelay(4);
+    vTaskDelay(2);
     /* read counter */
     down_counter = hal_counter_read();
     /* make final count calculations */
