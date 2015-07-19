@@ -12,13 +12,13 @@
  * board. The first line is clock, the second data, and the third the strobe (loads
  * the data shifted from the digital board on the output of the shift registers).
  *
- * The values sended to the shift registers (from now on adc sequences) should
+ * The values sent to the shift registers (from now on adc sequences) should
  * be precisely timed, as the integration period should be exactly the same always.
  * this is done by precisely controlling the strobe signal, to be sent with no
  * jitter (which is not easy in a microcontroller).
  *
  * When the problem with the jitter is under control, the rest is to send the
- * right adc sequences according to what we are triying to measure. For ac/dc
+ * right adc sequences according to what we are trying to measure. For ac/dc
  * voltages, the k199 do four measurements at once, first signal, after that zero,
  * again zero (for reference) and finally reference voltage. The final value is
  * calculated from the formula: Vout = VREF*(signal-zero)/(ref - zero).
@@ -128,7 +128,6 @@ static uint32_t do_sequence(unsigned char channel, adc_control_sequence* sequenc
         hal_adc_send_mux(channel, start_int_mux_cfg);
         start_int_mux_cfg = adcctrl_get_next_sequence(sequence);
     }
-    /* send the start integration command */
     assert(IS_START_INTEGRATION(start_int_mux_cfg));
     uint32_t stop_int_mux_cfg = adcctrl_get_next_sequence(sequence);
     assert(IS_STOP_INTEGRATION(stop_int_mux_cfg));

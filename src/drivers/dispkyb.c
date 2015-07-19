@@ -27,7 +27,7 @@ static uint16_t screen[NUMBER_OF_CHARACTERS];
 static unsigned int actual_character;
 static bool self_test = false;
 
-#define REFRESH_PERIOD 300 // uS
+#define REFRESH_PERIOD 1000 // uS per each digit
 #define KEY_HOLDOF_PERIOD 500 // mS
 #define KEY_REPEAT_PERIOD 100 //ms
 
