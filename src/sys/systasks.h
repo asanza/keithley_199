@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-    void systask_init(void);
+    void systasks_init(void);
 
     
 #ifdef	__cplusplus

@@ -29,6 +29,7 @@
 #include "systasks.h"
 #include "system.h"
 #include "settings.h"
+#include "queue.h"
 
 #define SYSTEM_TASK_STACK_SIZE      200
 #define TASK_STACK_SIZE             200
@@ -131,7 +132,7 @@ static void SystemTask(void *pvParameters) {
     }
 }
 
-void systask_init(void) {
+void systasks_init(void) {
         xTaskCreate(SystemTask, "SYS", SYSTEM_TASK_STACK_SIZE, NULL,
             SYSTEM_TASK_PRIORITY, NULL);
         xTaskCreate(task_multimeter, "DMM", TASK_STACK_SIZE, NULL, TASK_PRIORITY,

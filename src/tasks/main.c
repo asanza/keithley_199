@@ -15,7 +15,7 @@ int main()
     hal_i2c_init();
     usb_uart_init();
     /* create system task */
-    systask_init();
+    systasks_init();
     DIAG("START: %s, %s", REPOVERSION, REPOBRANCH);
     DIAG("Starting Scheduler");
     vTaskStartScheduler();
