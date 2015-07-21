@@ -22,11 +22,12 @@
  */
 
 #include <diag.h>
+#include <system.h>
+#include <settings.h>
+#include <FreeRTOS.h>
+#include <task.h>
+#include <disfmt.h>
 
-#include "settings.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "disfmt.h"
 
 void task_multimeter(void *params){
     DIAG("Loaded");
@@ -44,7 +45,7 @@ void task_multimeter(void *params){
             case ADC_INPUT_RESISTANCE_4W: display_puts("RES 4W"); continue;
             default: break;
         }
-        double value = adc_read_value(settings_get_channel());
+        double value = system_read_input();
         fmt_format_string(buff,settings_get_range(),value);
         fmt_append_scale(buff,settings_get_input(), settings_get_range());
         display_puts(buff);

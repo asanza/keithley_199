@@ -73,6 +73,7 @@
         <itemPath>src/sys/systasks.h</itemPath>
         <itemPath>src/sys/settings.h</itemPath>
         <itemPath>src/sys/adcctrl.h</itemPath>
+        <itemPath>src/sys/system.h</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>src/utils/util_ringbuff.h</itemPath>
@@ -125,7 +126,6 @@
       </logicalFolder>
       <logicalFolder name="hal" displayName="hal" projectFiles="true">
         <itemPath>src/hal/fuses.c</itemPath>
-        <itemPath>src/hal/system.c</itemPath>
         <itemPath>src/hal/exceptions.c</itemPath>
         <itemPath>src/hal/isrWrappers.S</itemPath>
         <itemPath>src/hal/hal_adc.c</itemPath>
@@ -134,6 +134,7 @@
         <itemPath>src/hal/hal_spi.c</itemPath>
         <itemPath>src/hal/hal_timer.c</itemPath>
         <itemPath>src/hal/hal_io.c</itemPath>
+        <itemPath>src/hal/hal_sys.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="libscpi" projectFiles="true">
         <itemPath>src/scpi-parser/libscpi/src/debug.c</itemPath>
