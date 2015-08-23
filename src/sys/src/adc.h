@@ -8,15 +8,12 @@
 #ifndef ADC_H
 #define	ADC_H
 
-#include "hal.h"
-#include <adcctrl.h>
+#include <hal.h>
+#include "adcctrl.h"
 
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
-#define ADC_MAX_VALUE  3.03
-#define ADC_MIN_VALUE -3.03
 
 typedef enum{
             ADC_ERROR_NOT_SUPPORTED,

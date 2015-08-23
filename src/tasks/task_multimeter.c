@@ -23,13 +23,17 @@
 
 #include <diag.h>
 #include <system.h>
-#include <settings.h>
+#include "settings.h"
 #include <FreeRTOS.h>
 #include <task.h>
-#include <disfmt.h>
+#include <queue.h>
+//#include "disfmt.h"
+
+#include "semphr.h"
 
 
-void task_multimeter(void *params){
+
+static void multimeter_main_task(void *params){
     DIAG("Loaded");
     char buff[10];
     while(1){

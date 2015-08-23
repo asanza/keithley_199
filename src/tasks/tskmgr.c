@@ -1,5 +1,5 @@
 /*
- * sysstate.c
+ * tskmgr.c
  *
  * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
  *
@@ -18,30 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  *
- * Created on January 23, 2015, 9:04 PM
+ * Created on August 23, 2015, 7:30 PM
  */
 
-#include <hal.h>
-#include <adc.h>
-#include <assert.h>
-#include <stddef.h>
-#include <string.h>
-#include "system.h"
+#include "tskmgr.h"
+#include <settings.h>
+#include <system.h>
+#include <FreeRTOS.h>
+#include <task.h>
 
-static adc_channel channel = 0;
-double gain;
-double offset;
-int system_set_configuration(adc_input input, adc_range range, 
-        adc_integration_period period, adc_channel _channel, double _gain, double _offset){
-    adc_error err = adc_init(period, input,range);
-    if(err != ADC_ERROR_NONE) return -1;
-    channel = _channel;
-    gain = _gain;
-    offset = _offset;
-    return 0;
-}
 
-double system_read_input(void){
-    double value = gain*adc_read_value(channel)+offset;
-    return value;
+
+void tskmgr_start(void){
+				
 }

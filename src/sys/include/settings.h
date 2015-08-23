@@ -29,8 +29,7 @@ extern "C" {
 #endif
 
 #include <stddef.h>
-#include <adc.h>
-    
+#include <sysdefs.h>
 /* storage addresses */
 typedef enum{
             SETTINGS_0,

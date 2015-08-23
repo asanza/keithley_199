@@ -23,7 +23,8 @@
  * Created on January 24, 2015, 12:10 AM
  */
 
-#include <disfmt.h>
+#include "disfmt.h"
+#include <sysdefs.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>

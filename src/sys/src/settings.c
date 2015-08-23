@@ -21,11 +21,11 @@
  * Created on July 15, 2015, 10:39 PM
  */
 
-#include <settings.h>
+#include "settings.h"
 #include <eefs.h>
 #include <stdbool.h>
 
-#include <adcctrl.h>
+#include "adcctrl.h"
 #include <assert.h>
 #include <string.h>
 #include <diag.h>

@@ -49,49 +49,7 @@
 extern "C" {
 #endif
 #include <stdint.h>
-
-    typedef enum{
-    ADC_INTEGRATION_50HZ = 20000, /**< 20mS or 50Hz */
-    ADC_INTEGRATION_60HZ = 16667, /**< 16mS or 60Hz  */
-}adc_integration_period;
-
-typedef enum {
-    ADC_CHANNEL_0 = 0x00,
-    ADC_CHANNEL_1 = 0x01,
-    ADC_CHANNEL_2 = 0x02,
-    ADC_CHANNEL_3 = 0x04,
-    ADC_CHANNEL_4 = 0x08,
-    ADC_CHANNEL_5 = 0x10,
-    ADC_CHANNEL_6 = 0x20,
-    ADC_CHANNEL_7 = 0x40,
-    ADC_CHANNEL_8 = 0x80,
-    ADC_NUMBER_OF_CHANNELS,
-}adc_channel;
-    
-typedef enum {
-        ADC_INPUT_VOLTAGE_DC = 0x00,
-        ADC_INPUT_VOLTAGE_AC,
-        ADC_INPUT_CURRENT_DC,
-        ADC_INPUT_CURRENT_AC,
-        ADC_INPUT_RESISTANCE_2W,
-        ADC_INPUT_RESISTANCE_4W,
-        ADC_NUMBER_OF_INPUTS /**< number of valid inputs */
-}adc_input;
-
-typedef enum {
-    ADC_RANGE_30m = 0x00,
-        ADC_RANGE_300m,
-        ADC_RANGE_3,
-        ADC_RANGE_30,
-        ADC_RANGE_300,
-        ADC_RANGE_3K,
-        ADC_RANGE_30K,
-        ADC_RANGE_300K,
-        ADC_RANGE_3M,
-        ADC_RANGE_30M,
-        ADC_RANGE_300M,
-        ADC_RANGE_COUNT,
-} adc_range;
+#include <sysdefs.h>
     
 typedef struct hal_adc_integration_sequence_t adc_control_sequence;
 

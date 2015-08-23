@@ -16,7 +16,7 @@ extern "C" {
 #define DIAGFL_OBJ_F9		0x00040000				// Anybus object 0x10 = ABCC file system interface
 #define	DIAGFL_OBJ_ANY		0x00080000				// any (other) message
 
-#ifdef _DEBUG
+#ifdef NDEBUG
 // Debugging enabled
 #  if defined(__SUNPRO_C) || defined(__SUNPRO_CC)
 	 // use variadic macros

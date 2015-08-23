@@ -1,5 +1,5 @@
 /*
- * task_calibration.c
+ * tskmgr.h
  *
  * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
  *
@@ -18,14 +18,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301  USA
  *
- * Created on July 17, 2015, 10:46 PM
+ * Created on August 23, 2015, 7:30 PM
  */
+#ifndef TSKMGR_H
+#define	TSKMGR_H
 
-#include<diag.h>
+#ifdef	__cplusplus
+extern "C" {
+#endif
+
+    void tskmgr_start(void);
 
 
-
-static void calibration_main_task(void* params){
-       DIAG("Loaded");
-    while(1); 
+#ifdef	__cplusplus
 }
+#endif
+
+#endif	/* TSKMGR_H */
+

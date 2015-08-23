@@ -26,22 +26,31 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-#include <adc.h>
-#include <syserr.h>
+
 #include <stddef.h>
-#include <settings.h>
+#include <sysdefs.h>
 
-/**
- * configure the hardware to perform a measurement. 
- * @param settings desired hardware configuration
- * @param cal  calibration parameters
- * @return -1 in case of error.
- */
-int system_set_configuration(adc_input input, adc_range range, 
-        adc_integration_period period, adc_channel channel, double gain, double offset);
+    /** Initialize system. Set up hardware. Should be called before
+     * OS Starts. */
+    void system_init(void);
 
-/** read the value at the input with the configuration set with system set configuration. */
-double system_read_input(void);
+    /**
+     * configure the hardware to perform a measurement. 
+     * @param settings desired hardware configuration
+     * @param cal  calibration parameters
+     * @return -1 in case of error.
+     */
+    int system_set_configuration(adc_input input, adc_range range,
+            adc_integration_period period, adc_channel channel, double gain, double offset);
+
+    /** read the value at the input with the configuration set with system set 
+     * configuration. */
+    double system_read_input(void);
+    
+    /** get the system lock before changing configuration. */
+    void system_get_lock();
+    /** dont forget to release the lock after you are done. */
+    void system_release_lock();
 
 #ifdef	__cplusplus
 }

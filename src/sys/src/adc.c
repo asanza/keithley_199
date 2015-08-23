@@ -151,6 +151,7 @@ static double adc_do_measurement(unsigned char channel, adc_control_sequence* se
     signal = signal_count - sigzero_count;
     reference = ref_count - refzero_count;
     assert(reference);
+    /** TODO: Analyze precision loss*/
     return VREF*signal*1.0/reference*1.0;
 }
 
