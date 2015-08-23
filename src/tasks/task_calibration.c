@@ -25,7 +25,7 @@
 
 
 
-static void calibration_main_task(void* params){
+void task_calibration(void* params){
        DIAG("Loaded");
     while(1); 
 }

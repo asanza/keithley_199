@@ -33,7 +33,7 @@
 
 
 
-static void multimeter_main_task(void *params){
+void task_multimeter(void *params){
     DIAG("Loaded");
     char buff[10];
     while(1){

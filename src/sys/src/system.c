@@ -26,6 +26,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <system.h>
+#include <diag.h>
 #include "adc.h"
 
 #include <FreeRTOS.h>
@@ -40,11 +41,11 @@ double offset;
 int system_set_configuration(adc_input input, adc_range range,
     adc_integration_period period, adc_channel _channel, double _gain, double _offset)
 {
-				/* try to get syslock. Syslock shall be obtained before calling this function. */
-				if(xSemaphoreTake(syslock, 0)==pdTRUE){
-								/* you MUST call system_get_lock before calling this function. */
-								assert(0);
-				}
+    /* try to get syslock. Syslock shall be obtained before calling this function. */
+    if (xSemaphoreTake(syslock, 0) == pdTRUE) {
+        /* you MUST call system_get_lock before calling this function. */
+        assert(0);
+    }
     adc_error err = adc_init(period, input, range);
     if (err != ADC_ERROR_NONE) return -1;
     channel = _channel;
@@ -55,12 +56,12 @@ int system_set_configuration(adc_input input, adc_range range,
 
 double system_read_input(void)
 {
-				/* get lock before doing a measurement. It guarantees that no settings changes
-					* are done while using the adc. */
-				xSemaphoreTake(syslock, portMAX_DELAY);
+    /* get lock before doing a measurement. It guarantees that no settings changes
+     * are done while using the adc. */
+    xSemaphoreTake(syslock, portMAX_DELAY);
     double value = gain * adc_read_value(channel) + offset;
-				/* release semaphore when done. */
-				xSemaphoreGive(syslock);
+    /* release semaphore when done. */
+    xSemaphoreGive(syslock);
     return value;
 }
 
@@ -69,14 +70,18 @@ void system_init(void)
     hal_sys_init();
     hal_i2c_init();
     usb_uart_init();
-				/* initialize system lock */
-				syslock = xSemaphoreCreateMutex();
+    /* initialize system lock */
+    syslock = xSemaphoreCreateMutex();
 }
 
-void system_get_lock(){
-				xSemaphoreTake(syslock, portMAX_DELAY);
+void system_get_lock()
+{
+    xSemaphoreTake(syslock, portMAX_DELAY);
+    DIAG("");
 }
 
-void system_release_lock(void){
-				xSemaphoreGive(syslock);
+void system_release_lock(void)
+{
+    xSemaphoreGive(syslock);
+    DIAG("");
 }

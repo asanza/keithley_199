@@ -10,8 +10,8 @@ int main()
 {
     /* hardware initialization. An error here is unrecoverable */
     system_init();
-				/* start tasks as needed */
-				tskmgr_start();
+    /* start tasks as needed */
+    tskmgr_start();
     DIAG("START: %s, %s", REPOVERSION, REPOBRANCH);
     DIAG("Starting Scheduler");
     vTaskStartScheduler();
