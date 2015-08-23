@@ -39,7 +39,6 @@ void task_multimeter(void *params){
     while(1){
         adc_input val = settings_get_input();
         hal_disp_adci_toggle();
-//        DIAG("Running");
         switch(val){
             case ADC_INPUT_VOLTAGE_AC: display_puts("VOLT AC"); continue;
             //case ADC_INPUT_VOLTAGE_DC: display_puts("VOLT DC"); break;

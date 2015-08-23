@@ -135,6 +135,7 @@ static void system_task(void* pvParameters)
                 switch_sys_function();
                 continue;
             case KEY_CAL:
+                stop_running_task();
                 start_task(TASK_CALIBRATION);
                 continue;
             case KEY_NONE:
