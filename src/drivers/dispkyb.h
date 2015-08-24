@@ -73,6 +73,8 @@ extern "C" {
     void display_adc_indicator(bool set_value);
     void display_adc_indicator_toggle();
     key_id keyboard_wait_for_key();
+    /* highlight a digit in the display. 0 = no digit is highlighted*/
+    void display_highlight(int digit);
 
 #ifdef	__cplusplus
 }

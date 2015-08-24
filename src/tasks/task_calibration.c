@@ -28,7 +28,10 @@
 void task_calibration(void* params)
 {
     DIAG("Loaded");
+    int i = 0;
     while (1) {
+        display_puts(" 30.0000 V");
+        display_highlight(i);
         key_id key = display_wait_for_key();
         DIAG("Key Pressed: %d", key);
         switch (key) {
@@ -42,8 +45,8 @@ void task_calibration(void* params)
             case KEY_7:continue;
             case KEY_8:continue;
             case KEY_9:continue; //continue;
-            case KEY_UP:continue;
-            case KEY_DOWN:continue;
+            case KEY_UP:i++;continue;
+            case KEY_DOWN:i--;continue;
             case KEY_CAL:
                 taskmgr_delete();
                 continue;

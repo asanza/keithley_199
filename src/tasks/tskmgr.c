@@ -199,11 +199,13 @@ static void poll_key(void)
         case KEY_2:break;
         case KEY_3:break;
         case KEY_4:
+            if(repeat_key == false) break;
             shift_key = !shift_key;
             if (shift_key) {
                 display_setmode(DISP_ZERO);
             } else
                 display_clearmode(DISP_ZERO);
+            repeat_key = false;
             break;
         case KEY_5:
             if (shift_key) {
