@@ -22,10 +22,34 @@
  */
 
 #include<diag.h>
-
-
-
-void task_calibration(void* params){
-       DIAG("Loaded");
-    while(1); 
+#include<FreeRTOS.h>
+#include<task.h>
+#include<dispkyb.h>
+void task_calibration(void* params)
+{
+    DIAG("Loaded");
+    while (1) {
+        key_id key = display_wait_for_key();
+        DIAG("Key Pressed: %d", key);
+        switch (key) {
+            case KEY_0:continue;
+            case KEY_1:continue;
+            case KEY_2:continue;
+            case KEY_3:continue;
+            case KEY_4:continue;
+            case KEY_5:continue;
+            case KEY_6:continue;
+            case KEY_7:continue;
+            case KEY_8:continue;
+            case KEY_9:continue; //continue;
+            case KEY_UP:continue;
+            case KEY_DOWN:continue;
+            case KEY_CAL:
+                taskmgr_delete();
+                continue;
+            case KEY_NONE:continue;
+            default:
+                Nop();
+        }
+    }
 }

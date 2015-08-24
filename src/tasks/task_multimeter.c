@@ -49,6 +49,7 @@ void task_multimeter(void *params){
             default: break;
         }
         double value = system_read_input();
+        printf("%f\n",value);
         fmt_format_string(buff,settings_get_range(),value);
         fmt_append_scale(buff,settings_get_input(), settings_get_range());
         display_puts(buff);

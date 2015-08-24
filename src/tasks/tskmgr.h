@@ -28,7 +28,7 @@ extern "C" {
 #endif
 
     void tskmgr_start(void);
-
+    void tskmgr_delete(void);
 
 #ifdef	__cplusplus
 }
