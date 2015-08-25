@@ -123,6 +123,8 @@ int hal_adc_integration_sequence (uint8_t channel, uint32_t int_mux, uint32_t pa
     send_strobe_and_wait(START_WAIT_TIME);
     /* wait until all adc pulses are received */
     vTaskDelay(2);
+    /* stop strobe from retrigger */
+    T2CONbits.ON = 0; 
     /* read counter */
     down_counter = hal_counter_read();
     /* make final count calculations */
