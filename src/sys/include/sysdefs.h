@@ -70,8 +70,11 @@ typedef enum {
         ADC_RANGE_COUNT,
 } adc_range;
 
-#define ADC_MAX_VALUE  3.03
-#define ADC_MIN_VALUE -3.03
+#define ADC_OVERFLOW  3.03
+#define ADC_UNDERFLOW -3.03
+
+#define ADC_MAX_VALUE 3.0
+#define ADC_MIN_VALUE -3.0
 
 #ifdef	__cplusplus
 }

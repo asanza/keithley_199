@@ -70,8 +70,8 @@ double adc_read_value(adc_channel channel){
     adc_control_sequence* seq = adcctrl_get_sequence(input, range);
     assert(seq);
     double value = adc_do_measurement(channel, seq);
-    if(value >= ADC_MAX_VALUE) value = ADC_MAX_VALUE;
-    if(value <= ADC_MIN_VALUE) value = ADC_MIN_VALUE;
+    if(value >= ADC_OVERFLOW) value = ADC_OVERFLOW;
+    if(value <= ADC_UNDERFLOW) value = ADC_UNDERFLOW;
     switch(range){
         case ADC_RANGE_3:
         case ADC_RANGE_3K: return value*1.0;

@@ -25,34 +25,26 @@
 #include<FreeRTOS.h>
 #include<task.h>
 #include<dispkyb.h>
+
+#include "settings.h"
+
+static void do_voltage_calibration(void);
+
 void task_calibration(void* params)
 {
     DIAG("Loaded");
     int i = 0;
-    while (1) {
-        display_puts(" 30.0000 V");
-        display_highlight(i);
-        key_id key = display_wait_for_key();
-        DIAG("Key Pressed: %d", key);
-        switch (key) {
-            case KEY_0:continue;
-            case KEY_1:continue;
-            case KEY_2:continue;
-            case KEY_3:continue;
-            case KEY_4:continue;
-            case KEY_5:continue;
-            case KEY_6:continue;
-            case KEY_7:continue;
-            case KEY_8:continue;
-            case KEY_9:continue; //continue;
-            case KEY_UP:i++;continue;
-            case KEY_DOWN:i--;continue;
-            case KEY_CAL:
-                taskmgr_delete();
-                continue;
-            case KEY_NONE:continue;
-            default:
-                Nop();
-        }
+    display_puts(" 30.0000 V");
+    display_highlight(i);
+    key_id key = display_wait_for_key();
+    switch(settings_get_input()){
+        case ADC_INPUT_VOLTAGE_DC: do_voltage_calibration(); break;
+        case ADC_INPUT_VOLTAGE_AC: do_voltage_calibration();break;
     }
+    taskmgr_delete();
+}
+
+static void do_voltage_calibration(void){
+    display_puts("CAL VOLT");
+    display_wait_for_key();
 }
