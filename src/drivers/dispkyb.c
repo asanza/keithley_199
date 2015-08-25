@@ -2,6 +2,7 @@
 #include <hal_timer.h>
 #include <FreeRTOS.h>
 #include <queue.h>
+#include <assert.h>
 #include "task.h"
 #include "hal_io.h"
 #include "dispkyb.h"
@@ -20,7 +21,6 @@ key_id display_wait_for_key()
 
 static void timer_handler(void);
 
-#define NUMBER_OF_CHARACTERS 11
 #define NUMBER_OF_SEGMENTS   15
 
 
@@ -40,6 +40,13 @@ void display_kyb_init(void)
     hal_spi_init_16bit();
     event_queue = xQueueCreate(EVENT_QUEUE_LENGTH, sizeof(key_id));
     hal_timer_init(REFRESH_PERIOD, timer_handler);
+}
+
+void display_evt_clear(void){
+    char item;
+    while(xQueueReceive(event_queue, &item, 0)!=pdTRUE);
+    BaseType_t val = xQueueReset(event_queue);
+    assert(val == pdPASS);
 }
 
 void display_highlight(int digit)
@@ -183,7 +190,6 @@ static key_id hal_disp_scan()
     if (key_pressed != KEY_NONE)
         last_key_pressed = key_pressed;
 
-    display_set(screen[actual_character], actual_character++);
     if (highlighted_digit == actual_character) {
         if (hl_time > 1) {
             hl_time = 0;
@@ -192,6 +198,8 @@ static key_id hal_disp_scan()
             hl_time++;
         }
     }
+
+    display_set(screen[actual_character], actual_character++);
     
     if (self_test == false)
         return last_key_pressed;
