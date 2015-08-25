@@ -27,7 +27,8 @@
 #include <FreeRTOS.h>
 #include <task.h>
 #include <queue.h>
-//#include "disfmt.h"
+#include <dispkyb.h>
+#include <disfmt.h>
 
 #include "semphr.h"
 
@@ -35,7 +36,7 @@
 
 void task_multimeter(void *params){
     DIAG("Loaded");
-    char buff[10];
+    char buff[NUMBER_OF_CHARACTERS];
     while(1){
         adc_input val = settings_get_input();
         hal_disp_adci_toggle();
@@ -50,7 +51,7 @@ void task_multimeter(void *params){
         }
         double value = system_read_input();
         printf("%f\n",value);
-        fmt_format_string(buff,settings_get_range(),value);
+        fmt_format_string(buff, NUMBER_OF_CHARACTERS, settings_get_range(),value);
         fmt_append_scale(buff,settings_get_input(), settings_get_range());
         display_puts(buff);
     }

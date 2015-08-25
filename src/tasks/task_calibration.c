@@ -25,26 +25,49 @@
 #include<FreeRTOS.h>
 #include<task.h>
 #include<dispkyb.h>
-
+#include<diag.h>
 #include "settings.h"
-
-static void do_voltage_calibration(void);
+#include "system.h"
+#include "fitlinear.h"
 
 void task_calibration(void* params)
 {
-    DIAG("Loaded");
-    int i = 0;
-    display_puts(" 30.0000 V");
-    display_highlight(i);
-    key_id key = display_wait_for_key();
-    switch(settings_get_input()){
-        case ADC_INPUT_VOLTAGE_DC: do_voltage_calibration(); break;
-        case ADC_INPUT_VOLTAGE_AC: do_voltage_calibration();break;
-    }
-    taskmgr_delete();
-}
+    double refvals[3] = {ADC_MAX_VALUE, 0 , ADC_MIN_VALUE};
+    double measval[3];
+    
+    double gain = 1;
+    double offset = 0;
+    
+    system_get_lock();
+    system_set_configuration(settings_get_input(), settings_get_range(), 
+        settings_get_integration_period(), ADC_CHANNEL_0, gain, offset);
+    system_release_lock();
+    
+    fmt_get_refval(&refvals[0], settings_get_input(), 
+        settings_get_range());
+    measval[0] = system_read_input();
+    DIAG("refval %f", refvals[0]);
+    DIAG("measval %f", measval[0]);
+    
+    fmt_get_refval(&refvals[1], settings_get_input(), 
+        settings_get_range());
+    measval[1] = system_read_input();
+    DIAG("refval %f", refvals[1]);
+    DIAG("measval %f", measval[1]);
+    
+    fmt_get_refval(&refvals[2], settings_get_input(), 
+        settings_get_range());
+    measval[2] = system_read_input();
+    DIAG("refval %f", refvals[2]);
+    DIAG("measval %f", measval[2]);
 
-static void do_voltage_calibration(void){
-    display_puts("CAL VOLT");
-    display_wait_for_key();
+    fit_linear(refvals, measval, 3, &offset, &gain);
+    int i = 0;
+    for(i = 0; i < 3; i++){
+        DIAG("refvals[%d]: %f, measval[%d]: %f",i, refvals[i],i, measval[i]);
+    }
+    DIAG("offset %f, gain %f", offset, gain);
+    calibration_save(gain, offset);
+    
+    taskmgr_delete();
 }
