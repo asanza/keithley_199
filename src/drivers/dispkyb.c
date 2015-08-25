@@ -44,7 +44,7 @@ void display_kyb_init(void)
 
 void display_evt_clear(void){
     char item;
-    while(xQueueReceive(event_queue, &item, 0)!=pdTRUE);
+    while(xQueueReceive(event_queue, &item, 0)==pdTRUE);
     BaseType_t val = xQueueReset(event_queue);
     assert(val == pdPASS);
 }
