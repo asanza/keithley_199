@@ -37,12 +37,12 @@ extern "C" {
         KEY_2,
         KEY_3,
         KEY_4,
-        KEY_UP,
         KEY_5,
         KEY_6,
         KEY_7,
         KEY_8,
         KEY_9,
+        KEY_UP,
         KEY_DOWN,
         KEY_CAL,
         KEY_NONE
@@ -61,7 +61,10 @@ extern "C" {
         DISP_AUTO = 0x0200
     } disp_mode;
 
+    #define NUMBER_OF_CHARACTERS 11
 
+    void display_evt_clear(void);
+    
     void display_kyb_init(void);
     void display_setmode(disp_mode mode);
     void display_addmode(disp_mode mode);
