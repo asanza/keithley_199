@@ -77,11 +77,9 @@ void system_init(void)
 void system_get_lock()
 {
     xSemaphoreTake(syslock, portMAX_DELAY);
-    DIAG("");
 }
 
 void system_release_lock(void)
 {
     xSemaphoreGive(syslock);
-    DIAG("");
 }

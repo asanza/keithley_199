@@ -24,14 +24,56 @@
 #include <HardwareProfile.h>
 #include <hal.h>
 #include <assert.h>
-
+#include <util_ringbuff.h>
 #include "hal_i2c.h"
 
+/** Send i2c eeprom reset sequency. Needed for Microchip eeproms :S:S*/
+static void hal_eeprom_reset(){
+    /* Bitbang Reset Sequence. */
+    PORTSetPinsDigitalOut(I2C_SDA);
+    PORTSetPinsDigitalOut(I2C_SCL);
+    PORTSetBits(I2C_SDA);
+    PORTSetBits(I2C_SCL);
+    utils_blocking_delay_ms(3);
+    /* Set Start Condition */
+    PORTClearBits(I2C_SDA);
+    utils_blocking_delay_ms(1);
+    PORTClearBits(I2C_SCL);
+    utils_blocking_delay_ms(1);
+    /* send nine 1 */
+    PORTSetBits(I2C_SDA);
+    int i = 0;
+    for(i = 0; i < 9; i ++){
+        PORTSetBits(I2C_SCL);
+        utils_blocking_delay_ms(1);
+        PORTClearBits(I2C_SCL);
+        utils_blocking_delay_ms(1);
+    }
+    /* send a start condition */
+    PORTSetBits(I2C_SCL);
+    utils_blocking_delay_ms(1);
+    PORTClearBits(I2C_SDA);
+    utils_blocking_delay_ms(1);
+    PORTClearBits(I2C_SCL);
+    /* send stop condition */
+    utils_blocking_delay_ms(1);
+    PORTSetBits(I2C_SCL);
+    utils_blocking_delay_ms(1);
+    PORTSetBits(I2C_SDA);
+    utils_blocking_delay_ms(1);
+}
+
 void hal_i2c_init(void){
+    /* set reset secuency before initializing i2c. This is needed for 
+     * microchip eeproms (just in case they lock themselves up), which
+     * happens more times than I could expect from a fine component manu-
+     * factured by a fine company in a perfectly fine country >:( 
+     */
+	hal_eeprom_reset();
     /* HardwareProfile.h defines to which i2c port is the eeprom attached. */
     I2CConfigure(HAL_I2C_BUS,HAL_I2C_CONFIG);
     /* Set the i2c scl frequency */
-    uint32_t actualClock = I2CSetFrequency(HAL_I2C_BUS, SYS_CLK, HAL_I2C_FREQ);
+    uint32_t actualClock = I2CSetFrequency(HAL_I2C_BUS, PIC32_PERIPHERALBUS_FREQ, HAL_I2C_FREQ);
     if ( abs(actualClock-HAL_I2C_FREQ) > HAL_I2C_FREQ/10 ){
         /* if the requested clock is not possible. */
         assert(0);

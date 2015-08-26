@@ -48,11 +48,10 @@ void eeprom_write_page(uint16_t address, uint8_t* _data){
     int i;
     for(i = 0; i < HAL_EEPROM_PAGE_SIZE; i++)
         hal_i2c_write(*(_data++));
-    hal_i2c_stop();
     /* wait for write to be executed */
-    while(hal_i2c_start(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE)){
+    do{
         hal_i2c_stop();
-    }
+    }while(hal_i2c_start(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE));
     hal_i2c_stop();
 }
 
@@ -72,8 +71,8 @@ void eeprom_write_byte(uint16_t address, uint8_t byte){
     hal_i2c_write(byte);
     hal_i2c_stop();
     /* wait for write to be executed */
-    while(hal_i2c_start(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE)){
+    do{
         hal_i2c_stop();
-    }
+    }while(hal_i2c_start(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE));
     hal_i2c_stop();
 }

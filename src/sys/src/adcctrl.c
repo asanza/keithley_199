@@ -147,6 +147,7 @@ static adc_control_sequence* get_res4w_seq(adc_range range);
 //static hal_adc_sequence* get_vdc_seq(adc_range range);
 
 int adcctrl_get_sequence_id(adc_input input, adc_range range){
+    char map[ADC_NUMBER_OF_INPUTS][ADC_RANGE_COUNT];
     assert(input < ADC_NUMBER_OF_INPUTS);
     assert(range < ADC_RANGE_COUNT);
     int i,j,id=0;
@@ -155,10 +156,10 @@ int adcctrl_get_sequence_id(adc_input input, adc_range range){
             adc_control_sequence* s = adcctrl_get_sequence(i, j);
             if(s == NULL) 
                 continue;
-            id++;
-            if(i == input && j == range) break;
+            map[i][j] = id++;
         }
     }
+    id = map[input][range];
     DIAG("input: %d, range: %d, id: %d", input, range,  id);
     return id;
 }

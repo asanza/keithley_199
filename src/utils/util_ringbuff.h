@@ -51,7 +51,7 @@ struct ringbuffer_t{
 
     int util_ringbuffer_get(util_ringbuffer* buffer, unsigned char* data);
 
-
+void utils_blocking_delay_ms(unsigned int ms);
 
 #ifdef	__cplusplus
 }

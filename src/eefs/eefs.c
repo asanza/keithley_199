@@ -49,11 +49,13 @@ EEFS_ERROR eefs_write_page(uint16_t page_address, eefs_page* page){
 	uint8_t bbyte;
 	/* do the write */
 	do{
+        t = true;
 		eeprom_write_page(page_address,p);
 		/* read back written data */
 		for(j=0; j < EEPROM_PAGE_SIZE; j++){
 			bbyte = eeprom_read_byte(page_address*EEPROM_PAGE_SIZE + j);
 			if(bbyte!=p[j]) {
+                t = false;
                 break;
             }; // write and read not match error. Retry.
 		}

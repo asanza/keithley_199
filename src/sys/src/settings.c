@@ -120,14 +120,14 @@ double calibration_offset(){
 
 void settings_set_range(adc_range range){
     /* check if range valid */
-    int id = adcctrl_get_sequence_id(actual_settings->input, range);
-    if(id < 0) return;
+    adc_control_sequence* id = adcctrl_get_sequence(actual_settings->input, range);
+    if(id == NULL) return;
     actual_settings->range = range;
 }
 
 void calibration_save(double gain, double offset){
     int id = adcctrl_get_sequence_id(actual_settings->input, actual_settings->range);
-    id = SETTINGS_START_ADDRESS + SETTINGS_LAST*sizeof(settings) + id;
+    id = SETTINGS_START_ADDRESS + SETTINGS_LAST*ADC_NUMBER_OF_INPUTS + id;
     assert(id<=0);
     assert(id < 255); //max number of objects
     cal.gain = gain;
@@ -181,8 +181,8 @@ static void settings_set_default(){
 /* load calibration according to settings */
 calibration_t* calibration_get_default(adc_input input){
     /* look if they are supported */
-    int id = adcctrl_get_sequence_id(settings[input].input, settings[input].range);
-    assert(id >= 0);
+    adc_control_sequence* id = adcctrl_get_sequence(settings[input].input, settings[input].range);
+    assert(id);
     cal.gain = 1;
     cal.offset = 0;
     return &cal;

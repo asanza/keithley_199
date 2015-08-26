@@ -95,7 +95,6 @@ void taskmgr_delete(void)
 static void start_task(sys_task_t task)
 {
     system_get_lock();
-    DIAG("restarting task: %d", task);
     switch (task) {
         case TASK_MULTIMETER: vTaskResume(dmm_task);
             break;
@@ -192,7 +191,6 @@ bool repeat_key = true;
 static void poll_key(void)
 {
     key_id key = display_wait_for_key();
-    DIAG("Key Pressed: %d", key);
     switch (key) {
         case KEY_0:break;
         case KEY_1:break;

@@ -76,3 +76,10 @@ int util_ringbuffer_get(util_ringbuffer* buffer, unsigned char* data){
     *data = *first;
     return 0;
 }
+
+void utils_blocking_delay_ms(unsigned int ms){
+    int i = 0;
+    for(i = 0; i < ms*1000; i++){
+        
+    }
+}
