@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <assert.h>
+#include <diag.h>
 #include "adcctrl.h"
 
 struct hal_adc_integration_sequence_t{
@@ -148,14 +149,17 @@ static adc_control_sequence* get_res4w_seq(adc_range range);
 int adcctrl_get_sequence_id(adc_input input, adc_range range){
     assert(input < ADC_NUMBER_OF_INPUTS);
     assert(range < ADC_RANGE_COUNT);
-    int i,j,id=-1; 
-    for(i = 0; i <= input; i++){
-        for(j=0; j<ADC_RANGE_COUNT; j++){
-            adc_control_sequence* s = adcctrl_get_sequence(input, range);
-            if(!s) continue;
+    int i,j,id=0;
+    for(i = 0; i < ADC_NUMBER_OF_INPUTS; i++){
+        for(j=0; j< ADC_RANGE_COUNT; j++){
+            adc_control_sequence* s = adcctrl_get_sequence(i, j);
+            if(s == NULL) 
+                continue;
             id++;
+            if(i == input && j == range) break;
         }
     }
+    DIAG("input: %d, range: %d, id: %d", input, range,  id);
     return id;
 }
 
@@ -233,7 +237,7 @@ adc_range adcctrl_get_next_range(adc_input input, adc_range actual_range){
     int i;
     adc_range range = actual_range;
     for(i = actual_range + 1; i < ADC_RANGE_COUNT; i++){
-        if(adcctrl_get_sequence_id(input, i) >= 0){
+        if(adcctrl_get_sequence(input, i) != NULL){
             range = i;
             break;
         }
@@ -245,7 +249,7 @@ adc_range adcctrl_get_previous_range(adc_input input, adc_range actual_range){
     int i;
     adc_range range = actual_range;
     for(i = actual_range - 1; i >= ADC_RANGE_30m; i--){
-        if(adcctrl_get_sequence_id(input, i) >= 0){
+        if(adcctrl_get_sequence(input, i) != NULL){
             range = i;
             break;
         }
