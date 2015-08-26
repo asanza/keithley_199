@@ -24,6 +24,9 @@ extern "C" {
 #define BRD_GREEN_LED       IOPORT_C, BIT_3
 #define BRD_AUX_LED         IOPORT_B, BIT_4
 #define DEBUG_PIN_0         IOPORT_A, BIT_9
+    
+#define I2C_SDA             IOPORT_G, BIT_3
+#define I2C_SCL             IOPORT_G, BIT_2
 
 /* map hal uarts to real uarts */
 #define HAL_UART_COUNT        1   /**< Number of enabled uarts */
