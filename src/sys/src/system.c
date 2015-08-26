@@ -27,6 +27,8 @@
 #include <string.h>
 #include <system.h>
 #include <diag.h>
+#include <hal_i2c.h>
+#include <usb_uart.h>
 #include "adc.h"
 
 #include <FreeRTOS.h>

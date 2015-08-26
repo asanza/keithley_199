@@ -153,8 +153,6 @@ static void send_strobe_and_wait(unsigned int wait_time){
 
 /**@brief send a byte to the adc mux*/
 static void hal_adc_sendbyte(char c);
-/**@brief send the mux configuration to the adc */
-static void hal_adc_sendword(char a, char b, char c, char d, char e);
 
 
 /* Initializes adc and control structures. Output compare 3 is used to generate
@@ -207,14 +205,6 @@ void OC3_handler(){
 
 static void hal_adc_sendbyte(char c){
     SpiChnPutC(1,c);
-}
-
-static void hal_adc_sendword(char a, char b, char c, char d, char e){
-    hal_adc_sendbyte(a);
-    hal_adc_sendbyte(b);
-    hal_adc_sendbyte(c);
-    hal_adc_sendbyte(d);
-    hal_adc_sendbyte(e);
 }
 
 static void adc_send_mux(char channel, uint32_t mux){

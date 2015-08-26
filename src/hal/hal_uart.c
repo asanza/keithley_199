@@ -127,6 +127,7 @@ static int get_baudrate(hal_uart_baudrate baudrate){
     case HAL_UART_BAUD_115200: return 115200;
     default: assert(0);
     }
+    return 0;
 }
 
 static UART_LINE_CONTROL_MODE get_parity(hal_uart_parity parity){
@@ -136,6 +137,7 @@ static UART_LINE_CONTROL_MODE get_parity(hal_uart_parity parity){
     case HAL_UART_PARITY_ODD: return UART_PARITY_ODD;
     default: assert(0);
     }
+    return 0;
 }
 
 static UART_LINE_CONTROL_MODE get_stop_bits(hal_uart_stop_bits stop_bits){
@@ -143,6 +145,7 @@ static UART_LINE_CONTROL_MODE get_stop_bits(hal_uart_stop_bits stop_bits){
     case HAL_UART_1_STOP_BITS: return UART_STOP_BITS_1;
     default: assert(0);
     }
+    return 0;
 }
 
 //TODO: implement sanity checks.
@@ -180,6 +183,7 @@ static UART_MODULE logic_uart2phy_uart(hal_uart_port port){
     default:
         assert(0);
     }
+    return 0;
 }
 
 void hal_uart_interrupt_handler(hal_uart_port port) {

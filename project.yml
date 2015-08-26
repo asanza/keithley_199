@@ -77,11 +77,11 @@
       - -x c
       - -c
       - -g
-      - -mips16
+      #- -mips16
       - -MMD
       - -Wno-packed-bitfield-compat
-      - -minterlink-compressed
-      #- -fno-short-double
+      #- -minterlink-compressed
+      - -fno-short-double
       - "${1}"
       - -o "${2}"
       - -D$: COLLECTION_DEFINES_TEST_AND_VENDOR
@@ -95,9 +95,10 @@
     :executable: xc32-gcc
     :arguments:
       - -mprocessor=32MX350F256L
-      - -mips16
-      - -minterlink-compressed
+      #- -mips16
+      #- -minterlink-compressed
       - --gc-sections
+      - -fno-short-double
       - ${1}
       - -o "./build/test/TestBuild.elf"
       #- -L

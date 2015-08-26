@@ -11,15 +11,16 @@ int main()
     /* hardware initialization. An error here is unrecoverable */
     system_init();
     /* start tasks as needed */
-    tskmgr_start();
+    taskmgr_start();
     DIAG("START: %s, %s", REPOVERSION, REPOBRANCH);
     DIAG("Starting Scheduler");
     vTaskStartScheduler();
+    return 0;
 }
 
 void vAssertCalled(const char* fileName, unsigned long lineNo)
 {
-    printf("FreeRTOS: %s, %d\n", fileName, lineNo);
+    printf("FreeRTOS: %s, %ld\n", fileName, lineNo);
     while (1);
 }
 

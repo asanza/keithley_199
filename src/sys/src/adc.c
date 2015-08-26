@@ -81,7 +81,10 @@ double adc_read_value(adc_channel channel){
         case ADC_RANGE_300m:
         case ADC_RANGE_300:
         case ADC_RANGE_300K: return value*100.0;
+        default:
+            assert(0);
     }
+    return 0.0;
 }
 
 adc_input adc_get_input(){
@@ -109,6 +112,7 @@ adc_error adc_set_input(adc_input input_in, adc_range range_in){
 
 adc_error adc_set_integration_period(adc_integration_period period){
     hal_adc_set_integration_period((uint32_t)period);
+    return ADC_ERROR_NONE;
 }
 
 adc_error adc_init(adc_integration_period period, adc_input input_, adc_range range_){

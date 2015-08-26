@@ -64,7 +64,7 @@ void settings_save(settings_location location){
 }
 
 int settings_restore(settings_location location) {
-    int i, j;
+    int i;
     int addr = SETTINGS_START_ADDRESS + location * sizeof (settings);
     for (i = 0; i < ADC_NUMBER_OF_INPUTS; i++) {
         EEFS_ERROR err = eefs_object_restore(addr + i, &settings[i], sizeof (settings_t));
@@ -181,8 +181,11 @@ static void settings_set_default(){
 /* load calibration according to settings */
 calibration_t* calibration_get_default(adc_input input){
     /* look if they are supported */
-    adc_control_sequence* id = adcctrl_get_sequence(settings[input].input, settings[input].range);
-    assert(id);
+    adc_control_sequence* id = adcctrl_get_sequence(settings[input].input, 
+        settings[input].range);
+    if(!id){
+        assert(id);
+    }
     cal.gain = 1;
     cal.offset = 0;
     return &cal;

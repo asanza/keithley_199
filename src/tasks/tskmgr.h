@@ -27,8 +27,8 @@
 extern "C" {
 #endif
 
-    void tskmgr_start(void);
-    void tskmgr_delete(void);
+    void taskmgr_start(void);
+    void taskmgr_delete(void);
 
 #ifdef	__cplusplus
 }

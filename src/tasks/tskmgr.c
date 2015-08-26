@@ -30,6 +30,7 @@
 #include <assert.h>
 #include <dispkyb.h>
 #include <queue.h>
+#include <ctype.h>
 
 #define SYSTEM_TASK_STACK_SIZE      200
 #define TASK_STACK_SIZE             200
@@ -60,7 +61,7 @@ static void stop_running_task();
 static void switch_sys_function();
 static void poll_key(void);
 
-void tskmgr_start(void)
+void taskmgr_start(void)
 {
     xTaskCreate(system_task, "SYS", SYSTEM_TASK_STACK_SIZE, NULL,
         SYSTEM_TASK_PRIORITY, NULL);
@@ -71,7 +72,7 @@ void tskmgr_start(void)
 
 static void system_task(void* pvParameters)
 {
-    (void*) pvParameters;
+    //(void*) pvParameters;
     sys_init();
     // Reload Sysstate from eeprom.
     load_settings();
@@ -124,7 +125,8 @@ static void sys_init(void)
     int i = 0;
     char* temp = REPOVERSION;
     while (temp[i] != 0) {
-        display_putc(toupper(temp[i]), i++);
+        display_putc(toupper(temp[i]), i);
+        i++;
     }
     vTaskDelay(MESSAGE_DELAY / portTICK_PERIOD_MS); // show firmware version at startup.
     display_clear();

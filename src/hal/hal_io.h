@@ -33,6 +33,8 @@ extern "C" {
             AUX_LED
 }IO_LED;
 
+void hal_io_init(void);
+
 void hal_io_displayport_write(uint16_t segments);
 uint16_t hal_io_get_segment(int segment);
 int hal_io_keyboard_get_channel(void);

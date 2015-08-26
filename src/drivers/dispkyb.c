@@ -46,6 +46,7 @@ void display_evt_clear(void){
     char item;
     while(xQueueReceive(event_queue, &item, 0)==pdTRUE);
     BaseType_t val = xQueueReset(event_queue);
+    val = val;
     assert(val == pdPASS);
 }
 
@@ -138,7 +139,7 @@ void display_test()
 static int test_segment = 0, test_delay = TEST_MAX_DELAY;
 static key_id key_pressed = KEY_NONE;
 static key_id last_key_pressed = KEY_NONE;
-static hl_time = 0; // time to highlight a digit
+static int hl_time = 0; // time to highlight a digit
 static key_id hal_disp_scan()
 {
     if (actual_character >= NUMBER_OF_CHARACTERS) {
@@ -199,7 +200,8 @@ static key_id hal_disp_scan()
         }
     }
 
-    display_set(screen[actual_character], actual_character++);
+    display_set(screen[actual_character], actual_character);
+    actual_character++;
     
     if (self_test == false)
         return last_key_pressed;

@@ -26,6 +26,8 @@
 #include<task.h>
 #include<dispkyb.h>
 #include<diag.h>
+#include<disfmt.h>
+#include "tskmgr.h"
 #include "settings.h"
 #include "system.h"
 #include "fitlinear.h"
@@ -44,7 +46,7 @@ static double do_measure(){
 
 void task_calibration(void* params)
 {
-    double refvals[3] = {ADC_MAX_VALUE, 0 , ADC_MIN_VALUE};
+    double refvals[3];
     double measval[3];
     
     double gain = 1;
@@ -55,24 +57,24 @@ void task_calibration(void* params)
         settings_get_integration_period(), ADC_CHANNEL_0, gain, offset);
     system_release_lock();
     
-    fmt_get_refval(&refvals[0], settings_get_input(), 
+    refvals[0] = fmt_get_refval(ADC_MAX_VALUE, settings_get_input(), 
         settings_get_range());
     measval[0] = do_measure();
     
-    fmt_get_refval(&refvals[1], settings_get_input(), 
+    refvals[1] = fmt_get_refval(0, settings_get_input(), 
         settings_get_range());
     measval[1] = do_measure();
     
-    fmt_get_refval(&refvals[2], settings_get_input(), 
+    refvals[2] = fmt_get_refval(ADC_MIN_VALUE, settings_get_input(), 
         settings_get_range());
     measval[2] = do_measure();
 
     fit_linear(measval, refvals, 3, &offset, &gain);
     int i = 0;
     for(i = 0; i < 3; i++){
-        DIAG("refvals[%d]: %f, measval[%d]: %f",i, refvals[i],i, measval[i]);
+        DIAG("refvals[%d]: %f, measval[%d]: %f",i, (float)refvals[i],i, (float)measval[i]);
     }
-    DIAG("offset %f, gain %f", offset, gain);
+    DIAG("offset %f, gain %f", (float)offset, (float)gain);
     calibration_save(gain, offset);
     
     system_get_lock();

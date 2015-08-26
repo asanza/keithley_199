@@ -66,7 +66,7 @@ EEFS_ERROR eefs_write_page(uint16_t page_address, eefs_page* page){
 
 EEFS_ERROR eefs_read_page(uint16_t page_address, eefs_page* page){
     assert(page_address < EEPROM_NUMBER_OF_PAGES);
-    int i = 0; bool t = false; CRC32 crc; EEFS_ERROR err = EEFS_OK;
+    int i = 0; CRC32 crc; EEFS_ERROR err = EEFS_OK;
     do{
         crc = 0;
         eeprom_read_page(page_address, (uint8_t*)page);

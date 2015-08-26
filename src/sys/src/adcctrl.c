@@ -171,6 +171,9 @@ adc_control_sequence* adcctrl_get_sequence(adc_input input, adc_range range){
         case ADC_INPUT_CURRENT_DC: return get_cdc_seq(range);
         case ADC_INPUT_CURRENT_AC: return get_cac_seq(range);
         case ADC_INPUT_RESISTANCE_4W: return get_res4w_seq(range);
+        case ADC_INPUT_RESISTANCE_2W:
+        case ADC_NUMBER_OF_INPUTS:
+            assert(0);
     }
     return NULL;
 }
@@ -178,7 +181,9 @@ adc_control_sequence* adcctrl_get_sequence(adc_input input, adc_range range){
 static adc_control_sequence* get_res4w_seq(adc_range range){
     switch(range){
         case ADC_RANGE_300: return NULL;
+        default: return NULL;
     }
+    return NULL;
 }
 
 static adc_control_sequence* get_vac_seq(adc_range range){
@@ -187,6 +192,7 @@ static adc_control_sequence* get_vac_seq(adc_range range){
         case ADC_RANGE_3: seq_3VAC.actual_value = 0; return &seq_3VAC;
         case ADC_RANGE_30: seq_30VAC.actual_value = 0; return &seq_30VAC;
         case ADC_RANGE_300: seq_300VAC.actual_value = 0; return &seq_300VAC;
+        default: return NULL;
     };
     return NULL;
 }
@@ -195,6 +201,7 @@ static adc_control_sequence* get_cdc_seq(adc_range range){
     switch(range){
         case ADC_RANGE_30m: seq_30mADC.actual_value = 0; return &seq_30mADC;
         case ADC_RANGE_3: seq_3ADC.actual_value = 0; return &seq_3ADC;
+        default: return NULL;
     }
     return NULL;
 }
@@ -203,6 +210,7 @@ static adc_control_sequence* get_cac_seq(adc_range range){
     switch(range){
         case ADC_RANGE_30m: seq_30mAAC.actual_value = 0; return &seq_30mAAC;
         case ADC_RANGE_3: seq_3AAC.actual_value = 0; return &seq_3AAC;
+        default: return NULL;
     }
     return NULL;
 }
@@ -213,6 +221,7 @@ static adc_control_sequence* get_vdc_seq(adc_range range){
         case ADC_RANGE_3: seq_3V.actual_value = 0; return &seq_3V;
         case ADC_RANGE_30: seq_30V.actual_value = 0; return &seq_30V;
         case ADC_RANGE_300: seq_300V.actual_value = 0; return &seq_300V;
+        default: return NULL;
     };
     return NULL;
 }

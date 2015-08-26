@@ -52,6 +52,8 @@ disp_mode fmt_get_disp_mode(adc_input mode)
         case ADC_INPUT_RESISTANCE_4W:
             display_indicator |= DISP_OHMS;
             break;
+        default:
+            break;
     }
     return display_indicator;
 }
@@ -143,14 +145,17 @@ void fmt_append_scale(char* buffer, adc_input mode, adc_range range)
                 case ADC_RANGE_30M:
                 case ADC_RANGE_300M: strcat(buffer, "Mo");
                     break;
+                default:
+                    break;
             }
         }
+        default:
             break;
     }
 }
 
 static void fmt_write_display(char* buffer, int size, adc_range range, adc_input mode,
-    double value)
+    float value)
 {
     fmt_format_string(buffer, NUMBER_OF_CHARACTERS, range, get_range_value(value, range));
     fmt_append_scale(buffer, mode, range);
@@ -165,10 +170,10 @@ static key_id fmt_get_key()
     return val;
 }
 
-void fmt_get_refval(double* val, adc_input mode, adc_range range)
+double fmt_get_refval(double val, adc_input mode, adc_range range)
 {
-    double sign;
-    if(*val >= 0) sign = 1;
+    float sign;
+    if(val >= 0) sign = 1;
     else sign = -1;
     key_id key = KEY_NONE;
     int hld_i = 2;
@@ -178,9 +183,9 @@ void fmt_get_refval(double* val, adc_input mode, adc_range range)
         if (key != KEY_NONE) {
             if (hld_i == 3) {
                 if (key < 3) {
-                    *val = sign*key;
+                    val = sign*key;
                 } else {
-                    if (key == 3) *val = sign*key;
+                    if (key == 3) val = sign*key;
                     display_highlight(hld_i--);
                 }
             } else {
@@ -190,19 +195,20 @@ void fmt_get_refval(double* val, adc_input mode, adc_range range)
                     for (i = 4; i <= hld_i; i++) {
                         dec = dec * 0.1;
                     }
-                    *val += sign*key*dec;
+                    val += sign*key*dec;
                 }
             }
         }
-        fmt_write_display(buffer, NUMBER_OF_CHARACTERS, range, mode, *val);
+        fmt_write_display(buffer, NUMBER_OF_CHARACTERS, range, mode, val);
         if (hld_i > 7) hld_i = 2;
         display_highlight(hld_i++);
         key = fmt_get_key();
     } while (key != KEY_CAL);
     /* buffer contains the incomming user value */
     buffer[8] = 0x00;
-    *val = atof(buffer);
+    val = atof(buffer);
     display_highlight(0);
+    return val;
 }
 
 static double get_range_value(double value, adc_range scale)
@@ -224,4 +230,5 @@ static double get_range_value(double value, adc_range scale)
             return value * 100;
         default: break;
     }
+    return 0;
 }
