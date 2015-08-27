@@ -32,10 +32,10 @@
         char* rve;
         char *out = utils_dtoa_priv(value,4,digits, &decpt, &sign, &rve);
         int i = 0, j;
-        if(sign > 0){
-            buff[i] = ' ';
+        if(value >= 0){
+            buff[i++] = ' ';
         }else{
-            buff[i] = '-';
+            buff[i++] = '-';
         }
         
         if(decpt < 0)
@@ -48,7 +48,7 @@
             buff[i++] = '0';
         }
         j = 0;
-        for (i = i; i <= digits; i++){
+        for (i = i; i <= digits + 1; i++){
             if(decpt-- == 0) buff[i++] = '.';
             if(out[j] == '\0'){
                 buff[i] = '0';
