@@ -155,7 +155,7 @@ void fmt_append_scale(char* buffer, adc_input mode, adc_range range)
 }
 
 static void fmt_write_display(char* buffer, int size, adc_range range, adc_input mode,
-    float value)
+    double value)
 {
     fmt_format_string(buffer, NUMBER_OF_CHARACTERS, range, get_range_value(value, range));
     fmt_append_scale(buffer, mode, range);
@@ -172,7 +172,7 @@ static key_id fmt_get_key()
 
 double fmt_get_refval(double val, adc_input mode, adc_range range)
 {
-    float sign;
+    double sign;
     if(val >= 0) sign = 1;
     else sign = -1;
     key_id key = KEY_NONE;

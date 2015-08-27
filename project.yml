@@ -102,7 +102,7 @@
       - ${1}
       - -o "./build/test/TestBuild.elf"
       #- -L
-      - -Wl,-Tp32MX350F256L.ld,-Map=./build/test/TestOutput.map,--report-mem
+      - -Wl,-Tp32MX350F256L.ld,--defsym=_min_heap_size=2000,-Map=./build/test/TestOutput.map,--report-mem
       - --defsym=_min_heap_size=32440
       - --defsym=_min_stack_size=1056
   :test_fixture:

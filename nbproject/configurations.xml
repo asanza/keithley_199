@@ -79,10 +79,16 @@
         <itemPath>src/tasks/tskmgr.h</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
-        <itemPath>src/utils/util_ringbuff.h</itemPath>
-        <itemPath>src/utils/fitlinear.h</itemPath>
-        <itemPath>src/utils/diag.h</itemPath>
-        <itemPath>src/utils/disfmt.h</itemPath>
+        <logicalFolder name="include" displayName="include" projectFiles="true">
+          <itemPath>src/utils/include/diag.h</itemPath>
+          <itemPath>src/utils/include/fitlinear.h</itemPath>
+          <itemPath>src/utils/include/disfmt.h</itemPath>
+          <itemPath>src/utils/include/util_ringbuff.h</itemPath>
+          <itemPath>src/utils/include/strutils.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="src" displayName="src" projectFiles="true">
+          <itemPath>src/utils/src/dtoa.h</itemPath>
+        </logicalFolder>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -162,10 +168,14 @@
         <itemPath>src/tasks/tskmgr.c</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
-        <itemPath>src/utils/util_ringbuff.c</itemPath>
-        <itemPath>src/utils/fitlinear.c</itemPath>
-        <itemPath>src/utils/diag.c</itemPath>
-        <itemPath>src/utils/disfmt.c</itemPath>
+        <logicalFolder name="src" displayName="src" projectFiles="true">
+          <itemPath>src/utils/src/diag.c</itemPath>
+          <itemPath>src/utils/src/fitlinear.c</itemPath>
+          <itemPath>src/utils/src/disfmt.c</itemPath>
+          <itemPath>src/utils/src/util_ringbuff.c</itemPath>
+          <itemPath>src/utils/src/dtoa.c</itemPath>
+          <itemPath>src/utils/src/strutils.c</itemPath>
+        </logicalFolder>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -233,7 +243,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="src/hal;src/FreeRTOS/include;src/FreeRTOS/portable/MPLAB/PIC32MX;src/sys/include;src/eefs;src/libscpi/inc;src/dmm;src/utils;src/drivers;src/scpi-parser/libscpi/inc"/>
+                  value="src/hal;src/FreeRTOS/include;src/FreeRTOS/portable/MPLAB/PIC32MX;src/sys/include;src/eefs;src/libscpi/inc;src/dmm;src/utils/include;src/drivers;src/scpi-parser/libscpi/inc"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
