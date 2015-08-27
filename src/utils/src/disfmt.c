@@ -24,6 +24,7 @@
  */
 
 #include "disfmt.h"
+#include "strutils.h"
 #include <sysdefs.h>
 #include <math.h>
 #include <stdio.h>
@@ -66,13 +67,10 @@ void fmt_format_string(char* buff, int buffsize, adc_range scale, double value)
         case ADC_RANGE_3K:
         case ADC_RANGE_3M:
         {
-            if (value >= 0) {
-                sprintf(buff, " %06.5f", value / 1.0);
-            } else {
-                sprintf(buff, "%07.5f", value / 1.0);
-            }
             if (fabs(value) >= ADC_OVERFLOW) {
                 sprintf(buff, " O.VERFL");
+            }else{
+                utils_dtostr(buff, 6, value);
             }
         }
             break;
@@ -81,13 +79,10 @@ void fmt_format_string(char* buff, int buffsize, adc_range scale, double value)
         case ADC_RANGE_30K:
         case ADC_RANGE_30M:
         {
-            if (value >= 0) {
-                sprintf(buff, " %07.4f", value / 1.0);
-            } else {
-                sprintf(buff, "%08.4f", value / 1.0);
-            }
             if (fabs(value) >= ADC_OVERFLOW * 10) {
                 sprintf(buff, " OV.ERFL");
+            }else{
+                utils_dtostr(buff, 6, value);
             }
         }
             break;
@@ -96,13 +91,10 @@ void fmt_format_string(char* buff, int buffsize, adc_range scale, double value)
         case ADC_RANGE_300M:
         case ADC_RANGE_300m:
         {
-            if (value >= 0) {
-                sprintf(buff, " %07.3f", value / 1.0);
-            } else {
-                sprintf(buff, "%08.3f", value / 1.0);
-            }
             if (fabs(value) >= ADC_OVERFLOW * 100) {
                 sprintf(buff, " OVE.RFL");
+            }else{
+                utils_dtostr(buff, 6, value);
             }
         }
             break;
@@ -206,7 +198,7 @@ double fmt_get_refval(double val, adc_input mode, adc_range range)
     } while (key != KEY_CAL);
     /* buffer contains the incomming user value */
     buffer[8] = 0x00;
-    val = atof(buffer);
+    val = utils_strtod(buffer);
     display_highlight(0);
     return val;
 }
