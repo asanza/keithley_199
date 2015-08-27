@@ -23,6 +23,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include "strutils.h"
 #include "dtoa.h"
 
     void utils_dtostr(char* buff, int digits, double value){
@@ -38,7 +39,7 @@
             buff[i++] = '-';
         }
         
-        if(decpt < 0)
+        if(decpt <= 0)
         {
             buff[i++] = '0';
             buff[i++] = '.';
@@ -47,6 +48,7 @@
         for(j = decpt+1; j <= 0; j++){
             buff[i++] = '0';
         }
+        
         j = 0;
         for (i = i; i <= digits + 1; i++){
             if(decpt-- == 0) buff[i++] = '.';
@@ -56,16 +58,28 @@
                 buff[i] = out[j++];
             }
         }
-        /* round if last digit + 1 > 5*/
+        /* round if last digit + 1 > 5 */
+        /* TODO: Test extreme case: round to 3, 0.04445*/
         if(out[j] != '\0'){
             char t[2] = {' ', '\0'};
             t[0]=out[j];
             int d1 = atoi(t);
-            if(d1 > 5){
+            if(d1 >= 5){
                 t[0]=buff[i-1];
                 d1 = atoi(t);
                 utoa(t, d1+1, 10);
                 buff[i-1] = t[0];
+            }else if(d1==4){
+                if(out[j+1] != '\0'){
+                    t[0]=out[j+1];
+                    d1 = atoi(t);
+                    if(d1 >= 5){
+                        t[0]=buff[i-1];
+                        d1 = atoi(t);
+                        utoa(t, d1+1, 10);
+                        buff[i-1] = t[0];
+                    }
+                }
             }
         }
         

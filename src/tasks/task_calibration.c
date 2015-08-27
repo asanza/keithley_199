@@ -78,7 +78,9 @@ void task_calibration(void* params)
         utils_dtostr(buffb,10,measval[i]);
         DIAG("refvals[%d]: %s, measval[%d]: %s",i, buffa,i, buffb);
     }
-    DIAG("offset %f, gain %f", (float)offset, (float)gain);
+    utils_dtostr(buffa,10,offset);
+    utils_dtostr(buffb,10,gain);
+    DIAG("offset %f, gain %f", buffa, buffb);
     calibration_save(gain, offset);
     
     system_get_lock();
