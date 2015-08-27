@@ -29,7 +29,8 @@
 #include<disfmt.h>
 #include "tskmgr.h"
 #include "settings.h"
-#include "system.h"
+#include <system.h>
+#include <strutils.h>
 #include "fitlinear.h"
 
 static double do_measure(){
@@ -71,8 +72,11 @@ void task_calibration(void* params)
 
     fit_linear(measval, refvals, 3, &offset, &gain);
     int i = 0;
+    char buffa[15], buffb[15];
     for(i = 0; i < 3; i++){
-        DIAG("refvals[%d]: %f, measval[%d]: %f",i, (float)refvals[i],i, (float)measval[i]);
+        utils_dtostr(buffa,10,refvals[i]);
+        utils_dtostr(buffb,10,measval[i]);
+        DIAG("refvals[%d]: %s, measval[%d]: %s",i, buffa,i, buffb);
     }
     DIAG("offset %f, gain %f", (float)offset, (float)gain);
     calibration_save(gain, offset);

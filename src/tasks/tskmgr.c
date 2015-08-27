@@ -33,7 +33,7 @@
 #include <ctype.h>
 
 #define SYSTEM_TASK_STACK_SIZE      200
-#define TASK_STACK_SIZE             200
+#define TASK_STACK_SIZE             400
 #define SYSTEM_TASK_PRIORITY        4
 #define MESSAGE_DELAY 500
 #define TASK_PRIORITY               3

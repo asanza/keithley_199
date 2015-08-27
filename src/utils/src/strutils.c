@@ -75,10 +75,9 @@
     
     double utils_strtod(char* buffer){
         double val;
-        char* se;
-        int i;
-        while(buffer[i++]!='\0')
-            se = &buffer[i];
+        char* se = buffer;
+        while(*se!='\0')
+            se++;
         val = utils_strtod_priv(buffer,&se);
         return val;
     }

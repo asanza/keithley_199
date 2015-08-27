@@ -11,7 +11,7 @@
 
 // pin access functions
 #include <hal_io.h>
-
+#include <assert.h>
 // declared static in case exception condition would prevent
 // auto variable being created
 static enum {
@@ -44,13 +44,10 @@ void _general_exception_handler( unsigned long ulCause, unsigned long ulStatus )
     hal_io_set_led(SYSERR_LED);
     switch(_excep_code)
     {
-    case EXCEP_Trap:
-        while(1);
-        break;
-    case EXCEP_DBE:
-        while(1);
-        break;
+    case EXCEP_Trap: assert(0);
+    case EXCEP_DBE: assert(0);
     default:
+        assert(0);
         while(1);
     }
 }

@@ -197,7 +197,7 @@ double fmt_get_refval(double val, adc_input mode, adc_range range)
         key = fmt_get_key();
     } while (key != KEY_CAL);
     /* buffer contains the incomming user value */
-    buffer[8] = 0x00;
+    buffer[8] = '\0';
     val = utils_strtod(buffer);
     display_highlight(0);
     return val;

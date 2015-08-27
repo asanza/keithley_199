@@ -4,6 +4,7 @@
 #include <task.h>
 #include <assert.h>
 #include <system.h>
+#include <diag.h>
 #include "tskmgr.h"
 
 int main()
@@ -31,6 +32,7 @@ void vApplicationIdleHook(void)
 
 void vApplicationStackOverflowHook(TaskHandle_t pxTask, signed char *pcTaskName)
 {
+    DIAG("%s", pcTaskName);
     assert(0);
     while (1);
 }
