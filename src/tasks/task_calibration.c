@@ -35,8 +35,8 @@
 
 static double do_measure(){
     display_clear();
-    display_puts(" WAIT ");
-    const double n = 10;
+    display_puts(" WORKING ");
+    const double n = 100;
     int i;
     double value = 0;
     for(i = 0; i < n; i++){
