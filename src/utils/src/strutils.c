@@ -61,7 +61,7 @@ void utils_dtofixstr(char* buff, int digits, int dplaces, double value){
     idx = buff + digits - dplaces + 1;
     
     for(i = digits-dplaces; i >= 0; i--){
-        if(*ids!=0)
+        if(*ids!=0 && *ids!='-')
             *idx--=*ids--;
         else
             *idx--='0';
