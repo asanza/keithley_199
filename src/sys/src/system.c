@@ -37,8 +37,8 @@
 static SemaphoreHandle_t syslock;
 
 static adc_channel channel = 0;
-double gain;
-double offset;
+static double gain;
+static double offset;
 
 int system_set_configuration(adc_input input, adc_range range,
     adc_integration_period period, adc_channel _channel, double _gain, double _offset)

@@ -29,7 +29,7 @@ extern "C" {
 
     void utils_dtostr(char* buffer, int digits, double value);
     double utils_strtod(char* buffer);
-
+void utils_dtofixstr(char* buff, int digits, int dplaces, double value);
 
 #ifdef	__cplusplus
 }

@@ -70,7 +70,7 @@ void fmt_format_string(char* buff, int buffsize, adc_range scale, double value)
             if (fabs(value) >= ADC_OVERFLOW) {
                 sprintf(buff, " O.VERFL");
             }else{
-                utils_dtostr(buff, 6, value);
+                utils_dtofixstr(buff, 6, 5, value);
             }
         }
             break;
@@ -82,7 +82,7 @@ void fmt_format_string(char* buff, int buffsize, adc_range scale, double value)
             if (fabs(value) >= ADC_OVERFLOW * 10) {
                 sprintf(buff, " OV.ERFL");
             }else{
-                utils_dtostr(buff, 6, value);
+                utils_dtofixstr(buff, 6, 4, value);
             }
         }
             break;
@@ -94,7 +94,7 @@ void fmt_format_string(char* buff, int buffsize, adc_range scale, double value)
             if (fabs(value) >= ADC_OVERFLOW * 100) {
                 sprintf(buff, " OVE.RFL");
             }else{
-                utils_dtostr(buff, 6, value);
+                utils_dtofixstr(buff, 6, 3, value);
             }
         }
             break;

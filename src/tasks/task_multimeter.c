@@ -31,12 +31,16 @@
 #include <disfmt.h>
 
 #include "semphr.h"
+#include "strutils.h"
+#include "tmp275.h"
 
 
 
 void task_multimeter(void *params){
     DIAG("Loaded");
     char buff[NUMBER_OF_CHARACTERS];
+    tmp245_init();
+    double value;
     while(1){
         adc_input val = settings_get_input();
         hal_disp_adci_toggle();
@@ -49,8 +53,12 @@ void task_multimeter(void *params){
             case ADC_INPUT_RESISTANCE_4W: display_puts("RES 4W"); continue;
             default: break;
         }
-        double value = system_read_input();
-        //printf("%f\n",value);
+        value = system_read_input(); //value + (system_read_input()-value)/10.0;
+        utils_dtostr(buff,8,value);
+        //printf("%s,",buff);
+        double temp = tmp245_read_temp_double();
+        utils_dtostr(buff,8,temp);
+        //printf("%s\n",buff);        
         fmt_format_string(buff, NUMBER_OF_CHARACTERS, settings_get_range(),value);
         fmt_append_scale(buff,settings_get_input(), settings_get_range());
         display_puts(buff);
