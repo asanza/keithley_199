@@ -33,14 +33,15 @@
 #include <strutils.h>
 #include "fitlinear.h"
 
+#define CAL_FILTER_SIZE  100.0
+
 static double do_measure(){
     display_clear();
     display_puts(" WORKING ");
-    const double n = 100;
     int i;
     double value = 0;
-    for(i = 0; i < n; i++){
-        value += system_read_input()/n;
+    for(i = 0; i < CAL_FILTER_SIZE; i++){
+        value += system_read_input()/CAL_FILTER_SIZE;
     }
     return value;
 }
