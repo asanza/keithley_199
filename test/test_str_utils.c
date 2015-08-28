@@ -31,4 +31,14 @@ void test_strutils(void){
   TEST_ASSERT_EQUAL_STRING(" 08.2346", buffer);
   utils_dtofixstr(buffer, 7, 6, -8.2345544);
   TEST_ASSERT_EQUAL_STRING("-8.234554", buffer);
+  utils_dtostr(buffer, 6, -0.14805821886151949);
+  TEST_ASSERT_EQUAL_STRING("-0.14806", buffer);
+  utils_dtofixstr(buffer, 6, 3, -0.14805821886151949);
+  TEST_ASSERT_EQUAL_STRING("-000.148", buffer);
+
+  utils_dtostr(buffer, 6, -0.0014805821886151949);
+  TEST_ASSERT_EQUAL_STRING("-0.00148", buffer);
+  utils_dtofixstr(buffer, 6, 3, -0.0014805821886151949);
+  TEST_ASSERT_EQUAL_STRING("-000.001", buffer);
+
 }
