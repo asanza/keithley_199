@@ -34,6 +34,42 @@ static double round(double x)
     return(x < 0.0) ? -floor(-x + 0.5) : floor(x + 0.5);
 }
 
+void utils_dtofixstr(char* buff, int digits, int dplaces, double value){
+    char dstr[10];
+    char* idx = buff;
+    char* ids = dstr;
+    int i;
+    value = round(value*pow(10,dplaces)*1.0)/pow(10,dplaces)*1.0;
+    utils_dtostr(dstr, digits, value);
+    if(*ids == '-'){
+        *idx++ = '-';
+    }else{
+        *idx++ = ' ';
+    }
+    ids = strchr(dstr, '.');
+    idx += digits - dplaces;
+    
+    for(i = 0; i <= dplaces + 1; i++){
+        if(*ids){
+            *idx++=*ids++;
+        }else{
+            *idx++='0';
+        }
+    }
+    
+    ids = strchr(dstr, '.');
+    idx = buff + digits - dplaces + 1;
+    
+    for(i = digits-dplaces; i >= 0; i--){
+        if(*ids!=0)
+            *idx--=*ids--;
+        else
+            *idx--='0';
+    }
+    
+    buff[digits + 2] = '\0';
+}
+
 void utils_dtostr(char* buff, int digits, double value)
 {
     int decpt;
