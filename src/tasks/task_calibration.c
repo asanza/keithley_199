@@ -57,7 +57,8 @@ void task_calibration(void* params)
 
     system_get_lock();
     system_set_configuration(settings_get_input(), settings_get_range(),
-        settings_get_integration_period(), ADC_CHANNEL_0, gain, offset);
+        settings_get_integration_period(), ADC_CHANNEL_0, gain, offset, 
+        ADC_RESOLUTION_5_5);
     system_release_lock();
 
     refvals[0] = fmt_get_refval(ADC_MAX_VALUE, settings_get_input(),
@@ -94,7 +95,7 @@ void task_calibration(void* params)
     system_get_lock();
     system_set_configuration(settings_get_input(), settings_get_range(),
         settings_get_integration_period(), ADC_CHANNEL_0, calibration_gain(),
-        calibration_offset());
+        calibration_offset(), settings_get_resolution());
     system_release_lock();
 
 

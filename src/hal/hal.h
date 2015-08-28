@@ -23,6 +23,7 @@ extern "C" {
 #include <hal_sys.h>
 #include <hal_timer.h>
 #include <hal_uart.h>
+#include <hal_i2c.h>
     
 #endif /*__LANGUAGE_ASSEMBLY*/
 #ifdef	__cplusplus

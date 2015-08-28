@@ -32,6 +32,11 @@ typedef enum{
     ADC_INTEGRATION_60HZ = 16667, /**< 16mS or 60Hz  */
 }adc_integration_period;
 
+typedef enum{
+    ADC_RESOLUTION_5_5,
+    ADC_RESOLUTION_6_5,
+}adc_resolution;
+
 typedef enum {
     ADC_CHANNEL_0 = 0x00,
     ADC_CHANNEL_1 = 0x01,

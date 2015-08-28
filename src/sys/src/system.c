@@ -20,15 +20,14 @@
  *
  * Created on January 23, 2015, 9:04 PM
  */
-
 #include <hal.h>
+#include <usb_uart.h>
 #include <assert.h>
 #include <stddef.h>
 #include <string.h>
 #include <system.h>
 #include <diag.h>
-#include <hal_i2c.h>
-#include <usb_uart.h>
+#include <math.h>
 #include "adc.h"
 
 #include <FreeRTOS.h>
@@ -40,8 +39,16 @@ static adc_channel channel = 0;
 static double gain;
 static double offset;
 
+static double acc_value;
+static int filter_size;
+
+static adc_resolution resln;
+
+#define RESLN_6_5_FILTER_SIZE 10.0
+
 int system_set_configuration(adc_input input, adc_range range,
-    adc_integration_period period, adc_channel _channel, double _gain, double _offset)
+    adc_integration_period period, adc_channel _channel, double _gain, double _offset,
+    adc_resolution res)
 {
     /* try to get syslock. Syslock shall be obtained before calling this function. */
     if (xSemaphoreTake(syslock, 0) == pdTRUE) {
@@ -53,6 +60,7 @@ int system_set_configuration(adc_input input, adc_range range,
     channel = _channel;
     gain = _gain;
     offset = _offset;
+    resln = res;
     return 0;
 }
 
@@ -62,6 +70,12 @@ double system_read_input(void)
      * are done while using the adc. */
     xSemaphoreTake(syslock, portMAX_DELAY);
     double value = gain * adc_read_value(channel) + offset;
+    if(resln == ADC_RESOLUTION_6_5){
+        acc_value = acc_value + (acc_value - value)/RESLN_6_5_FILTER_SIZE;
+        if(fabs(value - acc_value) <= 0.1){
+            value = acc_value;
+        }
+    }
     /* release semaphore when done. */
     xSemaphoreGive(syslock);
     return value;

@@ -41,7 +41,8 @@ extern "C" {
      * @return -1 in case of error.
      */
     int system_set_configuration(adc_input input, adc_range range,
-            adc_integration_period period, adc_channel channel, double gain, double offset);
+            adc_integration_period period, adc_channel channel, double gain, double offset,
+            adc_resolution res);
 
     /** read the value at the input with the configuration set with system set 
      * configuration. */

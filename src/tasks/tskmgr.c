@@ -166,7 +166,7 @@ static void switch_sys_function()
 
     if (system_set_configuration(settings_get_input(), settings_get_range(),
         settings_get_integration_period(), settings_get_channel(),
-        calibration_gain(), calibration_offset())) {
+        calibration_gain(), calibration_offset(), settings_get_resolution())) {
         display_puts("NOT IMPL");
         vTaskDelay(MESSAGE_DELAY / portTICK_PERIOD_MS);
         display_clear();

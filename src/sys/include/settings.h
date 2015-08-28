@@ -53,6 +53,9 @@ typedef void(*out_fmt)(double val, char* buff, size_t size);
 void settings_set_range(adc_range range);
 adc_range settings_get_range();
 
+adc_resolution settings_get_resolution();
+void settings_set_resolution(adc_resolution res);
+
 void settings_set_input(adc_input input);
 adc_input settings_get_input();
 

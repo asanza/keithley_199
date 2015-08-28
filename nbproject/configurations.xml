@@ -297,7 +297,7 @@
         <property key="fill-flash-options-seq" value=""/>
         <property key="fill-flash-options-what" value="0"/>
         <property key="generate-16-bit-code" value="false"/>
-        <property key="generate-cross-reference-file" value="true"/>
+        <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="heap-size" value="2000"/>
         <property key="input-libraries" value=""/>
@@ -308,11 +308,11 @@
         <property key="optimization-level" value=""/>
         <property key="preprocessor-macros" value=""/>
         <property key="remove-unused-sections" value="true"/>
-        <property key="report-memory-usage" value="true"/>
+        <property key="report-memory-usage" value="false"/>
         <property key="stack-size" value=""/>
         <property key="symbol-stripping" value=""/>
         <property key="trace-symbols" value=""/>
-        <property key="warn-section-align" value="true"/>
+        <property key="warn-section-align" value="false"/>
       </C32-LD>
       <C32CPP>
         <property key="additional-warnings" value="false"/>

@@ -35,6 +35,7 @@ typedef struct _settings_t{
     adc_channel             channel             :8 ; /* which channel is selected on the scanner */
     adc_integration_period  integration_period  :16; /* integration period used */
     adc_range               range               :4 ; /* selected range */
+    adc_resolution          resn                :3 ;
     bool                    auto_range          :1 ; /* auto_range selected */
     bool                    filter_enabled      :1 ; /* filter */
     uint8_t                 filter_resoln       :8 ; /* filter resolution */
@@ -62,6 +63,15 @@ void settings_save(settings_location location){
     for(i = 0; i < ADC_NUMBER_OF_INPUTS; i++)
         eefs_object_save(addr + i,&settings[i], sizeof(settings_t));
 }
+
+adc_resolution settings_get_resolution(){
+    return actual_settings->resn;
+}
+
+void settings_set_resolution(adc_resolution res){
+    actual_settings->resn = res;
+}
+
 
 int settings_restore(settings_location location) {
     int i;
