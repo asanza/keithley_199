@@ -105,29 +105,31 @@ void fmt_format_string(char* buff, int buffsize, adc_range scale, double value)
 void fmt_append_scale(char* buffer, adc_input mode, adc_range range)
 {
     switch (mode) {
-        case ADC_INPUT_VOLTAGE_DC:
         case ADC_INPUT_VOLTAGE_AC:
+            *buffer = '~';
+        case ADC_INPUT_VOLTAGE_DC:
         {
             if (range == ADC_RANGE_300m)
                 strcat(buffer, "mV");
             else
-                strcat(buffer, " V");
+                strcat(buffer, "V");
         }
             break;
-        case ADC_INPUT_CURRENT_DC:
         case ADC_INPUT_CURRENT_AC:
+            *buffer = '~';
+        case ADC_INPUT_CURRENT_DC:
         {
             if (range == ADC_RANGE_30m)
                 strcat(buffer, "mA");
             else
-                strcat(buffer, " A");
+                strcat(buffer, "A");
         }
             break;
         case ADC_INPUT_RESISTANCE_2W:
         case ADC_INPUT_RESISTANCE_4W:
         {
             switch (range) {
-                case ADC_RANGE_300: strcat(buffer, " o");
+                case ADC_RANGE_300: strcat(buffer, "o");
                     break;
                 case ADC_RANGE_3K:
                 case ADC_RANGE_30K:
@@ -197,6 +199,7 @@ double fmt_get_refval(double val, adc_input mode, adc_range range)
         key = fmt_get_key();
     } while (key != KEY_CAL);
     /* buffer contains the incomming user value */
+    buffer[0] = ' '; // replace ac symbol.
     buffer[8] = '\0';
     val = utils_strtod(buffer);
     display_highlight(0);

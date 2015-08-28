@@ -75,7 +75,7 @@ void utils_dtostr(char* buff, int digits, double value)
     int decpt;
     int sign;
     char* rve;
-    char *out = utils_dtoa_priv(value, 0, digits, &decpt, &sign, &rve);
+    char *out = utils_dtoa_priv(value, 4, digits, &decpt, &sign, &rve);
     int i = 0, j;
     if (value < 0) {
         buff[i++] = '-';
@@ -85,6 +85,10 @@ void utils_dtostr(char* buff, int digits, double value)
     if (decpt <= 0) {
         buff[i++] = '0';
         buff[i++] = '.';
+    }
+    
+    if(decpt + 1 <= -1.0*digits){
+        decpt = -1.0*digits;
     }
 
     for (j = decpt + 1; j <= 0; j++) {

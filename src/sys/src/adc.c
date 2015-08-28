@@ -70,6 +70,12 @@ double adc_read_value(adc_channel channel){
     adc_control_sequence* seq = adcctrl_get_sequence(input, range);
     assert(seq);
     double value = adc_do_measurement(channel, seq);
+    if(input == ADC_INPUT_CURRENT_AC||input == ADC_INPUT_VOLTAGE_AC||
+        input == ADC_INPUT_RESISTANCE_2W || input == ADC_INPUT_RESISTANCE_4W){
+        if(value < 0){
+            value = -1.0*value;
+        }
+    }
     if(value >= ADC_OVERFLOW) value = ADC_OVERFLOW;
     if(value <= ADC_UNDERFLOW) value = ADC_UNDERFLOW;
     switch(range){

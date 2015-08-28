@@ -33,15 +33,16 @@
 #include <strutils.h>
 #include "fitlinear.h"
 
-#define CAL_FILTER_SIZE  100.0
+#define CAL_FILTER_SIZE  50.0
 
-static double do_measure(){
+static double do_measure()
+{
     display_clear();
     display_puts(" WORKING ");
     int i;
     double value = 0;
-    for(i = 0; i < CAL_FILTER_SIZE; i++){
-        value += system_read_input()/CAL_FILTER_SIZE;
+    for (i = 0; i < CAL_FILTER_SIZE; i++) {
+        value += system_read_input() / CAL_FILTER_SIZE;
     }
     return value;
 }
@@ -50,46 +51,52 @@ void task_calibration(void* params)
 {
     double refvals[3];
     double measval[3];
-    
+    int mpoints = 0;
     double gain = 1;
     double offset = 0;
-    
+
     system_get_lock();
-    system_set_configuration(settings_get_input(), settings_get_range(), 
+    system_set_configuration(settings_get_input(), settings_get_range(),
         settings_get_integration_period(), ADC_CHANNEL_0, gain, offset);
     system_release_lock();
-    
-    refvals[0] = fmt_get_refval(ADC_MAX_VALUE, settings_get_input(), 
+
+    refvals[0] = fmt_get_refval(ADC_MAX_VALUE, settings_get_input(),
         settings_get_range());
     measval[0] = do_measure();
+    mpoints++;
     
-    refvals[1] = fmt_get_refval(0, settings_get_input(), 
+    refvals[1] = fmt_get_refval(0, settings_get_input(),
         settings_get_range());
     measval[1] = do_measure();
-    
-    refvals[2] = fmt_get_refval(ADC_MIN_VALUE, settings_get_input(), 
-        settings_get_range());
-    measval[2] = do_measure();
+    mpoints++;
 
-    fit_linear(measval, refvals, 3, &offset, &gain);
+    if (settings_get_input() == ADC_INPUT_VOLTAGE_DC ||
+        settings_get_input() == ADC_INPUT_CURRENT_DC) {
+        refvals[2] = fmt_get_refval(ADC_MIN_VALUE, settings_get_input(),
+            settings_get_range());
+        measval[2] = do_measure();
+        mpoints ++;
+    }
+
+    fit_linear(measval, refvals, mpoints, &offset, &gain);
     int i = 0;
     char buffa[15], buffb[15];
-    for(i = 0; i < 3; i++){
-        utils_dtostr(buffa,10,refvals[i]);
-        utils_dtostr(buffb,10,measval[i]);
-        DIAG("refvals[%d]: %s, measval[%d]: %s",i, buffa,i, buffb);
+    for (i = 0; i < mpoints; i++) {
+        utils_dtostr(buffa, 10, refvals[i]);
+        utils_dtostr(buffb, 10, measval[i]);
+        DIAG("refvals[%d]: %s, measval[%d]: %s", i, buffa, i, buffb);
     }
-    utils_dtostr(buffa,10,offset);
-    utils_dtostr(buffb,10,gain);
+    utils_dtostr(buffa, 10, offset);
+    utils_dtostr(buffb, 10, gain);
     DIAG("offset %f, gain %f", buffa, buffb);
     calibration_save(gain, offset);
-    
+
     system_get_lock();
-    system_set_configuration(settings_get_input(), settings_get_range(), 
-        settings_get_integration_period(), ADC_CHANNEL_0, calibration_gain(), 
+    system_set_configuration(settings_get_input(), settings_get_range(),
+        settings_get_integration_period(), ADC_CHANNEL_0, calibration_gain(),
         calibration_offset());
     system_release_lock();
 
-    
+
     taskmgr_delete();
 }
