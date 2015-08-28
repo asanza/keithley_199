@@ -23,75 +23,92 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <diag.h>
+#include <string.h>
+#include <math.h>
 #include "strutils.h"
 #include "dtoa.h"
 
-    void utils_dtostr(char* buff, int digits, double value){
-        
-        int decpt;
-        int sign;
-        char* rve;
-        char *out = utils_dtoa_priv(value,4,digits, &decpt, &sign, &rve);
-        int i = 0, j;
-        if(value >= 0){
-            buff[i++] = ' ';
-        }else{
-            buff[i++] = '-';
-        }
-        
-        if(decpt <= 0)
-        {
-            buff[i++] = '0';
-            buff[i++] = '.';
-        }
+static double round(double x)
+{
+    return(x < 0.0) ? -floor(-x + 0.5) : floor(x + 0.5);
+}
 
-        for(j = decpt+1; j <= 0; j++){
-            buff[i++] = '0';
+void utils_dtostr(char* buff, int digits, double value)
+{
+    int decpt;
+    int sign;
+    char* rve;
+    char *out = utils_dtoa_priv(value, 0, digits, &decpt, &sign, &rve);
+    int i = 0, j;
+    if (value < 0) {
+        buff[i++] = '-';
+        digits++;
+    }
+
+    if (decpt <= 0) {
+        buff[i++] = '0';
+        buff[i++] = '.';
+    }
+
+    for (j = decpt + 1; j <= 0; j++) {
+        buff[i++] = '0';
+    }
+
+    j = 0;
+    for (i = i; i <= digits; i++) {
+        if (decpt-- == 0) buff[i++] = '.';
+        if (out[j] == '\0') {
+            buff[i] = '0';
+        } else {
+            buff[i] = out[j++];
         }
-        
-        j = 0;
-        for (i = i; i <= digits + 1; i++){
-            if(decpt-- == 0) buff[i++] = '.';
-            if(out[j] == '\0'){
-                buff[i] = '0';
-            }else{
-                buff[i] = out[j++];
-            }
-        }
-        /* round if last digit + 1 > 5 */
-        /* TODO: Test extreme case: round to 3, 0.04445*/
-        if(out[j] != '\0'){
-            char t[2] = {' ', '\0'};
-            t[0]=out[j];
-            int d1 = atoi(t);
-            if(d1 >= 5){
-                t[0]=buff[i-1];
+    }
+    /* round if last digit + 1 > 5 */
+    /* TODO: Test extreme case: round to 3, 0.04445*/
+    if (out[j] != '\0') {
+        char t[2] = {' ', '\0'};
+        t[0] = out[j];
+        int d1 = atoi(t);
+        if (d1 >= 5) {
+            t[0] = buff[i - 1];
+            d1 = atoi(t);
+            utoa(t, d1 + 1, 10);
+            buff[i - 1] = t[0];
+        } else if (d1 == 4) {
+            if (out[j + 1] != '\0') {
+                t[0] = out[j + 1];
                 d1 = atoi(t);
-                utoa(t, d1+1, 10);
-                buff[i-1] = t[0];
-            }else if(d1==4){
-                if(out[j+1] != '\0'){
-                    t[0]=out[j+1];
+                if (d1 >= 5) {
+                    t[0] = buff[i - 1];
                     d1 = atoi(t);
-                    if(d1 >= 5){
-                        t[0]=buff[i-1];
+                    utoa(t, d1 + 1, 10);
+                    buff[i - 1] = t[0];
+                } else if (d1 == 4) {
+                    if (out[j + 2] != '\0') {
+                        t[0] = out[j + 2];
                         d1 = atoi(t);
-                        utoa(t, d1+1, 10);
-                        buff[i-1] = t[0];
+                        if (d1 >= 5) {
+                            t[0] = buff[i - 1];
+                            d1 = atoi(t);
+                            utoa(t, d1 + 1, 10);
+                            buff[i - 1] = t[0];
+                        }
                     }
                 }
             }
         }
-        
-        buff[i] = '\0';
-        free(out);
     }
-    
-    double utils_strtod(char* buffer){
-        double val;
-        char* se = buffer;
-        while(*se!='\0')
-            se++;
-        val = utils_strtod_priv(buffer,&se);
-        return val;
-    }
+    buff[i] = '\0';
+    free(out);
+}
+
+double utils_strtod(char* buffer)
+{
+    double val;
+    char* se = buffer;
+    while (*se != '\0')
+        se++;
+    val = utils_strtod_priv(buffer, &se);
+    return val;
+}
