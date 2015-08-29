@@ -155,6 +155,7 @@ static void load_settings()
 static void switch_sys_function()
 {
     stop_running_task();
+    display_puts(" ------- ");
     /* get system lock */
     system_get_lock();
     display_clear();
@@ -250,7 +251,20 @@ static void poll_key(void)
                 settings_set_input(ADC_INPUT_TEMP);
             switch_sys_function();
             break;
-        case KEY_9:break; //break;
+        case KEY_9:
+            if(shift_key){
+                shift_key = false;
+            }else{
+                stop_running_task();
+                display_puts("SAVE 0-9?");
+                key = display_wait_for_key();
+                key = display_wait_for_key();
+                display_puts(" WORKING ");
+                if(key <= 9)
+                    settings_save(key);
+                start_task(TASK_MULTIMETER);
+            }
+            break;
         case KEY_UP:
             settings_range_up();
             switch_sys_function();

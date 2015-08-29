@@ -205,12 +205,14 @@ double fmt_get_refval(double val, adc_input mode, adc_range range, adc_resolutio
                 }
             }
         }
-        fmt_write_display(buffer, NUMBER_OF_CHARACTERS, range,res, mode, val);
+        fmt_write_display(buffer, NUMBER_OF_CHARACTERS, range,mode,res, val);
         if (hld_i > 7) hld_i = 2;
         display_highlight(hld_i++);
         key = fmt_get_key();
     } while (key != KEY_CAL);
     display_highlight(0);
+    buffer[0] = ' ';
+    val = sign*utils_strtod(buffer);
     return val;
 }
 
