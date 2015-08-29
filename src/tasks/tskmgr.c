@@ -50,7 +50,7 @@ static void system_task(void* params);
 extern void task_multimeter(void* params);
 extern void task_resistance_4w(void* params);
 extern void task_calibration(void* params);
-extern void task_scpi(void* params);
+extern void scpi_task(void* params);
 
 static TaskHandle_t running_task = NULL;
 static TaskHandle_t dmm_task;
@@ -66,7 +66,7 @@ void taskmgr_start(void)
 {
     xTaskCreate(system_task, "SYS", SYSTEM_TASK_STACK_SIZE, NULL,
         SYSTEM_TASK_PRIORITY, NULL);
-    xTaskCreate(task_scpi, "SCPI", SYSTEM_TASK_STACK_SIZE, NULL,
+    xTaskCreate(scpi_task, "SCPI", SYSTEM_TASK_STACK_SIZE, NULL,
         SYSTEM_TASK_PRIORITY, NULL);
     xTaskCreate(task_multimeter, "MUL", TASK_STACK_SIZE, NULL, TASK_PRIORITY,
         &dmm_task);
