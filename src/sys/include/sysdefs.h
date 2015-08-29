@@ -35,6 +35,7 @@ typedef enum{
 typedef enum{
     ADC_RESOLUTION_5_5,
     ADC_RESOLUTION_6_5,
+    ADC_MAX_RESOLUTION
 }adc_resolution;
 
 typedef enum {

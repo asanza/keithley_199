@@ -160,7 +160,6 @@ int adcctrl_get_sequence_id(adc_input input, adc_range range){
         }
     }
     id = map[input][range];
-    DIAG("input: %d, range: %d, id: %d", input, range,  id);
     return id;
 }
 

@@ -50,7 +50,8 @@ void task_multimeter(void *params){
         double temp = tmp245_read_temp_double();
         utils_dtostr(buff,8,temp);
         //printf("%s\n",buff);        
-        fmt_format_string(buff, NUMBER_OF_CHARACTERS, settings_get_range(),value);
+        fmt_format_string(buff, NUMBER_OF_CHARACTERS, settings_get_range(),
+            settings_get_resolution(), value);
         fmt_append_scale(buff,settings_get_input(), settings_get_range());
         display_puts(buff);
     }

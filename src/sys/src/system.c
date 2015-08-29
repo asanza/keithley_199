@@ -29,6 +29,7 @@
 #include <diag.h>
 #include <math.h>
 #include "adc.h"
+#include "strutils.h"
 
 #include <FreeRTOS.h>
 #include <semphr.h>
@@ -43,6 +44,7 @@ static double acc_value;
 static int filter_size;
 
 static adc_resolution resln;
+static double wn_delta;
 
 #define RESLN_6_5_FILTER_SIZE 10.0
 
@@ -61,6 +63,26 @@ int system_set_configuration(adc_input input, adc_range range,
     gain = _gain;
     offset = _offset;
     resln = res;
+    switch(range){
+        case ADC_RANGE_30m:
+        case ADC_RANGE_30:
+        case ADC_RANGE_30K:
+        case ADC_RANGE_30M:
+            wn_delta =  1e-4;
+            break;
+        case ADC_RANGE_3:
+        case ADC_RANGE_3K:
+        case ADC_RANGE_3M:
+            wn_delta = 1e-5;
+            break;
+        case ADC_RANGE_300m:
+        case ADC_RANGE_300:
+        case ADC_RANGE_300K:
+        case ADC_RANGE_300M:
+            wn_delta = 1e-3;
+            break;
+        default: assert(0);
+    }
     return 0;
 }
 
@@ -71,10 +93,15 @@ double system_read_input(void)
     xSemaphoreTake(syslock, portMAX_DELAY);
     double value = gain * adc_read_value(channel) + offset;
     if(resln == ADC_RESOLUTION_6_5){
-        acc_value = acc_value + (acc_value - value)/RESLN_6_5_FILTER_SIZE;
-        if(fabs(value - acc_value) <= 0.1){
+        if(fabs(value - acc_value) <= wn_delta){
+            acc_value = acc_value + (value - acc_value)/RESLN_6_5_FILTER_SIZE;
             value = acc_value;
+        }else{
+            acc_value = value;
         }
+        char buff[15];
+        utils_dtostr(buff,10,value);
+        DIAG("%s", buff);
     }
     /* release semaphore when done. */
     xSemaphoreGive(syslock);

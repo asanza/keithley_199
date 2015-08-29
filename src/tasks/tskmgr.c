@@ -197,7 +197,17 @@ static void poll_key(void)
         case KEY_0:break;
         case KEY_1:break;
         case KEY_2:break;
-        case KEY_3:break;
+        case KEY_3:
+            if(shift_key){
+                adc_resolution res = settings_get_resolution();
+                res ++;
+                if(res >= ADC_MAX_RESOLUTION)
+                    res = ADC_RESOLUTION_5_5;
+                settings_set_resolution(res);
+                shift_key = false;
+                switch_sys_function();
+            }
+            break;
         case KEY_4:
             if(repeat_key == false) break;
             shift_key = !shift_key;

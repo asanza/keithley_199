@@ -24,6 +24,7 @@
  */
 
 #include "disfmt.h"
+#include <assert.h>
 #include "strutils.h"
 #include <sysdefs.h>
 #include <math.h>
@@ -59,9 +60,16 @@ disp_mode fmt_get_disp_mode(adc_input mode)
     return display_indicator;
 }
 
-void fmt_format_string(char* buff, int buffsize, adc_range scale, double value)
+void fmt_format_string(char* buff, int buffsize, adc_range scale, adc_resolution res, 
+    double value)
 {
     memset(buff, ' ', buffsize * sizeof(char));
+    int ndigits = 0;
+    switch(res){
+        case ADC_RESOLUTION_5_5: ndigits = 6; break;
+        case ADC_RESOLUTION_6_5: ndigits = 7; break;
+        default: assert(0);
+    }
     switch (scale) {
         case ADC_RANGE_3:
         case ADC_RANGE_3K:
@@ -70,7 +78,7 @@ void fmt_format_string(char* buff, int buffsize, adc_range scale, double value)
             if (fabs(value) >= ADC_OVERFLOW) {
                 sprintf(buff, " O.VERFL");
             }else{
-                utils_dtofixstr(buff, 6, 5, value);
+                utils_dtofixstr(buff, ndigits, ndigits - 1, value);
             }
         }
             break;
@@ -82,7 +90,7 @@ void fmt_format_string(char* buff, int buffsize, adc_range scale, double value)
             if (fabs(value) >= ADC_OVERFLOW * 10) {
                 sprintf(buff, " OV.ERFL");
             }else{
-                utils_dtofixstr(buff, 6, 4, value);
+                utils_dtofixstr(buff, ndigits, ndigits - 2, value);
             }
         }
             break;
@@ -94,7 +102,7 @@ void fmt_format_string(char* buff, int buffsize, adc_range scale, double value)
             if (fabs(value) >= ADC_OVERFLOW * 100) {
                 sprintf(buff, " OVE.RFL");
             }else{
-                utils_dtofixstr(buff, 6, 3, value);
+                utils_dtofixstr(buff, ndigits, ndigits - 3, value);
             }
         }
             break;
@@ -149,9 +157,9 @@ void fmt_append_scale(char* buffer, adc_input mode, adc_range range)
 }
 
 static void fmt_write_display(char* buffer, int size, adc_range range, adc_input mode,
-    double value)
+    adc_resolution res, double value)
 {
-    fmt_format_string(buffer, NUMBER_OF_CHARACTERS, range, get_range_value(value, range));
+    fmt_format_string(buffer, NUMBER_OF_CHARACTERS, range, res, get_range_value(value, range));
     fmt_append_scale(buffer, mode, range);
     display_puts(buffer);
 }
@@ -164,7 +172,7 @@ static key_id fmt_get_key()
     return val;
 }
 
-double fmt_get_refval(double val, adc_input mode, adc_range range)
+double fmt_get_refval(double val, adc_input mode, adc_range range, adc_resolution res)
 {
     double sign;
     if(val >= 0) sign = 1;
@@ -193,7 +201,7 @@ double fmt_get_refval(double val, adc_input mode, adc_range range)
                 }
             }
         }
-        fmt_write_display(buffer, NUMBER_OF_CHARACTERS, range, mode, val);
+        fmt_write_display(buffer, NUMBER_OF_CHARACTERS, range,res, mode, val);
         if (hld_i > 7) hld_i = 2;
         display_highlight(hld_i++);
         key = fmt_get_key();

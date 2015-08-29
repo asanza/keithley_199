@@ -166,6 +166,7 @@ static void settings_set_default(){
         settings[i].filter_resoln = 0;
         settings[i].formatter = NULL;
         settings[i].integration_period = ADC_INTEGRATION_50HZ;
+        settings[i].resn = ADC_RESOLUTION_5_5;
         settings[i].math = NULL;
     }
     settings[ADC_INPUT_CURRENT_AC].input = ADC_INPUT_CURRENT_AC;

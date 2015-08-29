@@ -62,19 +62,19 @@ void task_calibration(void* params)
     system_release_lock();
 
     refvals[0] = fmt_get_refval(ADC_MAX_VALUE, settings_get_input(),
-        settings_get_range());
+        settings_get_range(), settings_get_resolution());
     measval[0] = do_measure();
     mpoints++;
     
     refvals[1] = fmt_get_refval(0, settings_get_input(),
-        settings_get_range());
+        settings_get_range(), settings_get_resolution());
     measval[1] = do_measure();
     mpoints++;
 
     if (settings_get_input() == ADC_INPUT_VOLTAGE_DC ||
         settings_get_input() == ADC_INPUT_CURRENT_DC) {
         refvals[2] = fmt_get_refval(ADC_MIN_VALUE, settings_get_input(),
-            settings_get_range());
+            settings_get_range(), settings_get_resolution());
         measval[2] = do_measure();
         mpoints ++;
     }
