@@ -97,7 +97,6 @@ void taskmgr_delete(void)
 
 static void start_task(sys_task_t task)
 {
-    system_get_lock();
     switch (task) {
         case TASK_MULTIMETER: vTaskResume(dmm_task);
             break;
@@ -109,7 +108,6 @@ static void start_task(sys_task_t task)
         default:
             assert(0);
     }
-    system_release_lock();
     display_clear();
 }
 
@@ -159,7 +157,6 @@ static void switch_sys_function()
     stop_running_task();
     display_puts(" ------- ");
     /* get system lock */
-    system_get_lock();
     display_clear();
     if (!calibration_restore()) {
         display_puts("CAL ERROR");
@@ -174,7 +171,6 @@ static void switch_sys_function()
         vTaskDelay(MESSAGE_DELAY / portTICK_PERIOD_MS);
         display_clear();
     }
-    system_release_lock();
     switch (settings_get_input()) {
         case ADC_INPUT_CURRENT_DC:
         case ADC_INPUT_CURRENT_AC:

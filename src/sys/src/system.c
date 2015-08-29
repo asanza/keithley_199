@@ -55,6 +55,7 @@ int system_set_configuration(adc_input input, adc_range range,
     adc_integration_period period, adc_channel _channel, double _gain, double _offset,
     adc_resolution res)
 {
+    xSemaphoreTake(syslock, portMAX_DELAY);
     /* try to get syslock. Syslock shall be obtained before calling this function. */
     if (xSemaphoreTake(syslock, 0) == pdTRUE) {
         /* you MUST call system_get_lock before calling this function. */
@@ -91,6 +92,7 @@ int system_set_configuration(adc_input input, adc_range range,
             break;
         default: assert(0);
     }
+    xSemaphoreGive(syslock);
     return 0;
 }
 

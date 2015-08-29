@@ -246,7 +246,7 @@ static const scpi_command_t scpi_commands[] = {
     {.pattern = "MEASure:CURRent:AC?", .callback = SCPI_StubQ,},
     {.pattern = "MEASure:RESistance?", .callback = SCPI_StubQ,},
     {.pattern = "MEASure:FRESistance?", .callback = SCPI_StubQ,},
-    {.pattern = "MEASure:FREQuency?", .callback = SCPI_StubQ,},
+    {.pattern = "MEASure:TEMPerature?", .callback = SCPI_StubQ,},
     {.pattern = "MEASure:PERiod?", .callback = SCPI_StubQ,},
 
     //{.pattern = "SYSTem:COMMunication:TCPIP:CONTROL?", .callback = SCPI_SystemCommTcpipControlQ,},
@@ -277,7 +277,7 @@ scpi_t scpi_context = {
     .interface = &scpi_interface,
     .registers = scpi_regs,
     .units = scpi_units_def,
-    .idn = {"MANUFACTURE", "INSTR2013", NULL, "01-02"},
+    .idn = {"Advaced Microsystems Inc", "Keithley 199", NULL, REPOVERSION},
 };
 
 char buff[50];

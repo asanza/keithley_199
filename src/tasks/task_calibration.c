@@ -60,11 +60,9 @@ void task_calibration(void* params)
         display_puts(" WORKING ");
         //do_temp_calibration();
     } else {
-        system_get_lock();
         system_set_configuration(settings_get_input(), settings_get_range(),
             settings_get_integration_period(), ADC_CHANNEL_0, gain, offset,
             ADC_RESOLUTION_5_5);
-        system_release_lock();
 
         refvals[0] = fmt_get_refval(ADC_MAX_VALUE, settings_get_input(),
             settings_get_range(), settings_get_resolution());
@@ -84,20 +82,16 @@ void task_calibration(void* params)
             mpoints++;
         }
 
-        system_get_lock();
         system_set_configuration(ADC_INPUT_TEMP, ADC_RANGE_300, 
             settings_get_integration_period(), ADC_CHANNEL_0, 1, 0, ADC_RESOLUTION_5_5);
-        system_release_lock();
         
         temperature = system_read_input();
         
         fit_linear(measval, refvals, mpoints, &offset, &gain);
     }
     calibration_save(gain, offset, temperature);
-    system_get_lock();
     system_set_configuration(settings_get_input(), settings_get_range(),
         settings_get_integration_period(), ADC_CHANNEL_0, calibration_gain(),
         calibration_offset(), settings_get_resolution());
-    system_release_lock();
     taskmgr_delete();
 }
