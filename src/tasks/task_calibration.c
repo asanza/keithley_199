@@ -55,49 +55,41 @@ void task_calibration(void* params)
     double gain = 1;
     double offset = 0;
 
-    system_get_lock();
-    system_set_configuration(settings_get_input(), settings_get_range(),
-        settings_get_integration_period(), ADC_CHANNEL_0, gain, offset, 
-        ADC_RESOLUTION_5_5);
-    system_release_lock();
+    if (settings_get_input() == ADC_INPUT_TEMP) {
+        display_puts(" WORKING ");
+        //do_temp_calibration();
+    } else {
+        system_get_lock();
+        system_set_configuration(settings_get_input(), settings_get_range(),
+            settings_get_integration_period(), ADC_CHANNEL_0, gain, offset,
+            ADC_RESOLUTION_5_5);
+        system_release_lock();
 
-    refvals[0] = fmt_get_refval(ADC_MAX_VALUE, settings_get_input(),
-        settings_get_range(), settings_get_resolution());
-    measval[0] = do_measure();
-    mpoints++;
-    
-    refvals[1] = fmt_get_refval(0, settings_get_input(),
-        settings_get_range(), settings_get_resolution());
-    measval[1] = do_measure();
-    mpoints++;
-
-    if (settings_get_input() == ADC_INPUT_VOLTAGE_DC ||
-        settings_get_input() == ADC_INPUT_CURRENT_DC) {
-        refvals[2] = fmt_get_refval(ADC_MIN_VALUE, settings_get_input(),
+        refvals[0] = fmt_get_refval(ADC_MAX_VALUE, settings_get_input(),
             settings_get_range(), settings_get_resolution());
-        measval[2] = do_measure();
-        mpoints ++;
-    }
+        measval[0] = do_measure();
+        mpoints++;
 
-    fit_linear(measval, refvals, mpoints, &offset, &gain);
-    int i = 0;
-    char buffa[15], buffb[15];
-    for (i = 0; i < mpoints; i++) {
-        utils_dtostr(buffa, 10, refvals[i]);
-        utils_dtostr(buffb, 10, measval[i]);
-        DIAG("refvals[%d]: %s, measval[%d]: %s", i, buffa, i, buffb);
+        refvals[1] = fmt_get_refval(0, settings_get_input(),
+            settings_get_range(), settings_get_resolution());
+        measval[1] = do_measure();
+        mpoints++;
+
+        if (settings_get_input() == ADC_INPUT_VOLTAGE_DC ||
+            settings_get_input() == ADC_INPUT_CURRENT_DC) {
+            refvals[2] = fmt_get_refval(ADC_MIN_VALUE, settings_get_input(),
+                settings_get_range(), settings_get_resolution());
+            measval[2] = do_measure();
+            mpoints++;
+        }
+
+        fit_linear(measval, refvals, mpoints, &offset, &gain);
+        system_get_lock();
+        system_set_configuration(settings_get_input(), settings_get_range(),
+            settings_get_integration_period(), ADC_CHANNEL_0, calibration_gain(),
+            calibration_offset(), settings_get_resolution());
+        system_release_lock();
     }
-    utils_dtostr(buffa, 10, offset);
-    utils_dtostr(buffb, 10, gain);
-    DIAG("offset %f, gain %f", buffa, buffb);
     calibration_save(gain, offset);
-
-    system_get_lock();
-    system_set_configuration(settings_get_input(), settings_get_range(),
-        settings_get_integration_period(), ADC_CHANNEL_0, calibration_gain(),
-        calibration_offset(), settings_get_resolution());
-    system_release_lock();
-
-
     taskmgr_delete();
 }

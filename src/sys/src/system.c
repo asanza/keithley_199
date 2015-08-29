@@ -30,7 +30,8 @@
 #include <math.h>
 #include "adc.h"
 #include "strutils.h"
-
+#include "strutils.h"
+#include "tmp275.h"
 #include <FreeRTOS.h>
 #include <semphr.h>
 
@@ -42,6 +43,8 @@ static double offset;
 
 static double acc_value;
 static int filter_size;
+
+static bool is_temp_mode;
 
 static adc_resolution resln;
 static double wn_delta;
@@ -57,8 +60,13 @@ int system_set_configuration(adc_input input, adc_range range,
         /* you MUST call system_get_lock before calling this function. */
         assert(0);
     }
-    adc_error err = adc_init(period, input, range);
-    if (err != ADC_ERROR_NONE) return -1;
+    if(input == ADC_INPUT_TEMP){
+        is_temp_mode = true;
+    }else{
+        is_temp_mode = false;
+        adc_error err = adc_init(period, input, range);
+        if (err != ADC_ERROR_NONE) return -1;
+    }
     channel = _channel;
     gain = _gain;
     offset = _offset;
@@ -90,18 +98,22 @@ double system_read_input(void)
 {
     /* get lock before doing a measurement. It guarantees that no settings changes
      * are done while using the adc. */
+    double value;
     xSemaphoreTake(syslock, portMAX_DELAY);
-    double value = gain * adc_read_value(channel) + offset;
-    if(resln == ADC_RESOLUTION_6_5){
-        if(fabs(value - acc_value) <= wn_delta){
-            acc_value = acc_value + (value - acc_value)/RESLN_6_5_FILTER_SIZE;
-            value = acc_value;
-        }else{
-            acc_value = value;
+    if(is_temp_mode){
+        value = tmp245_read_temp_double();
+    } else{
+        value = gain * adc_read_value(channel) + offset;
+        if(resln == ADC_RESOLUTION_6_5){
+            if(fabs(value - acc_value) <= wn_delta){
+                acc_value = acc_value + (value - acc_value)/RESLN_6_5_FILTER_SIZE;
+                value = acc_value;
+            }else{
+                acc_value = value;
+            }
+            char buff[15];
+            utils_dtostr(buff,10,value);
         }
-        char buff[15];
-        utils_dtostr(buff,10,value);
-        DIAG("%s", buff);
     }
     /* release semaphore when done. */
     xSemaphoreGive(syslock);
@@ -113,6 +125,7 @@ void system_init(void)
     hal_sys_init();
     hal_i2c_init();
     usb_uart_init();
+    tmp245_init();
     /* initialize system lock */
     syslock = xSemaphoreCreateMutex();
 }

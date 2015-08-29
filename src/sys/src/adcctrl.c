@@ -154,6 +154,8 @@ int adcctrl_get_sequence_id(adc_input input, adc_range range){
     for(i = 0; i < ADC_NUMBER_OF_INPUTS; i++){
         for(j=0; j< ADC_RANGE_COUNT; j++){
             adc_control_sequence* s = adcctrl_get_sequence(i, j);
+            //TODO: Move to a better place.
+            if(input == ADC_INPUT_TEMP && range == ADC_RANGE_300) map[i][j] = id++;
             if(s == NULL) 
                 continue;
             map[i][j] = id++;
@@ -172,6 +174,7 @@ adc_control_sequence* adcctrl_get_sequence(adc_input input, adc_range range){
         case ADC_INPUT_RESISTANCE_4W: return get_res4w_seq(range);
         case ADC_INPUT_RESISTANCE_2W:
         case ADC_NUMBER_OF_INPUTS:
+        default:
             assert(0);
     }
     return NULL;

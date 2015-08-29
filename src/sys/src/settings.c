@@ -69,7 +69,10 @@ adc_resolution settings_get_resolution(){
 }
 
 void settings_set_resolution(adc_resolution res){
-    actual_settings->resn = res;
+    if(actual_settings->input == ADC_INPUT_TEMP) 
+        actual_settings->resn = ADC_RESOLUTION_5_5;
+    else
+        actual_settings->resn = res;
 }
 
 
@@ -108,6 +111,7 @@ void settings_set_input(adc_input input){
 }
 
 void settings_range_up(void){
+    if(actual_settings->input == ADC_INPUT_TEMP) return;
     /* get the next range for this input */
     adc_range range = adcctrl_get_next_range(actual_settings->input, actual_settings->range);
     if(range == actual_settings->range) return;
@@ -115,6 +119,7 @@ void settings_range_up(void){
 }
 
 void settings_range_down(void){
+    if(actual_settings->input == ADC_INPUT_TEMP) return;
     adc_range range = adcctrl_get_previous_range(actual_settings->input, actual_settings->range);
     if(range == actual_settings->range) return;
     actual_settings->range = range;
@@ -186,17 +191,14 @@ static void settings_set_default(){
 
     settings[ADC_INPUT_RESISTANCE_4W].input = ADC_INPUT_RESISTANCE_4W;
     settings[ADC_INPUT_RESISTANCE_4W].range = ADC_RANGE_300;
+    
+    settings[ADC_INPUT_TEMP].input = ADC_INPUT_TEMP;
+    settings[ADC_INPUT_TEMP].range = ADC_RANGE_300;
 
 }
 
 /* load calibration according to settings */
 calibration_t* calibration_get_default(adc_input input){
-    /* look if they are supported */
-    adc_control_sequence* id = adcctrl_get_sequence(settings[input].input, 
-        settings[input].range);
-    if(!id){
-        assert(id);
-    }
     cal.gain = 1;
     cal.offset = 0;
     return &cal;

@@ -178,6 +178,7 @@ static void switch_sys_function()
         case ADC_INPUT_RESISTANCE_2W:
         case ADC_INPUT_VOLTAGE_DC:
         case ADC_INPUT_VOLTAGE_AC:
+        case ADC_INPUT_TEMP:
             start_task(TASK_MULTIMETER);
             break;
         case ADC_INPUT_RESISTANCE_4W:
@@ -242,7 +243,13 @@ static void poll_key(void)
                 settings_set_input(ADC_INPUT_CURRENT_DC);
             switch_sys_function();
             break;
-        case KEY_8:break;
+        case KEY_8:
+            if (shift_key) {
+                shift_key = false;
+            } else
+                settings_set_input(ADC_INPUT_TEMP);
+            switch_sys_function();
+            break;
         case KEY_9:break; //break;
         case KEY_UP:
             settings_range_up();
