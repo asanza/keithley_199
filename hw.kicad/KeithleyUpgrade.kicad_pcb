@@ -6,7 +6,7 @@
     (area 50.597999 58.344999 240.867001 134.060001)
     (thickness 1.6)
     (drawings 23)
-    (tracks 17)
+    (tracks 14)
     (zones 0)
     (modules 74)
     (nets 109)
@@ -2137,7 +2137,7 @@
   )
 
   (module Capacitors_SMD:C_0805 (layer F.Cu) (tedit 5415D6EA) (tstamp 54C16963)
-    (at 117.75 106.95 270)
+    (at 117.55 108.95 270)
     (descr "Capacitor SMD 0805, reflow soldering, AVX (see smccp.pdf)")
     (tags "capacitor 0805")
     (path /5314E479)
@@ -2282,7 +2282,7 @@
   )
 
   (module Capacitors_SMD:C_0805 (layer F.Cu) (tedit 54C16CA6) (tstamp 54C1697C)
-    (at 115.15 106.95 270)
+    (at 115.316 108.966 270)
     (descr "Capacitor SMD 0805, reflow soldering, AVX (see smccp.pdf)")
     (tags "capacitor 0805")
     (path /5319F438)
@@ -3212,9 +3212,6 @@
   (gr_line (start 50.673 133.985) (end 200.025 133.985) (angle 90) (layer Edge.Cuts) (width 0.15))
   (gr_line (start 50.673 58.42) (end 50.673 133.985) (angle 90) (layer Edge.Cuts) (width 0.15))
 
-  (segment (start 117.75 107.95) (end 115.15 107.95) (width 0.2) (layer F.Cu) (net 1))
-  (segment (start 123.98502 108.35386) (end 118.15386 108.35386) (width 0.2) (layer F.Cu) (net 1))
-  (segment (start 118.15386 108.35386) (end 117.75 107.95) (width 0.2) (layer F.Cu) (net 1))
   (segment (start 126.3 120.65) (end 128.75 120.65) (width 0.2) (layer F.Cu) (net 68) (status C00000))
   (segment (start 128.75 120.65) (end 128.85 120.75) (width 0.2) (layer F.Cu) (net 68) (tstamp 54C16C63) (status C00000))
   (segment (start 128.85 120.75) (end 129.15 120.75) (width 0.16) (layer F.Cu) (net 68))

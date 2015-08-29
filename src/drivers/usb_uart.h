@@ -28,7 +28,7 @@ extern "C" {
 #endif
 
     void usb_uart_init();
-
+int usb_uart_readline(char* buffer, int size);
 
 #ifdef	__cplusplus
 }

@@ -151,7 +151,9 @@ static UART_LINE_CONTROL_MODE get_stop_bits(hal_uart_stop_bits stop_bits){
 //TODO: implement sanity checks.
 hal_uart_port hal_uart_open(hal_uart_port port, hal_uart_baudrate baudrate,
                     hal_uart_parity parity,
-                    hal_uart_stop_bits stop_bits){
+                    hal_uart_stop_bits stop_bits, 
+    hal_uart_on_data_received_callback data_received){
+    on_data_received[port] = data_received;
     assert(port >= HAL_UART_PORT_1 && port <= HAL_UART_NUMBER_OF_PORTS );
     /* Configure uart */
     UART_MODULE uart = logic_uart2phy_uart(port);
@@ -161,13 +163,14 @@ hal_uart_port hal_uart_open(hal_uart_port port, hal_uart_baudrate baudrate,
     UARTSetLineControl(uart, UART_DATA_SIZE_8_BITS | get_parity(parity) | get_stop_bits(stop_bits));
     UARTSetDataRate(uart, PIC32_PERIPHERALBUS_FREQ, get_baudrate(baudrate));
     UARTEnable(uart, UART_ENABLE_FLAGS(UART_PERIPHERAL | UART_TX | UART_RX));
+    INTClearFlag(INT_SOURCE_UART_RX(uart));
     INTEnable(INT_SOURCE_UART_RX(uart),INT_ENABLED);
     return port;
 }
 
  void hal_uart_disable_interrupts(hal_uart_port port){
     UART_MODULE uart = logic_uart2phy_uart(port);
-    INTEnable(INT_SOURCE_UART_RX(uart), INT_DISABLED);
+//    INTEnable(INT_SOURCE_UART_RX(uart), INT_DISABLED);
     INTEnable(INT_SOURCE_UART_TX(uart), INT_DISABLED);
  }
 
@@ -267,12 +270,11 @@ void hal_uart1_isr_handler(){
 void hal_uart2_isr_handler(){
     hal_uart_interrupt_handler(HAL_UART_PORT_2);
 }
-//TODO: Remove IOLink defines
-#ifndef IO_LINK
+
 void hal_uart3_isr_handler(){
     hal_uart_interrupt_handler(HAL_UART_PORT_3);
 }
-#endif
+
 void hal_uart4_isr_handler(){
     hal_uart_interrupt_handler(HAL_UART_PORT_4);
 }
@@ -288,3 +290,15 @@ void hal_uart_register_buffer_sent(hal_uart_port port,
     assert(fn);
     on_data_sent[port]=fn;
 }
+
+void __attribute__(( nomips16, interrupt(), vector(_UART_1_VECTOR)))
+hal_uart1_isr_wrapper();
+
+void __attribute__(( nomips16, interrupt(), vector(_UART_2_VECTOR)))
+hal_uart2_isr_wrapper();
+
+void __attribute__(( nomips16, interrupt(), vector(_UART_3_VECTOR)))
+hal_uart3_isr_wrapper();
+
+void __attribute__(( nomips16, interrupt(), vector(_UART_4_VECTOR)))
+hal_uart4_isr_wrapper();

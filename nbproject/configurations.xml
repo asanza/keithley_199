@@ -54,14 +54,12 @@
         <itemPath>src/scpi-parser/libscpi/inc/scpi/constants.h</itemPath>
         <itemPath>src/scpi-parser/libscpi/inc/scpi/debug.h</itemPath>
         <itemPath>src/scpi-parser/libscpi/inc/scpi/error.h</itemPath>
-        <itemPath>src/scpi-parser/libscpi/inc/scpi/fifo.h</itemPath>
         <itemPath>src/scpi-parser/libscpi/inc/scpi/ieee488.h</itemPath>
         <itemPath>src/scpi-parser/libscpi/inc/scpi/minimal.h</itemPath>
         <itemPath>src/scpi-parser/libscpi/inc/scpi/parser.h</itemPath>
         <itemPath>src/scpi-parser/libscpi/inc/scpi/scpi.h</itemPath>
         <itemPath>src/scpi-parser/libscpi/inc/scpi/types.h</itemPath>
         <itemPath>src/scpi-parser/libscpi/inc/scpi/units.h</itemPath>
-        <itemPath>src/scpi-parser/libscpi/inc/scpi/utils_private.h</itemPath>
       </logicalFolder>
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <logicalFolder name="include" displayName="include" projectFiles="true">
@@ -143,6 +141,9 @@
         <itemPath>src/hal/hal_sys.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="libscpi" projectFiles="true">
+        <logicalFolder name="src" displayName="src" projectFiles="true">
+          <itemPath>src/scpi-parser/libscpi/src/lexer.c</itemPath>
+        </logicalFolder>
         <itemPath>src/scpi-parser/libscpi/src/debug.c</itemPath>
         <itemPath>src/scpi-parser/libscpi/src/error.c</itemPath>
         <itemPath>src/scpi-parser/libscpi/src/fifo.c</itemPath>
@@ -166,6 +167,7 @@
         <itemPath>src/tasks/main.c</itemPath>
         <itemPath>src/tasks/task_resistance_4w.c</itemPath>
         <itemPath>src/tasks/tskmgr.c</itemPath>
+        <itemPath>src/tasks/task_scpi.c</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <logicalFolder name="src" displayName="src" projectFiles="true">

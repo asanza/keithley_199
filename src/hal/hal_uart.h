@@ -68,7 +68,12 @@ extern "C" {
     typedef enum{
         HAL_UART_1_STOP_BITS
     }hal_uart_stop_bits;
+    
+    /** Callback prototypes */
+    typedef void (*hal_uart_on_buffer_sent_callback)(hal_uart_port port);
+    typedef void (*hal_uart_on_data_received_callback)(hal_uart_port port, uint8_t data, hal_uart_error error);
 
+    
     /** Open a uart port
      * @param port
      * @param baudrate
@@ -77,12 +82,9 @@ extern "C" {
      * @return uart port.
      */
     hal_uart_port hal_uart_open(hal_uart_port port, hal_uart_baudrate baudrate,
-                    hal_uart_parity parity,
-                    hal_uart_stop_bits stop_bits);
+        hal_uart_parity parity,
+        hal_uart_stop_bits stop_bits, hal_uart_on_data_received_callback data_received);
 
-    /** Callback prototypes */
-    typedef void (*hal_uart_on_buffer_sent_callback)(hal_uart_port port);
-    typedef void (*hal_uart_on_data_received_callback)(hal_uart_port port, uint8_t data, hal_uart_error error);
 
     /** Register a handler function for incomming data.
      * @param port uart port where data is expected
