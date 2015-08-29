@@ -151,6 +151,7 @@ void fmt_append_scale(char* buffer, adc_input mode, adc_range range)
                     break;
             }
         }
+        break;
         case ADC_INPUT_TEMP:
             strcat(buffer,"gC");
             break;

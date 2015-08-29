@@ -107,8 +107,8 @@ double system_read_input(void)
     /* get lock before doing a measurement. It guarantees that no settings changes
      * are done while using the adc. */
     double value, temperature;
-    temperature = tmp245_read_temp_double();
     xSemaphoreTake(syslock, portMAX_DELAY);
+    temperature = tmp245_read_temp_double();
     if(is_temp_mode){
         value = temperature;
     } else{
