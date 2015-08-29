@@ -41,16 +41,16 @@ void task_multimeter(void *params){
     
     double value;
     while(1){
-        adc_input val = settings_get_input();
         hal_disp_adci_toggle();
         value = system_read_input(); //value + (system_read_input()-value)/10.0;
-        utils_dtostr(buff,8,value);
-        printf("%s\n",buff);
-
         fmt_format_string(buff, NUMBER_OF_CHARACTERS, settings_get_range(),
                 settings_get_resolution(), value);
-
         fmt_append_scale(buff,settings_get_input(), settings_get_range());
         display_puts(buff);
+        double temp = system_read_temp();
+        utils_dtostr(buff,8,value);
+        printf("%s, ",buff);
+        utils_dtostr(buff, 8, calibration_temp() - temp);
+        printf("%s\n", buff);
     }
 }

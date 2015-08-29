@@ -210,10 +210,6 @@ double fmt_get_refval(double val, adc_input mode, adc_range range, adc_resolutio
         display_highlight(hld_i++);
         key = fmt_get_key();
     } while (key != KEY_CAL);
-    /* buffer contains the incomming user value */
-    buffer[0] = ' '; // replace ac symbol.
-    buffer[8] = '\0';
-    val = utils_strtod(buffer);
     display_highlight(0);
     return val;
 }

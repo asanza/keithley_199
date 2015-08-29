@@ -46,6 +46,7 @@ typedef struct _settings_t{
 typedef struct _calibration_t{
     double gain;
     double offset;
+    double temp;
 }calibration_t;
 
 #define SETTINGS_START_ADDRESS  0x0A
@@ -133,6 +134,10 @@ double calibration_offset(){
     return cal.offset;
 }
 
+double calibration_temp(){
+    return cal.temp;
+}
+
 void settings_set_range(adc_range range){
     /* check if range valid */
     adc_control_sequence* id = adcctrl_get_sequence(actual_settings->input, range);
@@ -140,13 +145,14 @@ void settings_set_range(adc_range range){
     actual_settings->range = range;
 }
 
-void calibration_save(double gain, double offset){
+void calibration_save(double gain, double offset, double temperature){
     int id = adcctrl_get_sequence_id(actual_settings->input, actual_settings->range);
     id = SETTINGS_START_ADDRESS + SETTINGS_LAST*ADC_NUMBER_OF_INPUTS + id;
     assert(id<=0);
     assert(id < 255); //max number of objects
     cal.gain = gain;
     cal.offset = offset;
+    cal.temp = temperature;
     eefs_object_save(id, &cal, sizeof(calibration_t));
 }
 
@@ -158,7 +164,8 @@ int calibration_restore(){
     EEFS_ERROR err = eefs_object_restore(id, &cal, sizeof(calibration_t));
     if(err == EEFS_OK) return 1;
     cal.gain = 1;
-    cal.offset = 0;   
+    cal.offset = 0; 
+    cal.temp = 25;
     return 0;
 }
 
@@ -201,5 +208,6 @@ static void settings_set_default(){
 calibration_t* calibration_get_default(adc_input input){
     cal.gain = 1;
     cal.offset = 0;
+    cal.temp = 25.0;
     return &cal;
 }

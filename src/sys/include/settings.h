@@ -71,12 +71,12 @@ adc_channel settings_get_channel(void);
 void settings_range_up(void);
 void settings_range_down(void);
 
-void calibration_save(double gain, double offset);
+void calibration_save(double gain, double offset, double temperature);
 int calibration_restore();
 
 double calibration_gain();
 double calibration_offset();
-
+double calibration_temp();
 #ifdef	__cplusplus
 }
 #endif

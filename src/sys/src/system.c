@@ -94,14 +94,23 @@ int system_set_configuration(adc_input input, adc_range range,
     return 0;
 }
 
+double system_read_temp(void){
+    double temperature;
+    xSemaphoreTake(syslock, portMAX_DELAY);
+    temperature = tmp245_read_temp_double();
+    xSemaphoreGive(syslock);
+    return temperature;
+}
+
 double system_read_input(void)
 {
     /* get lock before doing a measurement. It guarantees that no settings changes
      * are done while using the adc. */
-    double value;
+    double value, temperature;
+    temperature = tmp245_read_temp_double();
     xSemaphoreTake(syslock, portMAX_DELAY);
     if(is_temp_mode){
-        value = tmp245_read_temp_double();
+        value = temperature;
     } else{
         value = gain * adc_read_value(channel) + offset;
         if(resln == ADC_RESOLUTION_6_5){
@@ -111,8 +120,6 @@ double system_read_input(void)
             }else{
                 acc_value = value;
             }
-            char buff[15];
-            utils_dtostr(buff,10,value);
         }
     }
     /* release semaphore when done. */

@@ -52,6 +52,8 @@ extern "C" {
     void system_get_lock();
     /** dont forget to release the lock after you are done. */
     void system_release_lock();
+    
+    double system_read_temp(void);
 
 #ifdef	__cplusplus
 }
