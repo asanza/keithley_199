@@ -80,7 +80,7 @@ static void system_task(void* pvParameters)
     // Reload Sysstate from eeprom.
     load_settings();
     switch_sys_function();
-    if(settings_is_autorange())
+    if (settings_is_autorange())
         display_setmode(DISP_AC);
     else
         display_clearmode(DISP_AC);
@@ -194,6 +194,7 @@ static void switch_sys_function()
 
 bool shift_key = false;
 bool repeat_key = true;
+
 static void poll_key(void)
 {
     key_id key = display_wait_for_key();
@@ -202,34 +203,29 @@ static void poll_key(void)
         case KEY_1:break;
         case KEY_2:break;
         case KEY_3:
-            if(shift_key){
+            if (shift_key) {
                 adc_resolution res = settings_get_resolution();
-                res ++;
-                if(res >= ADC_MAX_RESOLUTION)
+                res++;
+                if (res >= ADC_MAX_RESOLUTION)
                     res = ADC_RESOLUTION_5_5;
                 settings_set_resolution(res);
                 shift_key = false;
                 switch_sys_function();
-            }else{
-                if(settings_is_autorange()){
+            } else {
+                if (settings_is_autorange()) {
                     settings_set_autorange(false);
                     display_clearmode(DISP_AC);
-                }
-                else {
+                } else {
                     settings_set_autorange(true);
                     display_setmode(DISP_AC);
                 }
             }
             break;
         case KEY_4:
-            if(repeat_key == false) break;
+            if (repeat_key == false) break;
             shift_key = !shift_key;
-            if (shift_key) {
-                display_setmode(DISP_ZERO);
-            } else{
-                display_clearmode(DISP_ZERO);
-            }
-            repeat_key = false;
+            if (shift_key)
+                repeat_key = false;
             break;
         case KEY_5:
             if (shift_key) {
@@ -264,15 +260,15 @@ static void poll_key(void)
             switch_sys_function();
             break;
         case KEY_9:
-            if(shift_key){
+            if (shift_key) {
                 shift_key = false;
-            }else{
+            } else {
                 stop_running_task();
                 display_puts("SAVE 0-9?");
                 key = display_wait_for_key();
                 key = display_wait_for_key();
                 display_puts(" WORKING ");
-                if(key <= 9)
+                if (key <= 9)
                     settings_save(key);
                 start_task(TASK_MULTIMETER);
             }
@@ -294,5 +290,10 @@ static void poll_key(void)
             break;
         default:
             Nop();
+    }
+    if (shift_key) {
+        display_setmode(DISP_ZERO);
+    } else {
+        display_clearmode(DISP_ZERO);
     }
 }

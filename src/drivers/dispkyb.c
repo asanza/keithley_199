@@ -111,7 +111,9 @@ void display_clear()
 {
     uint16_t adci = hal_io_displayport_map_char_to_segments('.');
     adci &= screen[NUMBER_OF_CHARACTERS - 2];
+    char dmode = screen[NUMBER_OF_CHARACTERS - 1];
     memset(screen, 0, sizeof(uint16_t) * NUMBER_OF_CHARACTERS);
+    screen[NUMBER_OF_CHARACTERS - 1] |= dmode;
     screen[NUMBER_OF_CHARACTERS - 2] |= adci;
 }
 
