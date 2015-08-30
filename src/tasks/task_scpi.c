@@ -22,6 +22,7 @@
  */
 
 #include <scpi/scpi.h>
+#include <stdio.h>
 
 #include "usb_uart.h"
 

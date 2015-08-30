@@ -1,6 +1,6 @@
 #include "unity.h"
 #include "strutils.h"
-#include "dtoa.h"
+#include "fcvt.h"
 
 void setUp(void){
 }
@@ -20,11 +20,11 @@ void test_strutils(void){
   utils_dtostr(buffer, 9, x);
   TEST_ASSERT_EQUAL_STRING("0.00518306", buffer);
   utils_dtostr(buffer, 5, 2.342345e2);
-  TEST_ASSERT_EQUAL_STRING("234.24", buffer);
+  TEST_ASSERT_EQUAL_STRING("234.23", buffer);
   utils_dtostr(buffer, 5, -2.342345e2);
-  TEST_ASSERT_EQUAL_STRING("-234.24", buffer);
+  TEST_ASSERT_EQUAL_STRING("-234.23", buffer);
   utils_dtostr(buffer, 4, 2.44445);
-  TEST_ASSERT_EQUAL_STRING("2.445", buffer);
+  TEST_ASSERT_EQUAL_STRING("2.444", buffer);
   utils_dtofixstr(buffer, 6, 3, 8.23455);
   TEST_ASSERT_EQUAL_STRING(" 008.235", buffer);
   utils_dtofixstr(buffer, 6, 4, 8.23455);
@@ -41,4 +41,11 @@ void test_strutils(void){
   utils_dtofixstr(buffer, 6, 3, -0.0014805821886151949);
   TEST_ASSERT_EQUAL_STRING("-000.001", buffer);
 
+}
+
+void test_ecvt(void){
+  char buffer[50], *res;
+  int decpt, sign;
+  res = e_cvt(-0.0014805821886151949, buffer, 8, &decpt, &sign);
+  printf("%s, decpt: %d, sign: %d\n", res, decpt, sign);
 }

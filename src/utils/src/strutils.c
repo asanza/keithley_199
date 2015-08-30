@@ -27,7 +27,7 @@
 #include <string.h>
 #include <math.h>
 #include "strutils.h"
-#include "dtoa.h"
+#include "fcvt.h"
 
 static double round(double x)
 {
@@ -74,8 +74,10 @@ void utils_dtostr(char* buff, int digits, double value)
 {
     int decpt;
     int sign;
-    char* rve;
-    char *out = utils_dtoa_priv(value, 1, digits, &decpt, &sign, &rve);
+    char tmp[50];
+    char *out = e_cvt(value, buff, digits, &decpt, &sign);
+    memcpy( tmp, out, 50);
+    out = tmp;
     int i = 0, j;
     if (value < 0) {
         buff[i++] = '-';
@@ -140,7 +142,6 @@ void utils_dtostr(char* buff, int digits, double value)
         }
     }
     buff[i] = '\0';
-    free(out);
 }
 
 double utils_strtod(char* buffer)
@@ -149,6 +150,6 @@ double utils_strtod(char* buffer)
     char* se = buffer;
     while (*se != '\0')
         se++;
-    val = utils_strtod_priv(buffer, &se);
+    val = strtod(buffer, &se);
     return val;
 }
