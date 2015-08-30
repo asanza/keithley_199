@@ -67,7 +67,7 @@ extern "C" {
     
     void display_kyb_init(void);
     void display_setmode(disp_mode mode);
-    void display_addmode(disp_mode mode);
+    //void display_addmode(disp_mode mode);
     void display_clearmode(disp_mode mode);
     void display_puts(char* c);
     void display_putc(char c, int pos);

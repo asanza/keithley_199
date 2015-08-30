@@ -80,6 +80,10 @@ static void system_task(void* pvParameters)
     // Reload Sysstate from eeprom.
     load_settings();
     switch_sys_function();
+    if(settings_is_autorange())
+        display_setmode(DISP_AC);
+    else
+        display_clearmode(DISP_AC);
     while (1) {
         if (running_task) {
             vTaskDelay(10);
@@ -206,6 +210,15 @@ static void poll_key(void)
                 settings_set_resolution(res);
                 shift_key = false;
                 switch_sys_function();
+            }else{
+                if(settings_is_autorange()){
+                    settings_set_autorange(false);
+                    display_clearmode(DISP_AC);
+                }
+                else {
+                    settings_set_autorange(true);
+                    display_setmode(DISP_AC);
+                }
             }
             break;
         case KEY_4:
@@ -213,8 +226,9 @@ static void poll_key(void)
             shift_key = !shift_key;
             if (shift_key) {
                 display_setmode(DISP_ZERO);
-            } else
+            } else{
                 display_clearmode(DISP_ZERO);
+            }
             repeat_key = false;
             break;
         case KEY_5:

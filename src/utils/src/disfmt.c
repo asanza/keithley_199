@@ -35,29 +35,6 @@
 #include <diag.h>
 
 double disfmt_get_range_value(double value, adc_range scale);
-disp_mode fmt_get_disp_mode(adc_input mode)
-{
-    disp_mode display_indicator = 0x00000000;
-    switch (mode) {
-        case ADC_INPUT_VOLTAGE_AC:
-            display_indicator |= DISP_AC;
-        case ADC_INPUT_VOLTAGE_DC:
-            display_indicator |= DISP_VOLTS;
-            break;
-        case ADC_INPUT_CURRENT_AC:
-            display_indicator |= DISP_AC;
-        case ADC_INPUT_CURRENT_DC:
-            display_indicator |= DISP_AMPS;
-            break;
-        case ADC_INPUT_RESISTANCE_2W:
-        case ADC_INPUT_RESISTANCE_4W:
-            display_indicator |= DISP_OHMS;
-            break;
-        default:
-            break;
-    }
-    return display_indicator;
-}
 
 void fmt_format_string(char* buff, int buffsize, adc_range scale, adc_resolution res, 
     double value)

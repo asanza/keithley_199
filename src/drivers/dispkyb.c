@@ -63,13 +63,13 @@ static void display_set(unsigned int segments, int position)
 
 void display_setmode(disp_mode mode)
 {
-    screen[NUMBER_OF_CHARACTERS - 1] = mode;
-}
-
-void display_addmode(disp_mode mode)
-{
     screen[NUMBER_OF_CHARACTERS - 1] |= mode;
 }
+
+/*void display_addmode(disp_mode mode)
+{
+    screen[NUMBER_OF_CHARACTERS - 1] |= mode;
+}*/
 
 void display_clearmode(disp_mode mode)
 {
