@@ -70,7 +70,7 @@ static void set_new_range(double value)
         settings_range_down();
         double minl = disfmt_get_range_value(ADC_MAX_VALUE, settings_get_range());
         minl = system_get_real_value(minl, settings_get_range());
-        if(value >= minl ){
+        if(maxl >= minl ){
             settings_range_up();
         }else{
             wset++;
