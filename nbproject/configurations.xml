@@ -83,9 +83,7 @@
           <itemPath>src/utils/include/disfmt.h</itemPath>
           <itemPath>src/utils/include/util_ringbuff.h</itemPath>
           <itemPath>src/utils/include/strutils.h</itemPath>
-        </logicalFolder>
-        <logicalFolder name="src" displayName="src" projectFiles="true">
-          <itemPath>src/utils/src/dtoa.h</itemPath>
+          <itemPath>src/utils/include/fcvt.h</itemPath>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
@@ -170,12 +168,14 @@
         <itemPath>src/tasks/task_scpi.c</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
+        <logicalFolder name="fcvt-1.1" displayName="fcvt-1.1" projectFiles="true">
+          <itemPath>src/utils/fcvt-1.1/fcvt.c</itemPath>
+        </logicalFolder>
         <logicalFolder name="src" displayName="src" projectFiles="true">
           <itemPath>src/utils/src/diag.c</itemPath>
           <itemPath>src/utils/src/fitlinear.c</itemPath>
           <itemPath>src/utils/src/disfmt.c</itemPath>
           <itemPath>src/utils/src/util_ringbuff.c</itemPath>
-          <itemPath>src/utils/src/dtoa.c</itemPath>
           <itemPath>src/utils/src/strutils.c</itemPath>
         </logicalFolder>
       </logicalFolder>
