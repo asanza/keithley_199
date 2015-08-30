@@ -27,9 +27,17 @@
 extern "C" {
 #endif
 
+    
+#define DTOSTR_ALWAYS_SIGN   0x01 /* put '+' or ' ' for positives */
+#define DTOSTR_PLUS_SIGN   0x02 /* put '+' rather than ' ' */
+#define DTOSTR_UPPERCASE   0x04 /* put 'E' rather 'e' */
+    
     void utils_dtostr(char* buffer, int digits, double value);
     double utils_strtod(char* buffer);
 void utils_dtofixstr(char* buff, int digits, int dplaces, double value);
+
+char *
+dtostre (double val, char *sbeg, unsigned char prec, unsigned char flags);
 
 #ifdef	__cplusplus
 }

@@ -46,6 +46,6 @@ void test_strutils(void){
 void test_ecvt(void){
   char buffer[50], *res;
   int decpt, sign;
-  res = e_cvt(-0.0014805821886151949, buffer, 8, &decpt, &sign);
+  res = e_cvt(0.0014805821886151949, buffer, 8, &decpt, &sign);
   printf("%s, decpt: %d, sign: %d\n", res, decpt, sign);
 }
