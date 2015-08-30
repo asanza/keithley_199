@@ -14,7 +14,8 @@ void tearDown(void)
 void test_hal_uart_open(void)
 {
   /* try to open port 3 */
-  hal_uart_port port = hal_uart_open(HAL_UART_PORT_3,HAL_UART_BAUD_9600,HAL_UART_PARITY_NONE, HAL_UART_1_STOP_BITS);
+  hal_uart_port port = hal_uart_open(HAL_UART_PORT_3,HAL_UART_BAUD_9600,
+    HAL_UART_PARITY_NONE, HAL_UART_1_STOP_BITS, NULL);
   TEST_ASSERT_EQUAL_MESSAGE(HAL_UART_PORT_3, port,"Initialize PORT");
   /* look if baudrate was properly set. PBClk 80MHz */
   TEST_ASSERT_EQUAL(520, U3BRG);

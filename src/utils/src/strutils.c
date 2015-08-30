@@ -76,9 +76,10 @@ void utils_dtostr(char* buff, int digits, double value)
 {
     int decpt;
     int sign;
-    char tmp[50];
+    char tmp[15];
     char *out = e_cvt(value, buff, digits, &decpt, &sign);
-    memcpy( tmp, out, 50);
+    //TODO: Replace by a in string copy to avoid allocating tmp.
+    memcpy( tmp, out, 15);
     out = tmp;
     int i = 0, j;
     if (value < 0) {

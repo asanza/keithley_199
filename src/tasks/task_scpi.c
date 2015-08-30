@@ -43,7 +43,7 @@ size_t SCPI_Write(scpi_t * context, const char * data, size_t len) {
 
 static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     scpi_number_t param1, param2;
-    char bf[15];
+
     printf("meas:volt:dc\r\n"); // debug command name   
 
     // read first parameter if present

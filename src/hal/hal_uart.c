@@ -291,6 +291,7 @@ void hal_uart_register_buffer_sent(hal_uart_port port,
     on_data_sent[port]=fn;
 }
 
+#ifndef TEST
 void __attribute__(( nomips16, interrupt(), vector(_UART_1_VECTOR)))
 hal_uart1_isr_wrapper();
 
@@ -302,3 +303,4 @@ hal_uart3_isr_wrapper();
 
 void __attribute__(( nomips16, interrupt(), vector(_UART_4_VECTOR)))
 hal_uart4_isr_wrapper();
+#endif
