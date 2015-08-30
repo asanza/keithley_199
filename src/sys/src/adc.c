@@ -36,8 +36,10 @@
 
 #include <stdint.h>
 #include <assert.h>
+#include <diag.h>
 #include "adc.h"
 #include "adcctrl.h"
+#include "strutils.h"
 
 #define SENSE_100K_BIT         (1<<28)
 #define SIG_x10_BIT            (1<<22)
@@ -79,16 +81,15 @@ double adc_read_value(adc_channel channel){
     if(value >= ADC_OVERFLOW) value = ADC_OVERFLOW;
     if(value <= ADC_UNDERFLOW) value = ADC_UNDERFLOW;
     switch(range){
-        case ADC_RANGE_3:
-        case ADC_RANGE_3K: return value*1.0;
+         case ADC_RANGE_3:
+         case ADC_RANGE_3K: return value*1.0;
         case ADC_RANGE_30m:
-        case ADC_RANGE_30:
+         case ADC_RANGE_30:
         case ADC_RANGE_30K: return value*10.0;
         case ADC_RANGE_300m:
         case ADC_RANGE_300:
         case ADC_RANGE_300K: return value*100.0;
-        default:
-            assert(0);
+        default: assert(0);
     }
     return 0.0;
 }
@@ -161,7 +162,8 @@ static double adc_do_measurement(unsigned char channel, adc_control_sequence* se
     signal = signal_count - sigzero_count;
     reference = ref_count - refzero_count;
     assert(reference);
+    double val = signal*1.0/reference*1.0;
     /** TODO: Analyze precision loss*/
-    return VREF*signal*1.0/reference*1.0;
+    return VREF*val;
 }
 

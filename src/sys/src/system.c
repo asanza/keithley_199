@@ -129,6 +129,22 @@ double system_read_input(void)
     return value;
 }
 
+double system_get_real_value(double value, adc_range range){
+    switch(range){
+        case ADC_RANGE_30m:  return value*1e-4;
+        case ADC_RANGE_300m: return value*1e-3;
+        case ADC_RANGE_3:    return value*1.0;
+        case ADC_RANGE_30:   return value*1.0;
+        case ADC_RANGE_300:  return value*1.0;
+        case ADC_RANGE_3K:   return value*1e3;
+        case ADC_RANGE_30K:  return value*1e4;
+        case ADC_RANGE_300K: return value*1e5;
+        default:
+            assert(0);
+    }
+    return 1.0;
+}
+
 void system_init(void)
 {
     hal_sys_init();

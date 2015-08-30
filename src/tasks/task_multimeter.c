@@ -33,24 +33,52 @@
 #include "semphr.h"
 
 
+static void set_new_range(double value);
 
-
-void task_multimeter(void *params){
+void task_multimeter(void *params)
+{
     DIAG("Loaded");
     char buff[NUMBER_OF_CHARACTERS];
-    
+
     double value;
-    while(1){
+    while (1) {
         hal_disp_adci_toggle();
         value = system_read_input(); //value + (system_read_input()-value)/10.0;
+        if (settings_is_autorange())
+            set_new_range(value);
         fmt_format_string(buff, NUMBER_OF_CHARACTERS, settings_get_range(),
-                settings_get_resolution(), value);
-        fmt_append_scale(buff,settings_get_input(), settings_get_range());
+            settings_get_resolution(), value);
+        fmt_append_scale(buff, settings_get_input(), settings_get_range());
         display_puts(buff);
         /*double temp = system_read_temp();
         utils_dtostr(buff,8,value);
         printf("%s, ",buff);
         utils_dtostr(buff, 8, calibration_temp() - temp);
         printf("%s\n", buff);*/
+    }
+}
+
+static void set_new_range(double value)
+{
+    int wset = 0;
+    double maxl = disfmt_get_range_value(ADC_MAX_VALUE, settings_get_range());
+    if(value >= maxl){
+        settings_range_up();
+        wset++;
+    }else{
+        maxl = system_get_real_value(value, settings_get_range());
+        settings_range_down();
+        double minl = disfmt_get_range_value(ADC_MAX_VALUE, settings_get_range());
+        minl = system_get_real_value(minl, settings_get_range());
+        if(value >= minl ){
+            settings_range_up();
+        }else{
+            wset++;
+        }
+    }
+    if(wset){
+        system_set_configuration(settings_get_input(), settings_get_range(),
+            settings_get_integration_period(), settings_get_channel(),
+            calibration_gain(), calibration_offset(), settings_get_resolution());
     }
 }

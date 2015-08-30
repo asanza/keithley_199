@@ -26,6 +26,9 @@
 #include <stdbool.h>
 
 #include "adcctrl.h"
+#include <FreeRTOS.h>
+#include "semphr.h"
+#include "portmacro.h"
 #include <assert.h>
 #include <string.h>
 #include <diag.h>
@@ -52,6 +55,16 @@ typedef struct _calibration_t{
 #define SETTINGS_START_ADDRESS  0x0A
 static calibration_t cal;
 
+SemaphoreHandle_t slock = NULL;
+
+static void lock(void){
+    xSemaphoreTake(slock, portMAX_DELAY);
+}
+
+static void unlock(void){
+    xSemaphoreGive(slock);
+}
+
 /* each input has its settings */
 static settings_t settings[ADC_NUMBER_OF_INPUTS];
 static settings_t* actual_settings = settings;
@@ -59,93 +72,167 @@ static settings_t* actual_settings = settings;
 static void settings_set_default();
 
 void settings_save(settings_location location){
+    lock();
     int i;
     int addr = SETTINGS_START_ADDRESS + location*sizeof(settings);
     for(i = 0; i < ADC_NUMBER_OF_INPUTS; i++)
         eefs_object_save(addr + i,&settings[i], sizeof(settings_t));
+    unlock();
 }
 
 adc_resolution settings_get_resolution(){
-    return actual_settings->resn;
+    adc_resolution res;
+    lock();
+    res = actual_settings->resn;
+    unlock();
+    return res;
 }
 
 void settings_set_resolution(adc_resolution res){
+    lock();
     if(actual_settings->input == ADC_INPUT_TEMP) 
         actual_settings->resn = ADC_RESOLUTION_5_5;
     else
         actual_settings->resn = res;
+    unlock();
 }
 
 
 int settings_restore(settings_location location) {
     int i;
+    if(!slock){
+        slock = xSemaphoreCreateMutex();
+    }
+    lock();
     int addr = SETTINGS_START_ADDRESS + location * sizeof (settings);
     for (i = 0; i < ADC_NUMBER_OF_INPUTS; i++) {
         EEFS_ERROR err = eefs_object_restore(addr + i, &settings[i], sizeof (settings_t));
         if (err != EEFS_OK) {
             settings_set_default();
+            unlock();
             return 1;
         }
     }
+    unlock();
     return 0;
 }
 
 adc_integration_period settings_get_integration_period(){
-    return actual_settings->integration_period;
+    adc_integration_period p;
+    lock();
+    p = actual_settings->integration_period;
+    unlock();
+    return p;
 }
 
 adc_input settings_get_input(){
-    return actual_settings->input;
+    adc_input p;
+    lock();
+    p = actual_settings->input;
+    unlock();
+    return p;
 }
 
 adc_range settings_get_range(){
-    return actual_settings->range;
+    adc_range r;
+    lock();
+    r = actual_settings->range;
+    unlock();
+    return r;
 }
 
 adc_channel settings_get_channel(){
-    return actual_settings->channel;
+    lock();
+    adc_channel c = actual_settings->channel;
+    unlock();
+    return c;
 }
 
 void settings_set_input(adc_input input){
     assert(input < ADC_NUMBER_OF_INPUTS);
+    lock();
     actual_settings = &settings[input];
+    unlock();
 }
 
 void settings_range_up(void){
-    if(actual_settings->input == ADC_INPUT_TEMP) return;
+    lock();
+    if(actual_settings->input == ADC_INPUT_TEMP){
+        unlock();
+        return;
+    }
     /* get the next range for this input */
     adc_range range = adcctrl_get_next_range(actual_settings->input, actual_settings->range);
-    if(range == actual_settings->range) return;
+    if(range == actual_settings->range){
+        unlock();
+        return;
+    }
     actual_settings->range = range;
+    unlock();
 }
 
 void settings_range_down(void){
-    if(actual_settings->input == ADC_INPUT_TEMP) return;
+    lock();
+    if(actual_settings->input == ADC_INPUT_TEMP){
+        unlock();
+        return;
+    }
     adc_range range = adcctrl_get_previous_range(actual_settings->input, actual_settings->range);
-    if(range == actual_settings->range) return;
+    if(range == actual_settings->range){
+        unlock();
+        return;
+    }
     actual_settings->range = range;
+    unlock();
 }
 
 double calibration_gain(void){
-    return cal.gain;
+    lock();
+    double c = cal.gain;
+    unlock();
+    return c;
 }
 
 double calibration_offset(){
-    return cal.offset;
+    lock();
+    double c = cal.offset;
+    unlock();
+    return c;
 }
 
 double calibration_temp(){
-    return cal.temp;
+    lock();
+    double c = cal.temp;
+    unlock();
+    return c;
+}
+
+bool settings_is_autorange(void){
+    lock();
+    bool t = actual_settings->auto_range;
+    unlock();
+    return t;
+}
+void settings_set_autorange(bool val){
+    lock();
+    actual_settings->auto_range = val;
+    unlock();
 }
 
 void settings_set_range(adc_range range){
+    lock();
     /* check if range valid */
     adc_control_sequence* id = adcctrl_get_sequence(actual_settings->input, range);
-    if(id == NULL) return;
+    if(id == NULL){
+        unlock();
+        return;
+    }
     actual_settings->range = range;
+    unlock();
 }
 
 void calibration_save(double gain, double offset, double temperature){
+    lock();
     int id = adcctrl_get_sequence_id(actual_settings->input, actual_settings->range);
     id = SETTINGS_START_ADDRESS + SETTINGS_LAST*ADC_NUMBER_OF_INPUTS + id;
     assert(id<=0);
@@ -154,22 +241,29 @@ void calibration_save(double gain, double offset, double temperature){
     cal.offset = offset;
     cal.temp = temperature;
     eefs_object_save(id, &cal, sizeof(calibration_t));
+    unlock();
 }
 
 int calibration_restore(){
+    lock();
     int id = adcctrl_get_sequence_id(actual_settings->input, actual_settings->range);
     id = SETTINGS_START_ADDRESS + SETTINGS_LAST*ADC_NUMBER_OF_INPUTS + id;
     assert(id >= 0);
     assert(id < 255);
     EEFS_ERROR err = eefs_object_restore(id, &cal, sizeof(calibration_t));
-    if(err == EEFS_OK) return 1;
+    if(err == EEFS_OK){
+        unlock();
+        return 1;
+    }
     cal.gain = 1;
     cal.offset = 0; 
     cal.temp = 25;
+    unlock();
     return 0;
 }
 
 static void settings_set_default(){
+    lock();
     int i;
     for(i = 0; i < ADC_NUMBER_OF_INPUTS;i++){
         settings[i].auto_range = true;
@@ -201,6 +295,7 @@ static void settings_set_default(){
     
     settings[ADC_INPUT_TEMP].input = ADC_INPUT_TEMP;
     settings[ADC_INPUT_TEMP].range = ADC_RANGE_300;
+    unlock();
 
 }
 

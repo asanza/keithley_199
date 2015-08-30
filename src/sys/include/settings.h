@@ -30,6 +30,7 @@ extern "C" {
 
 #include <stddef.h>
 #include <sysdefs.h>
+#include <stdbool.h>
 /* storage addresses */
 typedef enum{
             SETTINGS_0,
@@ -71,12 +72,18 @@ adc_channel settings_get_channel(void);
 void settings_range_up(void);
 void settings_range_down(void);
 
+bool settings_is_autorange(void);
+void settings_set_autorange(bool val);
+
 void calibration_save(double gain, double offset, double temperature);
 int calibration_restore();
 
 double calibration_gain();
 double calibration_offset();
 double calibration_temp();
+
+int settings_set_best_range(double value);
+
 #ifdef	__cplusplus
 }
 #endif

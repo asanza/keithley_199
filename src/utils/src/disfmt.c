@@ -34,8 +34,7 @@
 
 #include <diag.h>
 
-static double get_range_value(double value, adc_range scale);
-
+double disfmt_get_range_value(double value, adc_range scale);
 disp_mode fmt_get_disp_mode(adc_input mode)
 {
     disp_mode display_indicator = 0x00000000;
@@ -164,7 +163,7 @@ void fmt_append_scale(char* buffer, adc_input mode, adc_range range)
 static void fmt_write_display(char* buffer, int size, adc_range range, adc_input mode,
     adc_resolution res, double value)
 {
-    fmt_format_string(buffer, NUMBER_OF_CHARACTERS, range, res, get_range_value(value, range));
+    fmt_format_string(buffer, NUMBER_OF_CHARACTERS, range, res, disfmt_get_range_value(value, range));
     fmt_append_scale(buffer, mode, range);
     display_puts(buffer);
 }
@@ -217,7 +216,7 @@ double fmt_get_refval(double val, adc_input mode, adc_range range, adc_resolutio
     return val;
 }
 
-static double get_range_value(double value, adc_range scale)
+double disfmt_get_range_value(double value, adc_range scale)
 {
     switch (scale) {
         case ADC_RANGE_3:

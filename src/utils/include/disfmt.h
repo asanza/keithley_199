@@ -37,6 +37,8 @@ void fmt_append_scale(char* buffer, adc_input mode, adc_range range);
 
 double fmt_get_refval(double val, adc_input mode, adc_range range, adc_resolution res);
 
+double disfmt_get_range_value(double value, adc_range scale);
+
 #ifdef	__cplusplus
 }
 #endif

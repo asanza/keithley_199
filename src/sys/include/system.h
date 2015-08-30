@@ -55,6 +55,8 @@ extern "C" {
     
     double system_read_temp(void);
 
+    double system_get_real_value(double value, adc_range range);
+    
 #ifdef	__cplusplus
 }
 #endif
