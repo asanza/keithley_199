@@ -80,7 +80,7 @@ unsigned int integration_period;
 #else
 static unsigned int integration_period;
 #endif
-static QueueHandle_t data_sended;
+static QueueHandle_t data_sended = NULL;
 
 
 static void send_strobe_and_wait(unsigned int wait_time);
@@ -167,7 +167,9 @@ void hal_adc_init(unsigned int period){
     ConfigIntOC3(OC_INT_PRIOR_3|OC_INT_ON);
     PORTSetPinsDigitalOut(IOPORT_G, BIT_1);
     PPSOutput(1,RPG1,OC3);
-    data_sended = xQueueCreate(1, sizeof(char));
+    if(!data_sended){
+        data_sended = xQueueCreate(1, sizeof(char));
+    }
     hal_counter_init();
     SpiChnOpen(SPI_CHANNEL1,SPI_OPEN_MSTEN|SPI_OPEN_CKE_REV|SPI_OPEN_MODE8 
             |SPI_OPEN_DISSDI|SPI_OPEN_ON ,80);
