@@ -1,6 +1,7 @@
 #include "unity.h"
 #include "strutils.h"
 #include "fcvt.h"
+#include <math.h>
 
 void setUp(void){
 }
@@ -46,6 +47,9 @@ void test_strutils(void){
 void test_ecvt(void){
   char buffer[50], *res;
   int decpt, sign;
-  res = e_cvt(0.0014805821886151949, buffer, 8, &decpt, &sign);
-  printf("%s, decpt: %d, sign: %d\n", res, decpt, sign);
+  //res = e_cvt(0, buffer, 8, &decpt, &sign);
+  res = dtostre (34.0003203, buffer, 3,
+    DTOSTR_PLUS_SIGN|DTOSTR_ALWAYS_SIGN|DTOSTR_UPPERCASE);
+  printf("%s\n", res);
+  //printf("%s, decpt: %d, sign: %d\n", buffer, decpt, sign);
 }
