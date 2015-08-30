@@ -25,6 +25,7 @@
 #include <stdio.h>
 
 #include "usb_uart.h"
+#include "system.h"
 
 #define SCPI_INPUT_BUFFER_LENGTH 256
 static char scpi_input_buffer[SCPI_INPUT_BUFFER_LENGTH];
@@ -63,11 +64,38 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param2, bf, 15);
     printf( "\tP2=%s\r\n", bf);
 
-    SCPI_ResultDouble(context, 0);
+    SCPI_ResultDouble(context, system_read_input());
     
     return SCPI_RES_OK;
 }
 
+static scpi_result_t DMM_MeasureTemperature(scpi_t* context){
+    scpi_number_t param1, param2;
+    char bf[15];
+    printf("meas:volt:temp\r\n"); // debug command name   
+
+    // read first parameter if present
+    if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, FALSE)) {
+        // do something, if parameter not present
+    }
+
+    // read second paraeter if present
+    if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param2, FALSE)) {
+        // do something, if parameter not present
+    }
+
+    
+    SCPI_NumberToStr(context, scpi_special_numbers_def, &param1, bf, 15);
+    printf( "\tP1=%s\r\n", bf);
+
+    
+    SCPI_NumberToStr(context, scpi_special_numbers_def, &param2, bf, 15);
+    printf( "\tP2=%s\r\n", bf);
+
+    SCPI_ResultDouble(context, system_read_temp());
+    
+    return SCPI_RES_OK;    
+}
 
 static scpi_result_t DMM_MeasureVoltageAcQ(scpi_t * context) {
     scpi_number_t param1, param2;
@@ -247,7 +275,7 @@ static const scpi_command_t scpi_commands[] = {
     {.pattern = "MEASure:CURRent:AC?", .callback = SCPI_StubQ,},
     {.pattern = "MEASure:RESistance?", .callback = SCPI_StubQ,},
     {.pattern = "MEASure:FRESistance?", .callback = SCPI_StubQ,},
-    {.pattern = "MEASure:TEMPerature?", .callback = SCPI_StubQ,},
+    {.pattern = "MEASure:TEMPerature?", .callback = DMM_MeasureTemperature,},
     {.pattern = "MEASure:PERiod?", .callback = SCPI_StubQ,},
 
     //{.pattern = "SYSTem:COMMunication:TCPIP:CONTROL?", .callback = SCPI_SystemCommTcpipControlQ,},

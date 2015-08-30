@@ -33,6 +33,7 @@
 #include <ctype.h>
 
 #define SYSTEM_TASK_STACK_SIZE      200
+#define SCPI_TASK_STACK_SIZE        400
 #define TASK_STACK_SIZE             400
 #define SYSTEM_TASK_PRIORITY        4
 #define MESSAGE_DELAY 500
@@ -66,7 +67,7 @@ void taskmgr_start(void)
 {
     xTaskCreate(system_task, "SYS", SYSTEM_TASK_STACK_SIZE, NULL,
         SYSTEM_TASK_PRIORITY, NULL);
-    xTaskCreate(scpi_task, "SCPI", SYSTEM_TASK_STACK_SIZE, NULL,
+    xTaskCreate(scpi_task, "SCPI", SCPI_TASK_STACK_SIZE, NULL,
         SYSTEM_TASK_PRIORITY, NULL);
     xTaskCreate(task_multimeter, "MUL", TASK_STACK_SIZE, NULL, TASK_PRIORITY,
         &dmm_task);
