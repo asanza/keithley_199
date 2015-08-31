@@ -28,7 +28,7 @@
 #include <system.h>
 #include <diag.h>
 #include <math.h>
-#include "adc.h"
+#include <adc.h>
 #include "strutils.h"
 #include "strutils.h"
 #include "tmp275.h"
@@ -104,6 +104,11 @@ double system_read_temp(void){
     return temperature;
 }
 
+double system_get_max(adc_range range){
+    return adc_get_max(range);
+}
+
+
 double system_read_input(system_flags_t* flag)
 {
     /* get lock before doing a measurement. It guarantees that no settings changes
@@ -129,24 +134,6 @@ double system_read_input(system_flags_t* flag)
     /* release semaphore when done. */
     xSemaphoreGive(syslock);
     return value;
-}
-
-double system_get_display_value(double value, adc_range range){
-    switch(range){
-        case ADC_RANGE_30m:
-            
-            return value*1e-4;
-        case ADC_RANGE_300m: return value*1e-3;
-        case ADC_RANGE_3:    return value*1.0;
-        case ADC_RANGE_30:   return value*1.0;
-        case ADC_RANGE_300:  return value*1.0;
-        case ADC_RANGE_3K:   return value*1e3;
-        case ADC_RANGE_30K:  return value*1e4;
-        case ADC_RANGE_300K: return value*1e5;
-        default:
-            assert(0);
-    }
-    return 1.0;
 }
 
 void system_init(void)

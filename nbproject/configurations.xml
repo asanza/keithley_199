@@ -9,9 +9,6 @@
         <itemPath>src/drivers/tmp275.h</itemPath>
         <itemPath>src/drivers/usb_uart.h</itemPath>
         <itemPath>src/drivers/dispkyb.h</itemPath>
-        <itemPath>src/drivers/adcdefs.h</itemPath>
-        <itemPath>src/drivers/adcctrl.h</itemPath>
-        <itemPath>src/drivers/adc.h</itemPath>
       </logicalFolder>
       <logicalFolder name="eefs" displayName="eefs" projectFiles="true">
         <itemPath>src/eefs/eefs.h</itemPath>
@@ -67,11 +64,13 @@
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <logicalFolder name="include" displayName="include" projectFiles="true">
           <itemPath>src/sys/include/system.h</itemPath>
-          <itemPath>src/sys/include/settings.h</itemPath>
           <itemPath>src/sys/include/sysdefs.h</itemPath>
+          <itemPath>src/sys/include/settings.h</itemPath>
         </logicalFolder>
         <logicalFolder name="src" displayName="src" projectFiles="true">
           <itemPath>src/sys/src/syserr.h</itemPath>
+          <itemPath>src/sys/src/adcctrl.h</itemPath>
+          <itemPath>src/sys/src/adc.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="tasks" displayName="tasks" projectFiles="true">
@@ -100,8 +99,6 @@
         <itemPath>src/drivers/tmp275.c</itemPath>
         <itemPath>src/drivers/dispkyb.c</itemPath>
         <itemPath>src/drivers/usb_uart.c</itemPath>
-        <itemPath>src/drivers/adc.c</itemPath>
-        <itemPath>src/drivers/adcctrl.c</itemPath>
       </logicalFolder>
       <logicalFolder name="eefs" displayName="eefs" projectFiles="true">
         <itemPath>src/eefs/crc32.c</itemPath>
@@ -157,6 +154,8 @@
       <logicalFolder name="sys" displayName="sys" projectFiles="true">
         <logicalFolder name="src" displayName="src" projectFiles="true">
           <itemPath>src/sys/src/system.c</itemPath>
+          <itemPath>src/sys/src/adcctrl.c</itemPath>
+          <itemPath>src/sys/src/adc.c</itemPath>
           <itemPath>src/sys/src/settings.c</itemPath>
         </logicalFolder>
       </logicalFolder>
@@ -247,7 +246,7 @@
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
                   value="src/hal;src/FreeRTOS/include;src/FreeRTOS/portable/MPLAB/PIC32MX;src/sys/include;src/eefs;src/libscpi/inc;src/dmm;src/utils/include;src/drivers;src/scpi-parser/libscpi/inc"/>
-        <property key="generate-16-bit-code" value="true"/>
+        <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
         <property key="make-warnings-into-errors" value="false"/>
@@ -299,7 +298,7 @@
         <property key="fill-flash-options-increment" value=""/>
         <property key="fill-flash-options-seq" value=""/>
         <property key="fill-flash-options-what" value="0"/>
-        <property key="generate-16-bit-code" value="true"/>
+        <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="heap-size" value="2000"/>

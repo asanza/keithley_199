@@ -60,17 +60,15 @@ void task_multimeter(void *params)
 
 static void set_new_range(double value)
 {
-    /*int wset = 0;
-    double maxl = disfmt_get_range_value(ADC_MAX_VALUE, settings_get_range());
+    int wset = 0;
+    double maxl = system_get_max(settings_get_range());
     if(value >= maxl){
         settings_range_up();
         wset++;
     }else{
-        maxl = system_get_real_value(value, settings_get_range());
         settings_range_down();
-        double minl = disfmt_get_range_value(ADC_MAX_VALUE, settings_get_range());
-        minl = system_get_real_value(minl, settings_get_range());
-        if(maxl >= minl ){
+        system_get_max(settings_get_range());
+        if(maxl <= value){
             settings_range_up();
         }else{
             wset++;
@@ -80,5 +78,5 @@ static void set_new_range(double value)
         system_set_configuration(settings_get_input(), settings_get_range(),
             settings_get_integration_period(), settings_get_channel(),
             calibration_gain(), calibration_offset(), settings_get_resolution());
-    }*/
+    }
 }

@@ -56,8 +56,8 @@ extern "C" {
     void system_release_lock();
     
     double system_read_temp(void);
-
-    double system_get_real_value(double value, adc_range range);
+    
+    double system_get_max(adc_range range);
     
 #ifdef	__cplusplus
 }

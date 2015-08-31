@@ -71,6 +71,7 @@ static adc_input input;
 
 static double adc_do_measurement(unsigned char channel, adc_control_sequence* sequence);
 
+static double get_real_value(double value, adc_range range);
 
 double adc_read_value(adc_channel channel, int* flag){
     adc_control_sequence* seq = adcctrl_get_sequence(input, range);
@@ -85,6 +86,10 @@ double adc_read_value(adc_channel channel, int* flag){
     *flag = 0;
     if(value >= ADC_MAX_VALUE) *flag = ADC_OVERFLOW;
     if(value <= ADC_MIN_VALUE) *flag = ADC_UNDERFLOW;
+    return get_real_value(value, range);
+}
+
+static double get_real_value(double value, adc_range range){
     switch(range){
         case ADC_RANGE_30m:  value*=1e-2; break;
         case ADC_RANGE_300m: value*=1e-1; break;
@@ -96,7 +101,12 @@ double adc_read_value(adc_channel channel, int* flag){
         case ADC_RANGE_300K: value*=1e+5; break;
         default: assert(0);
     }
-    return value;
+    return value;    
+}
+
+
+double adc_get_max(adc_range range){
+    return get_real_value(ADC_MAX_VALUE, range);
 }
 
 adc_input adc_get_input(){

@@ -39,6 +39,7 @@ adc_error adc_set_input(adc_input input, adc_range range);
 double adc_read_value(adc_channel channel, int* flag);
 adc_error adc_init(adc_integration_period period, adc_input input, adc_range range);
 
+double adc_get_max(adc_range range);
     
 #ifdef	__cplusplus
 }
