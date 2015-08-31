@@ -86,17 +86,17 @@ double adc_read_value(adc_channel channel, int* flag){
     if(value >= ADC_MAX_VALUE) *flag = ADC_OVERFLOW;
     if(value <= ADC_MIN_VALUE) *flag = ADC_UNDERFLOW;
     switch(range){
-        case ADC_RANGE_30m:  return value*1e-2;
-        case ADC_RANGE_300m: return value*1e-1;
-         case ADC_RANGE_3:   return value*1e+0;
-         case ADC_RANGE_30:  return value*1e+1;
-        case ADC_RANGE_300:  return value*1e+2;
-         case ADC_RANGE_3K:  return value*1e+3;
-        case ADC_RANGE_30K:  return value*1e+4;
-        case ADC_RANGE_300K: return value*1e+5;
+        case ADC_RANGE_30m:  value*=1e-2; break;
+        case ADC_RANGE_300m: value*=1e-1; break;
+         case ADC_RANGE_3:   value*=1e+0; break;
+         case ADC_RANGE_30:  value*=1e+1; break;
+        case ADC_RANGE_300:  value*=1e+2; break;
+         case ADC_RANGE_3K:  value*=1e+3; break;
+        case ADC_RANGE_30K:  value*=1e+4; break;
+        case ADC_RANGE_300K: value*=1e+5; break;
         default: assert(0);
     }
-    return 0.0;
+    return value;
 }
 
 adc_input adc_get_input(){

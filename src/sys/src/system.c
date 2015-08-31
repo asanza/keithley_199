@@ -111,8 +111,8 @@ double system_read_input(system_flags_t* flag)
     double value, temperature;
     *flag = 0;
     xSemaphoreTake(syslock, portMAX_DELAY);
-    temperature = tmp245_read_temp_double();
     if(is_temp_mode){
+        temperature = tmp245_read_temp_double();
         value = temperature;
     } else{
         value = gain * adc_read_value(channel, (int*)flag) + offset;
