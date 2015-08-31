@@ -28,7 +28,7 @@ extern "C" {
 #endif
 
 #include <stddef.h>
-#include <sysdefs.h>
+#include <adcdefs.h>
 
     /** Initialize system. Set up hardware. Should be called before
      * OS Starts. */

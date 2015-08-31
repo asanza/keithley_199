@@ -109,12 +109,14 @@ double system_read_input(void)
     /* get lock before doing a measurement. It guarantees that no settings changes
      * are done while using the adc. */
     double value, temperature;
+    int flag = 0;
     xSemaphoreTake(syslock, portMAX_DELAY);
     temperature = tmp245_read_temp_double();
     if(is_temp_mode){
         value = temperature;
     } else{
-        value = gain * adc_read_value(channel) + offset;
+        value = gain * adc_read_value(channel, &flag) + offset;
+        //TODO:do something with the overflow!
         if(resln == ADC_RESOLUTION_6_5){
             if(fabs(value - acc_value) <= wn_delta){
                 acc_value = acc_value + (value - acc_value)/RESLN_6_5_FILTER_SIZE;

@@ -26,7 +26,7 @@
 #include "disfmt.h"
 #include <assert.h>
 #include "strutils.h"
-#include <sysdefs.h>
+#include <adcdefs.h>
 #include <math.h>
 #include <stdio.h>
 #include <string.h>

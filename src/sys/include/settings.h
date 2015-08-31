@@ -29,7 +29,7 @@ extern "C" {
 #endif
 
 #include <stddef.h>
-#include <sysdefs.h>
+#include <adcdefs.h>
 #include <stdbool.h>
 /* storage addresses */
 typedef enum{

@@ -64,8 +64,8 @@ void task_calibration(void* params)
             settings_get_integration_period(), ADC_CHANNEL_0, gain, offset,
             ADC_RESOLUTION_5_5);
 
-        refvals[0] = fmt_get_refval(ADC_MAX_VALUE, settings_get_input(),
-            settings_get_range(), settings_get_resolution());
+//TODO:        refvals[0] = fmt_get_refval(ADC_MAX_VALUE, settings_get_input(),
+//            settings_get_range(), settings_get_resolution());
         measval[0] = do_measure();
         mpoints++;
 
@@ -76,8 +76,8 @@ void task_calibration(void* params)
 
         if (settings_get_input() == ADC_INPUT_VOLTAGE_DC ||
             settings_get_input() == ADC_INPUT_CURRENT_DC) {
-            refvals[2] = fmt_get_refval(ADC_MIN_VALUE, settings_get_input(),
-                settings_get_range(), settings_get_resolution());
+//TODO:            refvals[2] = fmt_get_refval(ADC_MIN_VALUE, settings_get_input(),
+ //               settings_get_range(), settings_get_resolution());
             measval[2] = do_measure();
             mpoints++;
         }

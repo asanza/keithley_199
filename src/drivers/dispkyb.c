@@ -121,6 +121,7 @@ void display_putc(char c, int pos)
 {
     uint16_t adci = hal_io_displayport_map_char_to_segments('.');
     adci &= screen[NUMBER_OF_CHARACTERS - 2];
+    char dmode = screen[NUMBER_OF_CHARACTERS - 1];
     if (self_test) return;
     if (pos < 0 || pos >= (NUMBER_OF_CHARACTERS - 1)) return;
     if (c == '.' && pos > 0)
@@ -128,6 +129,7 @@ void display_putc(char c, int pos)
     else
         screen[pos] = hal_io_displayport_map_char_to_segments(c);
     screen[NUMBER_OF_CHARACTERS - 2] |= adci;
+    screen[NUMBER_OF_CHARACTERS - 1] |= dmode;
 }
 
 void display_test()

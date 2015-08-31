@@ -44,7 +44,7 @@ size_t SCPI_Write(scpi_t * context, const char * data, size_t len) {
 static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     scpi_number_t param1, param2;
 
-    printf("meas:volt:dc\r\n"); // debug command name   
+    //printf("meas:volt:dc\r\n"); // debug command name   
 
     // read first parameter if present
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, FALSE)) {
@@ -57,13 +57,13 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     }
     char bf[15];
     
-    SCPI_NumberToStr(context, scpi_special_numbers_def, &param1, bf, 15);
+    /*SCPI_NumberToStr(context, scpi_special_numbers_def, &param1, bf, 15);
     printf( "\tP1=%s\r\n", bf);
 
     
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param2, bf, 15);
-    printf( "\tP2=%s\r\n", bf);
-
+    printf( "\tP2=%s\r\n", bf);*/
+    
     SCPI_ResultDouble(context, system_read_input());
     
     return SCPI_RES_OK;
@@ -72,7 +72,7 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
 static scpi_result_t DMM_MeasureTemperature(scpi_t* context){
     scpi_number_t param1, param2;
     char bf[15];
-    printf("meas:volt:temp\r\n"); // debug command name   
+    //printf("meas:volt:temp\r\n"); // debug command name   
 
     // read first parameter if present
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, FALSE)) {
@@ -86,11 +86,11 @@ static scpi_result_t DMM_MeasureTemperature(scpi_t* context){
 
     
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param1, bf, 15);
-    printf( "\tP1=%s\r\n", bf);
+    //printf( "\tP1=%s\r\n", bf);
 
     
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param2, bf, 15);
-    printf( "\tP2=%s\r\n", bf);
+    //printf( "\tP2=%s\r\n", bf);
 
     SCPI_ResultDouble(context, system_read_temp());
     

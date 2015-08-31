@@ -27,7 +27,7 @@
 extern "C" {
 #endif
 
-#include <sysdefs.h>
+#include <adcdefs.h>
 #include <dispkyb.h>
 
 disp_mode fmt_get_disp_mode(adc_input mode);

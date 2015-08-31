@@ -50,17 +50,17 @@ void task_multimeter(void *params)
             settings_get_resolution(), value);
         fmt_append_scale(buff, settings_get_input(), settings_get_range());
         display_puts(buff);
-        /*double temp = system_read_temp();
+        double temp = system_read_temp();
         utils_dtostr(buff,8,value);
         printf("%s, ",buff);
         utils_dtostr(buff, 8, calibration_temp() - temp);
-        printf("%s\n", buff);*/
+        printf("%s\n", buff);
     }
 }
 
 static void set_new_range(double value)
 {
-    int wset = 0;
+    /*int wset = 0;
     double maxl = disfmt_get_range_value(ADC_MAX_VALUE, settings_get_range());
     if(value >= maxl){
         settings_range_up();
@@ -80,5 +80,5 @@ static void set_new_range(double value)
         system_set_configuration(settings_get_input(), settings_get_range(),
             settings_get_integration_period(), settings_get_channel(),
             calibration_gain(), calibration_offset(), settings_get_resolution());
-    }
+    }*/
 }
