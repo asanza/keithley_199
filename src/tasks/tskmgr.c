@@ -113,7 +113,6 @@ static void start_task(sys_task_t task)
         default:
             assert(0);
     }
-    display_clear();
 }
 
 static void stop_running_task()
@@ -134,19 +133,20 @@ static void sys_init(void)
         i++;
     }
     vTaskDelay(MESSAGE_DELAY / portTICK_PERIOD_MS); // show firmware version at startup.
-    display_clear();
 }
 
 static void load_settings()
 {
+    //display_puts("LOADING");
     if (settings_restore(SETTINGS_0)) {
+        display_clear();
         DIAG("Bad Settings on Store. Loading defaults");
         display_puts("SETT ERROR");
         vTaskDelay(MESSAGE_DELAY / portTICK_PERIOD_MS);
-        display_clear();
     }
 
     switch (settings_get_integration_period()) {
+        display_clear();
         case ADC_INTEGRATION_50HZ: display_puts("FREQ=50 HZ");
             break;
         case ADC_INTEGRATION_60HZ: display_puts("FREQ=60 HZ");
@@ -161,17 +161,16 @@ static void switch_sys_function()
 {
     stop_running_task();
     display_puts(" ------- ");
-    /* get system lock */
-    display_clear();
     if (!calibration_restore()) {
+        display_clear();
         display_puts("CAL ERROR");
         vTaskDelay(MESSAGE_DELAY / portTICK_PERIOD_MS);
-        display_clear();
     }
 
     if (system_set_configuration(settings_get_input(), settings_get_range(),
         settings_get_integration_period(), settings_get_channel(),
         calibration_gain(), calibration_offset(), settings_get_resolution())) {
+        display_clear();
         display_puts("NOT IMPL");
         vTaskDelay(MESSAGE_DELAY / portTICK_PERIOD_MS);
         display_clear();
@@ -275,10 +274,14 @@ static void poll_key(void)
             break;
         case KEY_UP:
             settings_range_up();
+            settings_set_autorange(false);
+            display_clearmode(DISP_AC);
             switch_sys_function();
             break;
         case KEY_DOWN:
             settings_range_down();
+            settings_set_autorange(false);
+            display_clearmode(DISP_AC);
             switch_sys_function();
             break;
         case KEY_CAL:
