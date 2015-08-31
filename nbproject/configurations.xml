@@ -68,6 +68,7 @@
         <logicalFolder name="include" displayName="include" projectFiles="true">
           <itemPath>src/sys/include/system.h</itemPath>
           <itemPath>src/sys/include/settings.h</itemPath>
+          <itemPath>src/sys/include/sysdefs.h</itemPath>
         </logicalFolder>
         <logicalFolder name="src" displayName="src" projectFiles="true">
           <itemPath>src/sys/src/syserr.h</itemPath>

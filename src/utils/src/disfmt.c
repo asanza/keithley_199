@@ -34,50 +34,54 @@
 
 #include <diag.h>
 
-double disfmt_get_range_value(double value, adc_range scale);
+static double disfmt_get_range_value(double value, adc_range scale);
+static double get_value(double value, adc_range scale);
 
-void fmt_format_string(char* buff, int buffsize, adc_range scale, adc_resolution res, 
-    double value)
+void fmt_format_string(char* buff, int buffsize, adc_range scale, adc_resolution res,
+    double value, system_flags_t flag)
 {
-    memset(buff, ' ', buffsize * sizeof(char));
+    //TODO: show when filter out of window
+    sprintf(buff, " -------");
     int ndigits = 0;
-    switch(res){
-        case ADC_RESOLUTION_5_5: ndigits = 6; break;
-        case ADC_RESOLUTION_6_5: ndigits = 7; break;
+    switch (res) {
+        case ADC_RESOLUTION_5_5: ndigits = 6;
+            break;
+        case ADC_RESOLUTION_6_5: ndigits = 7;
+            break;
         default: assert(0);
     }
     switch (scale) {
-        case ADC_RANGE_3:
-        case ADC_RANGE_3K:
-        case ADC_RANGE_3M:
+        case ADC_RANGE_3M: value *= 1e-3;
+        case ADC_RANGE_3K: value *= 1e-3;
+        case ADC_RANGE_3:  value *= 1e+0;
         {
-            if (fabs(value) >= ADC_OVERFLOW) {
+            if (flag & SYSTEM_OVERFLOW || flag & SYSTEM_UNDERFLOW) {
                 sprintf(buff, " O.VERFL");
-            }else{
+            } else {
                 utils_dtofixstr(buff, ndigits, ndigits - 1, value);
             }
         }
             break;
-        case ADC_RANGE_30m:
-        case ADC_RANGE_30:
-        case ADC_RANGE_30K:
-        case ADC_RANGE_30M:
+        case ADC_RANGE_30M: value *= 1e-3;
+        case ADC_RANGE_30K: value *= 1e-6;
+        case ADC_RANGE_30m: value *= 1e+3;
+        case ADC_RANGE_30:  value *= 1e+0;
         {
-            if (fabs(value) >= ADC_OVERFLOW * 10) {
+            if (flag & SYSTEM_OVERFLOW || flag & SYSTEM_UNDERFLOW) {
                 sprintf(buff, " OV.ERFL");
-            }else{
+            } else {
                 utils_dtofixstr(buff, ndigits, ndigits - 2, value);
             }
         }
             break;
-        case ADC_RANGE_300:
-        case ADC_RANGE_300K:
-        case ADC_RANGE_300M:
-        case ADC_RANGE_300m:
+        case ADC_RANGE_300M: value *= 1e-3;
+        case ADC_RANGE_300K: value *= 1e-6;
+        case ADC_RANGE_300m: value *= 1e+3;
+        case ADC_RANGE_300:  value *= 1e+0;
         {
-            if (fabs(value) >= ADC_OVERFLOW * 100) {
+            if (flag & SYSTEM_OVERFLOW || flag & SYSTEM_UNDERFLOW) {
                 sprintf(buff, " OVE.RFL");
-            }else{
+            } else {
                 utils_dtofixstr(buff, ndigits, ndigits - 3, value);
             }
         }
@@ -127,20 +131,20 @@ void fmt_append_scale(char* buffer, adc_input mode, adc_range range)
                     break;
             }
         }
-        break;
+            break;
         case ADC_INPUT_TEMP:
-            strcat(buffer,"gC");
+            strcat(buffer, "gC");
             break;
         default:
             break;
-            
+
     }
 }
 
 static void fmt_write_display(char* buffer, int size, adc_range range, adc_input mode,
     adc_resolution res, double value)
 {
-    fmt_format_string(buffer, NUMBER_OF_CHARACTERS, range, res, disfmt_get_range_value(value, range));
+    fmt_format_string(buffer, NUMBER_OF_CHARACTERS, range, res, disfmt_get_range_value(value, range),0);
     fmt_append_scale(buffer, mode, range);
     display_puts(buffer);
 }
@@ -156,7 +160,7 @@ static key_id fmt_get_key()
 double fmt_get_refval(double val, adc_input mode, adc_range range, adc_resolution res)
 {
     double sign;
-    if(val >= 0) sign = 1;
+    if (val >= 0) sign = 1;
     else sign = -1;
     key_id key = KEY_NONE;
     int hld_i = 2;
@@ -168,7 +172,7 @@ double fmt_get_refval(double val, adc_input mode, adc_range range, adc_resolutio
                 if (key < 3) {
                     val = sign*key;
                 } else {
-                    if (key == 3) val = sign*key;
+                    if (key == 3) val = sign * key;
                     display_highlight(hld_i--);
                 }
             } else {
@@ -178,38 +182,54 @@ double fmt_get_refval(double val, adc_input mode, adc_range range, adc_resolutio
                     for (i = 4; i <= hld_i; i++) {
                         dec = dec * 0.1;
                     }
-                    val += sign*key*dec;
+                    val += sign * key*dec;
                 }
             }
         }
-        fmt_write_display(buffer, NUMBER_OF_CHARACTERS, range,mode,res, val);
+        fmt_write_display(buffer, NUMBER_OF_CHARACTERS, range, mode, res, val);
         if (hld_i > 7) hld_i = 2;
         display_highlight(hld_i++);
         key = fmt_get_key();
     } while (key != KEY_CAL);
     display_highlight(0);
     buffer[0] = ' ';
-    val = sign*utils_strtod(buffer);
-    return val;
+    val = sign * utils_strtod(buffer);
+    return get_value(val, range);
 }
 
-double disfmt_get_range_value(double value, adc_range scale)
+static double get_value(double value, adc_range scale)
 {
     switch (scale) {
-        case ADC_RANGE_3:
-        case ADC_RANGE_3K:
-        case ADC_RANGE_3M:
-            return value;
-        case ADC_RANGE_30m:
-        case ADC_RANGE_30:
-        case ADC_RANGE_30K:
-        case ADC_RANGE_30M:
-            return value * 10;
-        case ADC_RANGE_300:
-        case ADC_RANGE_300K:
-        case ADC_RANGE_300M:
-        case ADC_RANGE_300m:
-            return value * 100;
+        case ADC_RANGE_30m:  return value*1e-3;
+        case ADC_RANGE_300m: return value*1e-3;
+        case ADC_RANGE_3:    return value*1e+0;
+        case ADC_RANGE_30:   return value*1e+0;
+        case ADC_RANGE_300:  return value*1e+0;
+        case ADC_RANGE_3K:   return value*1e+3;
+        case ADC_RANGE_30K:  return value*1e+3;
+        case ADC_RANGE_300K: return value*1e+3;
+        case ADC_RANGE_3M:   return value*1e+6;
+        case ADC_RANGE_30M:  return value*1e+6;
+        case ADC_RANGE_300M: return value*1e+6;
+        default: break;
+    }
+    return 0;
+}
+
+static double disfmt_get_range_value(double value, adc_range scale)
+{
+    switch (scale) {
+        case ADC_RANGE_30m:  return value*1e-2;
+        case ADC_RANGE_300m: return value*1e-1;
+        case ADC_RANGE_3:    return value*1e+0;
+        case ADC_RANGE_30:   return value*1e+1;
+        case ADC_RANGE_300:  return value*1e+2;
+        case ADC_RANGE_3K:   return value*1e+3;
+        case ADC_RANGE_30K:  return value*1e+4;
+        case ADC_RANGE_300K: return value*1e+5;
+        case ADC_RANGE_3M:   return value*1e+6;
+        case ADC_RANGE_30M:  return value*1e+7;
+        case ADC_RANGE_300M: return value*1e+8;
         default: break;
     }
     return 0;

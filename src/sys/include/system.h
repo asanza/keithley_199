@@ -30,6 +30,8 @@ extern "C" {
 #include <stddef.h>
 #include <adcdefs.h>
 
+#include "sysdefs.h"
+    
     /** Initialize system. Set up hardware. Should be called before
      * OS Starts. */
     void system_init(void);
@@ -46,7 +48,7 @@ extern "C" {
 
     /** read the value at the input with the configuration set with system set 
      * configuration. */
-    double system_read_input(void);
+    double system_read_input(system_flags_t* flag);
     
     /** get the system lock before changing configuration. */
     void system_get_lock();

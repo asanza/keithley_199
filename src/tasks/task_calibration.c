@@ -30,10 +30,13 @@
 #include "tskmgr.h"
 #include "settings.h"
 #include <system.h>
+#include <sysdefs.h>
 #include <strutils.h>
 #include "fitlinear.h"
 
 #define CAL_FILTER_SIZE  50.0
+#define ADC_CAL_POS  3.00
+#define ADC_CAL_NEG -3.00
 
 static double do_measure()
 {
@@ -41,8 +44,10 @@ static double do_measure()
     display_puts(" WORKING ");
     int i;
     double value = 0;
+    system_flags_t flags;
     for (i = 0; i < CAL_FILTER_SIZE; i++) {
-        value += system_read_input() / CAL_FILTER_SIZE;
+        //TODO: What to do if overflow( abort???)
+        value += system_read_input(&flags) / CAL_FILTER_SIZE;
     }
     return value;
 }
@@ -64,8 +69,8 @@ void task_calibration(void* params)
             settings_get_integration_period(), ADC_CHANNEL_0, gain, offset,
             ADC_RESOLUTION_5_5);
 
-//TODO:        refvals[0] = fmt_get_refval(ADC_MAX_VALUE, settings_get_input(),
-//            settings_get_range(), settings_get_resolution());
+        refvals[0] = fmt_get_refval(ADC_CAL_POS, settings_get_input(),
+            settings_get_range(), settings_get_resolution());
         measval[0] = do_measure();
         mpoints++;
 
@@ -76,8 +81,8 @@ void task_calibration(void* params)
 
         if (settings_get_input() == ADC_INPUT_VOLTAGE_DC ||
             settings_get_input() == ADC_INPUT_CURRENT_DC) {
-//TODO:            refvals[2] = fmt_get_refval(ADC_MIN_VALUE, settings_get_input(),
- //               settings_get_range(), settings_get_resolution());
+            refvals[2] = fmt_get_refval(ADC_CAL_NEG, settings_get_input(),
+                settings_get_range(), settings_get_resolution());
             measval[2] = do_measure();
             mpoints++;
         }
@@ -85,7 +90,7 @@ void task_calibration(void* params)
         system_set_configuration(ADC_INPUT_TEMP, ADC_RANGE_300, 
             settings_get_integration_period(), ADC_CHANNEL_0, 1, 0, ADC_RESOLUTION_5_5);
         
-        temperature = system_read_input();
+        temperature = system_read_temp();
         
         fit_linear(measval, refvals, mpoints, &offset, &gain);
     }

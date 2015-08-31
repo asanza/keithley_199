@@ -64,7 +64,7 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param2, bf, 15);
     printf( "\tP2=%s\r\n", bf);*/
     
-    SCPI_ResultDouble(context, system_read_input());
+//    SCPI_ResultDouble(context, system_read_input());
     
     return SCPI_RES_OK;
 }

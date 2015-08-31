@@ -39,15 +39,15 @@ void task_multimeter(void *params)
 {
     DIAG("Loaded");
     char buff[NUMBER_OF_CHARACTERS];
-
+    system_flags_t flag;
     double value;
     while (1) {
         hal_disp_adci_toggle();
-        value = system_read_input(); //value + (system_read_input()-value)/10.0;
+        value = system_read_input(&flag); //value + (system_read_input()-value)/10.0;
         if (settings_is_autorange())
             set_new_range(value);
         fmt_format_string(buff, NUMBER_OF_CHARACTERS, settings_get_range(),
-            settings_get_resolution(), value);
+            settings_get_resolution(), value, flag);
         fmt_append_scale(buff, settings_get_input(), settings_get_range());
         display_puts(buff);
         double temp = system_read_temp();
