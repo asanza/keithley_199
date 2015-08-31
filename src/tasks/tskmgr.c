@@ -266,18 +266,24 @@ static void poll_key(void)
             switch_sys_function();
             break;
         case KEY_9:
-            if (shift_key) {
-                shift_key = false;
+            stop_running_task();
+            if (!shift_key) {
+                display_puts("LOAD 0-9?");
+                key = display_wait_for_key();
+                key = display_wait_for_key();
+                display_puts(" WORKING ");
+                if (key <= 9)
+                    settings_restore(key);
             } else {
-                stop_running_task();
+                shift_key = false;
                 display_puts("SAVE 0-9?");
                 key = display_wait_for_key();
                 key = display_wait_for_key();
                 display_puts(" WORKING ");
                 if (key <= 9)
                     settings_save(key);
-                start_task(TASK_MULTIMETER);
             }
+            switch_sys_function();
             break;
         case KEY_UP:
             settings_range_up();

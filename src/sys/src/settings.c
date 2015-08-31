@@ -210,6 +210,8 @@ double calibration_temp(){
 bool settings_is_autorange(void){
     lock();
     bool t = actual_settings->auto_range;
+    if(actual_settings->input == ADC_INPUT_TEMP)
+        t = false;
     unlock();
     return t;
 }
@@ -263,7 +265,6 @@ int calibration_restore(){
 }
 
 static void settings_set_default(){
-    lock();
     int i;
     for(i = 0; i < ADC_NUMBER_OF_INPUTS;i++){
         settings[i].auto_range = true;
@@ -295,8 +296,6 @@ static void settings_set_default(){
     
     settings[ADC_INPUT_TEMP].input = ADC_INPUT_TEMP;
     settings[ADC_INPUT_TEMP].range = ADC_RANGE_300;
-    unlock();
-
 }
 
 /* load calibration according to settings */
