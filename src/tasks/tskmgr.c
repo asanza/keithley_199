@@ -60,7 +60,7 @@ static void sys_init(void);
 static void load_settings();
 static void start_task(sys_task_t task);
 static void stop_running_task();
-static void switch_sys_function();
+static void apply_settings();
 static void poll_key(void);
 
 void taskmgr_start(void)
@@ -79,11 +79,6 @@ static void system_task(void* pvParameters)
     sys_init();
     // Reload Sysstate from eeprom.
     load_settings();
-    switch_sys_function();
-    if (settings_is_autorange())
-        display_setmode(DISP_AC);
-    else
-        display_clearmode(DISP_AC);
     while (1) {
         if (running_task) {
             vTaskDelay(10);
@@ -146,7 +141,7 @@ static void load_settings()
     }
 
     switch (settings_get_integration_period()) {
-        display_clear();
+            display_clear();
         case ADC_INTEGRATION_50HZ: display_puts("FREQ=50 HZ");
             break;
         case ADC_INTEGRATION_60HZ: display_puts("FREQ=60 HZ");
@@ -155,9 +150,10 @@ static void load_settings()
     }
     vTaskDelay(MESSAGE_DELAY / portTICK_PERIOD_MS);
     display_clear();
+    apply_settings();
 }
 
-static void switch_sys_function()
+static void apply_settings()
 {
     stop_running_task();
     display_puts(" ------- ");
@@ -175,6 +171,10 @@ static void switch_sys_function()
         vTaskDelay(MESSAGE_DELAY / portTICK_PERIOD_MS);
         display_clear();
     }
+    if (settings_is_autorange())
+        display_setmode(DISP_AC);
+    else
+        display_clearmode(DISP_AC);
     switch (settings_get_input()) {
         case ADC_INPUT_CURRENT_DC:
         case ADC_INPUT_CURRENT_AC:
@@ -182,11 +182,6 @@ static void switch_sys_function()
         case ADC_INPUT_VOLTAGE_DC:
         case ADC_INPUT_VOLTAGE_AC:
         case ADC_INPUT_TEMP:
-            if (settings_is_autorange()) {
-                display_setmode(DISP_AC);
-            } else {
-                display_clearmode(DISP_AC);
-            }
             start_task(TASK_MULTIMETER);
             break;
         case ADC_INPUT_RESISTANCE_4W:
@@ -214,17 +209,15 @@ static void poll_key(void)
                     res = ADC_RESOLUTION_5_5;
                 settings_set_resolution(res);
                 shift_key = false;
-                switch_sys_function();
             } else {
-                if(settings_get_input()==ADC_INPUT_TEMP) return;
+                if (settings_get_input() == ADC_INPUT_TEMP) return;
                 if (settings_is_autorange()) {
                     settings_set_autorange(false);
-                    display_clearmode(DISP_AC);
                 } else {
                     settings_set_autorange(true);
-                    display_setmode(DISP_AC);
                 }
             }
+            apply_settings();
             break;
         case KEY_4:
             if (repeat_key == false) break;
@@ -239,7 +232,7 @@ static void poll_key(void)
                 settings_set_input(ADC_INPUT_RESISTANCE_2W);
             }
             shift_key = false;
-            switch_sys_function();
+            apply_settings();
             break;
         case KEY_6:
             if (shift_key) {
@@ -247,7 +240,7 @@ static void poll_key(void)
                 shift_key = false;
             } else
                 settings_set_input(ADC_INPUT_VOLTAGE_DC);
-            switch_sys_function();
+            apply_settings();
             break;
         case KEY_7:
             if (shift_key) {
@@ -255,47 +248,28 @@ static void poll_key(void)
                 shift_key = false;
             } else
                 settings_set_input(ADC_INPUT_CURRENT_DC);
-            switch_sys_function();
+            apply_settings();
             break;
         case KEY_8:
             if (shift_key) {
                 shift_key = false;
             } else
-            settings_set_input(ADC_INPUT_TEMP);
+                settings_set_input(ADC_INPUT_TEMP);
             settings_set_autorange(false);
-            switch_sys_function();
+            apply_settings();
             break;
         case KEY_9:
-            stop_running_task();
-            if (!shift_key) {
-                display_puts("LOAD 0-9?");
-                key = display_wait_for_key();
-                key = display_wait_for_key();
-                display_puts(" WORKING ");
-                if (key <= 9)
-                    settings_restore(key);
-            } else {
-                shift_key = false;
-                display_puts("SAVE 0-9?");
-                key = display_wait_for_key();
-                key = display_wait_for_key();
-                display_puts(" WORKING ");
-                if (key <= 9)
-                    settings_save(key);
-            }
-            switch_sys_function();
+            apply_settings();
             break;
         case KEY_UP:
             settings_range_up();
             settings_set_autorange(false);
-            display_clearmode(DISP_AC);
-            switch_sys_function();
+            apply_settings();
             break;
         case KEY_DOWN:
             settings_range_down();
             settings_set_autorange(false);
-            display_clearmode(DISP_AC);
-            switch_sys_function();
+            apply_settings();
             break;
         case KEY_CAL:
             stop_running_task();
