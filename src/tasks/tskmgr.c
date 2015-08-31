@@ -182,6 +182,11 @@ static void switch_sys_function()
         case ADC_INPUT_VOLTAGE_DC:
         case ADC_INPUT_VOLTAGE_AC:
         case ADC_INPUT_TEMP:
+            if (settings_is_autorange()) {
+                display_setmode(DISP_AC);
+            } else {
+                display_clearmode(DISP_AC);
+            }
             start_task(TASK_MULTIMETER);
             break;
         case ADC_INPUT_RESISTANCE_4W:
@@ -211,6 +216,7 @@ static void poll_key(void)
                 shift_key = false;
                 switch_sys_function();
             } else {
+                if(settings_get_input()==ADC_INPUT_TEMP) return;
                 if (settings_is_autorange()) {
                     settings_set_autorange(false);
                     display_clearmode(DISP_AC);
@@ -255,7 +261,8 @@ static void poll_key(void)
             if (shift_key) {
                 shift_key = false;
             } else
-                settings_set_input(ADC_INPUT_TEMP);
+            settings_set_input(ADC_INPUT_TEMP);
+            settings_set_autorange(false);
             switch_sys_function();
             break;
         case KEY_9:
