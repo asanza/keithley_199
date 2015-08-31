@@ -33,7 +33,7 @@
 #include "semphr.h"
 
 
-static void set_new_range(double value);
+static void set_new_range(double value, system_flags_t flag);
 
 void task_multimeter(void *params)
 {
@@ -45,7 +45,7 @@ void task_multimeter(void *params)
         hal_disp_adci_toggle();
         value = system_read_input(&flag); //value + (system_read_input()-value)/10.0;
         if (settings_is_autorange())
-            set_new_range(value);
+            set_new_range(value,  flag);
         fmt_format_string(buff, NUMBER_OF_CHARACTERS, settings_get_range(),
             settings_get_resolution(), value, flag);
         fmt_append_scale(buff, settings_get_input(), settings_get_range());
@@ -58,11 +58,11 @@ void task_multimeter(void *params)
     }
 }
 
-static void set_new_range(double value)
+static void set_new_range(double value, system_flags_t flag)
 {
     int wset = 0;
     double maxl = system_get_max(settings_get_range());
-    if(fabs(value) >= maxl){
+    if(fabs(value) >= maxl  || (flag&SYSTEM_OVERFLOW) ){
         settings_range_up();
         wset++;
     }else{
