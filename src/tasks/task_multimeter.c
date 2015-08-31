@@ -62,13 +62,13 @@ static void set_new_range(double value)
 {
     int wset = 0;
     double maxl = system_get_max(settings_get_range());
-    if(value >= maxl){
+    if(fabs(value) >= maxl){
         settings_range_up();
         wset++;
     }else{
         settings_range_down();
-        system_get_max(settings_get_range());
-        if(maxl <= value){
+        maxl = system_get_max(settings_get_range());
+        if(maxl <= fabs(value)){
             settings_range_up();
         }else{
             wset++;
