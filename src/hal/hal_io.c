@@ -63,9 +63,9 @@ uint16_t hal_io_get_segment(int segment){
 
 void hal_io_init(void){
     PORTSetPinsDigitalOut(BRD_GREEN_LED);
-    PORTClearBits(BRD_GREEN_LED);
+    PORTSetBits(BRD_GREEN_LED);
     PORTSetPinsDigitalOut(BRD_AUX_LED);
-    PORTClearBits(BRD_AUX_LED);
+    PORTSetBits(BRD_AUX_LED);
     PORTSetPinsDigitalOut(BRD_RED_LED);
     PORTSetBits(BRD_RED_LED);
     PORTSetPinsDigitalOut(DEBUG_PIN_0);

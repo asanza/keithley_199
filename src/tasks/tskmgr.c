@@ -33,11 +33,14 @@
 #include <ctype.h>
 
 #define SYSTEM_TASK_STACK_SIZE      200
+#define WLAN_TASK_STACK_SIZE        200
 #define SCPI_TASK_STACK_SIZE        400
 #define TASK_STACK_SIZE             400
 #define SYSTEM_TASK_PRIORITY        4
-#define MESSAGE_DELAY 500
+#define WLAN_TASK_PRIORITY          2
+#define SCPI_TASK_PRIORITY          2
 #define TASK_PRIORITY               3
+#define MESSAGE_DELAY               500
 
 typedef enum {
     TASK_MULTIMETER,
@@ -52,6 +55,7 @@ extern void task_multimeter(void* params);
 extern void task_resistance_4w(void* params);
 extern void task_calibration(void* params);
 extern void scpi_task(void* params);
+extern void wlan_task(void* params);
 
 static TaskHandle_t running_task = NULL;
 static TaskHandle_t dmm_task;
@@ -67,10 +71,12 @@ void taskmgr_start(void)
 {
     xTaskCreate(system_task, "SYS", SYSTEM_TASK_STACK_SIZE, NULL,
         SYSTEM_TASK_PRIORITY, NULL);
-    xTaskCreate(scpi_task, "SCPI", SCPI_TASK_STACK_SIZE, NULL,
-        SYSTEM_TASK_PRIORITY, NULL);
+    xTaskCreate(scpi_task, "SCPI", WLAN_TASK_STACK_SIZE, NULL,
+        WLAN_TASK_PRIORITY, NULL);
     xTaskCreate(task_multimeter, "MUL", TASK_STACK_SIZE, NULL, TASK_PRIORITY,
         &dmm_task);
+    xTaskCreate(wlan_task, "WLAN", SCPI_TASK_STACK_SIZE, NULL, SCPI_TASK_PRIORITY,
+        NULL);
     vTaskSuspend(dmm_task);
 }
 

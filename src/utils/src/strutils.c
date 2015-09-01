@@ -31,11 +31,6 @@
 #include "strutils.h"
 #include "fcvt.h"
 
-static double round(double x)
-{
-    return(x < 0.0) ? -floor(-x + 0.5) : floor(x + 0.5);
-}
-
 /* shift a number in string form n places to the right. Push zeroes to front. */
 static void _shift_right_nstr(const char* c, unsigned int places);
 /* shift a number string n places to the left, push zeroes to the back. */
@@ -71,7 +66,7 @@ void utils_dtofixstr(char* buff, int digits, int dplaces, double value){
 static void _shift_right_nstr(const char* c, unsigned int places) {
 	char* s, c1, c2;
 	while (places--) {
-		s = c;
+		s = (char*)c;
 		c1 = *s;
 		*s++ = '0';
 		while (*s) {
@@ -91,8 +86,8 @@ static void _shift_right_nstr(const char* c, unsigned int places) {
 static void _shift_left_nstr(const char* c, unsigned int places) {
 	char* s, *d;
 	while (places--) {
-		s = c + 1;
-		d = c;
+		s = (char*)c + 1;
+		d = (char*)c;
 		while (*s) {
 			*d++ = *s++;
 		}
