@@ -90,6 +90,8 @@ static void system_task(void* pvParameters)
 
 void taskmgr_delete(void)
 {
+    //TODO: This gets called from other threads... 
+    // maybe is a good idea to make it thread safe.
     running_task = NULL;
     start_task(TASK_MULTIMETER);
     vTaskDelete(NULL);
@@ -259,6 +261,22 @@ static void poll_key(void)
             apply_settings();
             break;
         case KEY_9:
+            if (!shift_key) {
+                display_puts("LOAD 0-9?");
+                key = display_wait_for_key();
+                key = display_wait_for_key();
+                display_puts(" WORKING ");
+                if (key <= 9)
+                    settings_restore(key);
+            } else {
+                shift_key = false;
+                display_puts("SAVE 0-9?");
+                key = display_wait_for_key();
+                key = display_wait_for_key();
+                display_puts(" WORKING ");
+                if (key <= 9)
+                    settings_save(key);
+            }
             apply_settings();
             break;
         case KEY_UP:

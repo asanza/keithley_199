@@ -43,7 +43,7 @@ void task_multimeter(void *params)
     double value;
     while (1) {
         hal_disp_adci_toggle();
-        value = system_read_input(&flag); //value + (system_read_input()-value)/10.0;
+        value = system_read_input(&flag); 
         if (settings_is_autorange())
             set_new_range(value,  flag);
         fmt_format_string(buff, NUMBER_OF_CHARACTERS, settings_get_range(),
@@ -51,10 +51,10 @@ void task_multimeter(void *params)
         fmt_append_scale(buff, settings_get_input(), settings_get_range());
         display_puts(buff);
         double temp = system_read_temp();
-        utils_dtostr(buff,8,value);
+        /*utils_dtostr(buff,8,value);
         printf("%s, ",buff);
         utils_dtostr(buff, 8, calibration_temp() - temp);
-        printf("%s\n", buff);
+        printf("%s\n", buff);*/
     }
 }
 

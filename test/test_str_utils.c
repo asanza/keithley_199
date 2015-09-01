@@ -27,7 +27,9 @@ void test_strutils(void){
   utils_dtostr(buffer, 4, 2.44445);
   TEST_ASSERT_EQUAL_STRING("2.444", buffer);
   utils_dtofixstr(buffer, 6, 3, 8.23455);
-  TEST_ASSERT_EQUAL_STRING(" 008.235", buffer);
+  TEST_ASSERT_EQUAL_STRING(" 008.234", buffer);
+  utils_dtofixstr(buffer, 6, 3, 8.23555);
+  TEST_ASSERT_EQUAL_STRING(" 008.236", buffer);
   utils_dtofixstr(buffer, 6, 4, 8.23455);
   TEST_ASSERT_EQUAL_STRING(" 08.2346", buffer);
   utils_dtofixstr(buffer, 7, 6, -8.2345544);

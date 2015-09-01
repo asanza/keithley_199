@@ -36,125 +36,100 @@ static double round(double x)
     return(x < 0.0) ? -floor(-x + 0.5) : floor(x + 0.5);
 }
 
+/* shift a number in string form n places to the right. Push zeroes to front. */
+static void _shift_right_nstr(const char* c, unsigned int places);
+/* shift a number string n places to the left, push zeroes to the back. */
+static void _shift_left_nstr(const char* c, unsigned int places);
+
 void utils_dtofixstr(char* buff, int digits, int dplaces, double value){
-    char dstr[10];
-    char* idx = buff;
-    char* ids = dstr;
-    int i;
-    value = round(value*pow(10,dplaces)*1.0)/pow(10,dplaces)*1.0;
-    utils_dtostr(dstr, digits, value);
-    if(*ids == '-'){
-        *idx++ = '-';
-    }else{
-        *idx++ = ' ';
+    utils_dtostr(buff, digits, value);
+    char* out = buff;
+    int i=0; 
+    while(*++out) i++;
+    while(i++ <= digits) *out++ = '0';
+    *out = 0;
+    out = buff;
+    /* add sign or space */
+    if(*out++ != '-'){ 
+        _shift_right_nstr(buff, 1);
+        *buff = ' ';
     }
-    ids = strchr(dstr, '.');
-    idx += digits - dplaces;
-    
-    for(i = 0; i <= dplaces + 1; i++){
-        if(*ids){
-            *idx++=*ids++;
-        }else{
-            *idx++='0';
-        }
+    /* locate the dp. */
+    char* dp = strchr(out, '.');
+    /* find out how many places to shift. */
+    i = 0;
+    while(*++dp) i++;
+    int shift = i - dplaces;
+    if(shift > 0){
+        _shift_right_nstr(out, shift);
+    }else if(shift < 0){
+        _shift_left_nstr(out, shift);
     }
-    
-    ids = strchr(dstr, '.');
-    idx = buff + digits - dplaces + 1;
-    
-    for(i = digits-dplaces; i >= 0; i--){
-        if(*ids!=0 && *ids!='-')
-            *idx--=*ids--;
-        else
-            *idx--='0';
-    }
-    
-    buff[digits + 2] = '\0';
+    out[digits + 1] = 0;
 }
+
+static void _shift_right_nstr(const char* c, unsigned int places) {
+	char* s, c1, c2;
+	while (places--) {
+		s = c;
+		c1 = *s;
+		*s++ = '0';
+		while (*s) {
+			c2 = *s;
+			*s++ = c1;
+			c1 = c2;
+		}
+	}
+	if ((c1 - 0x30) > 5) {
+		*(s - 1) += 1;
+	}else if ((c1 - 0x30) == 5) {
+		/* implement correct rounding. Increase digit if odd, let it be if even */
+		if ((*(s - 1) % 2)) *(s - 1) += 1;
+	}
+}
+
+static void _shift_left_nstr(const char* c, unsigned int places) {
+	char* s, *d;
+	while (places--) {
+		s = c + 1;
+		d = c;
+		while (*s) {
+			*d++ = *s++;
+		}
+		*d++ = '0';
+	}
+}
+
 
 void utils_dtostr(char* buff, int digits, double value)
 {
-    int decpt;
-    int sign;
-    char tmp[15];
-    char *out = e_cvt(value, buff, digits, &decpt, &sign);
-    //TODO: Replace by a in string copy to avoid allocating tmp.
-    memcpy( tmp, out, 15);
-    out = tmp;
-    int i = 0, j;
-    if (value < 0) {
-        buff[i++] = '-';
-        digits++;
-    }
-
-    if (decpt <= 0) {
-        buff[i++] = '0';
-    }
-    
-    if(decpt + 1 <= -1.0*digits){
-        decpt = -1.0*digits;
-    }
-
-    for (j = decpt + 1; j <= 0; j++) {
-        if(j == decpt + 1)buff[i++] = '.';
-        buff[i++] = '0';
-    }
-
-    j = 0;
-    for (i = i; i <= digits; i++) {
-        if (decpt-- == 0) buff[i++] = '.';
-        if (out[j] == '\0') {
-            buff[i] = '0';
-        } else {
-            buff[i] = out[j++];
-        }
-    }
-    /* round if last digit + 1 > 5 */
-    /* TODO: Test extreme case: round to 3, 0.04445*/
-    if (out[j] != '\0') {
-        char t[2] = {' ', '\0'};
-        t[0] = out[j];
-        int d1 = atoi(t);
-        if (d1 >= 5) {
-            t[0] = buff[i - 1];
-            d1 = atoi(t);
-            utoa(t, d1 + 1, 10);
-            buff[i - 1] = t[0];
-        } else if (d1 == 4) {
-            if (out[j + 1] != '\0') {
-                t[0] = out[j + 1];
-                d1 = atoi(t);
-                if (d1 >= 5) {
-                    t[0] = buff[i - 1];
-                    d1 = atoi(t);
-                    utoa(t, d1 + 1, 10);
-                    buff[i - 1] = t[0];
-                } else if (d1 == 4) {
-                    if (out[j + 2] != '\0') {
-                        t[0] = out[j + 2];
-                        d1 = atoi(t);
-                        if (d1 >= 5) {
-                            t[0] = buff[i - 1];
-                            d1 = atoi(t);
-                            utoa(t, d1 + 1, 10);
-                            buff[i - 1] = t[0];
-                        }
-                    }
-                }
-            }
-        }
-    }
-    buff[i] = '\0';
+	int decpt, sign;
+	digits++;
+	char *out = e_cvt(value, buff, digits, &decpt, &sign);
+	if (decpt <= 0) {
+		_shift_right_nstr(out, -1*decpt + 2);
+		out[1] = '.';
+	}
+	else {
+		out = &buff[decpt + 1];
+		_shift_right_nstr(out, 1);
+		buff[decpt + 1] = '.';
+	}
+	if (sign) {
+		buff[0] = '-';
+		buff[digits + 3] = 0;
+	}
+	else {
+		_shift_left_nstr(buff, 1);
+		buff[digits] = 0;
+	}
 }
+
 
 double utils_strtod(char* buffer)
 {
-    double val;
-    char* se = buffer;
-    while (*se != '\0')
-        se++;
-    val = strtod(buffer, &se);
-    return val;
+    char* se;
+    return strtod(buffer, &se);
 }
 
 char *dtostre (double val, char *sbeg, unsigned char prec, unsigned char flags){
