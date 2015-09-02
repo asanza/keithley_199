@@ -39,6 +39,7 @@ void vApplicationStackOverflowHook(TaskHandle_t pxTask, signed char *pcTaskName)
 
 void vApplicationMallocFailedHook()
 {
+    DIAG("");
     assert(0);
     while (1);
 }

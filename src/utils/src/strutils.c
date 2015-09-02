@@ -36,7 +36,13 @@ static void _shift_right_nstr(const char* c, unsigned int places);
 /* shift a number string n places to the left, push zeroes to the back. */
 static void _shift_left_nstr(const char* c, unsigned int places);
 
+static double _round(double x, unsigned int digits) {
+    double fac = pow(10, digits);
+    return rint(x*fac)/fac;
+}
+
 void utils_dtofixstr(char* buff, int digits, int dplaces, double value){
+    value = _round(value, dplaces);
     utils_dtostr(buff, digits, value);
     char* out = buff;
     int i=0; 
@@ -75,12 +81,13 @@ static void _shift_right_nstr(const char* c, unsigned int places) {
 			c1 = c2;
 		}
 	}
-	if ((c1 - 0x30) > 5) {
-		*(s - 1) += 1;
-	}else if ((c1 - 0x30) == 5) {
-		/* implement correct rounding. Increase digit if odd, let it be if even */
-		if ((*(s - 1) % 2)) *(s - 1) += 1;
-	}
+    // TODO: FIX this. Propagate rounding. 
+//	if ((c1 - 0x30) > 5) {
+//		*(s - 1) += 1;
+//	}else if ((c1 - 0x30) == 5) {
+//		/* TODO: implement correct rounding. Increase digit if odd, let it be if even */
+//		if ((*(s - 1) % 2)) *(s - 1) += 1;
+//	}
 }
 
 static void _shift_left_nstr(const char* c, unsigned int places) {
