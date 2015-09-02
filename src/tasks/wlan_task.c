@@ -22,19 +22,35 @@
  */
 
 #include <stdio.h>
+#include <FreeRTOS.h>
+#include <queue.h>
 #include "hal_uart.h"
+#include "task.h"
 
 static void on_data_received(hal_uart_port port, uint8_t data, hal_uart_error error);
+static void on_data_sent(hal_uart_port port);
+
+static QueueHandle_t qinput;
 
 void wlan_task(void* param){
     hal_uart_open(HAL_UART_PORT_5, HAL_UART_BAUD_9600, HAL_UART_PARITY_NONE,
         HAL_UART_1_STOP_BITS, on_data_received);
+    qinput = xQueueCreate(1, sizeof(char));
+    hal_uart_register_buffer_sent(HAL_UART_PORT_5, on_data_sent);
+    char t;
     while(1){
-        //printf("Wlan Active");
-        vTaskDelay(10);
+        hal_uart_send_buffer_async(HAL_UART_PORT_5, "AT\r\n", 4);
+        //xQueueReceive(qinput, &t, portMAX_DELAY);
+        //putchar(t);
+        vTaskDelay(500);
+        printf("Wlan Active\n");
     }
 }
 
 static void on_data_received(hal_uart_port port, uint8_t data, hal_uart_error error){
     putchar(data);
+}
+
+static void on_data_sent(hal_uart_port port){
+    int i = 0;
 }

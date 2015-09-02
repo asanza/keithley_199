@@ -310,7 +310,7 @@ hal_uart3_isr_wrapper();
 void __attribute__(( nomips16, interrupt(), vector(_UART_4_VECTOR)))
 hal_uart4_isr_wrapper();
 
-void __attribute__(( nomips16, interrupt(), vector(_UART_4_VECTOR)))
-hal_uart4_isr_wrapper();
+void __attribute__(( nomips16, interrupt(), vector(_UART_5_VECTOR)))
+hal_uart5_isr_wrapper();
 
 #endif

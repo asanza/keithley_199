@@ -56,9 +56,10 @@ extern "C" {
 #if defined HAL_UART_5
 #define CONFIGURE_UART5_PPS() do{ \
         PPSInput(4,U5RX,RPF13); \
-        PPSOutput(4,RPB14,U5TX); \
+        PPSOutput(3,RPF12,U5TX); \
+        PORTSetPinsDigitalOut(IOPORT_F, BIT_12); \
         PORTSetPinsDigitalIn(IOPORT_F,BIT_13);\
-        PORTSetPinsDigitalOut(IOPORT_B, BIT_14); }while(0)  
+        }while(0)  
 #endif
     
 
