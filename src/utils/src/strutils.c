@@ -31,9 +31,9 @@
 #include "strutils.h"
 #include "fcvt.h"
 
-static double round(double x)
-{
-    return(x < 0.0) ? -floor(-x + 0.5) : floor(x + 0.5);
+static double round_to_n(double x, unsigned int digits) {
+    double fac = pow(10, digits);
+    return rint(x*fac)/fac;
 }
 
 /* shift a number in string form n places to the right. Push zeroes to front. */
@@ -42,6 +42,7 @@ static void _shift_right_nstr(const char* c, unsigned int places);
 static void _shift_left_nstr(const char* c, unsigned int places);
 
 void utils_dtofixstr(char* buff, int digits, int dplaces, double value){
+    value = round_to_n(value, dplaces);
     utils_dtostr(buff, digits, value);
     char* out = buff;
     int i=0; 
@@ -63,7 +64,7 @@ void utils_dtofixstr(char* buff, int digits, int dplaces, double value){
     if(shift > 0){
         _shift_right_nstr(out, shift);
     }else if(shift < 0){
-        _shift_left_nstr(out, shift);
+        _shift_left_nstr(out, -1*shift);
     }
     out[digits + 1] = 0;
 }
@@ -71,7 +72,7 @@ void utils_dtofixstr(char* buff, int digits, int dplaces, double value){
 static void _shift_right_nstr(const char* c, unsigned int places) {
 	char* s, c1, c2;
 	while (places--) {
-		s = c;
+		s = (char*)c;
 		c1 = *s;
 		*s++ = '0';
 		while (*s) {
@@ -80,19 +81,15 @@ static void _shift_right_nstr(const char* c, unsigned int places) {
 			c1 = c2;
 		}
 	}
-	if ((c1 - 0x30) > 5) {
-		*(s - 1) += 1;
-	}else if ((c1 - 0x30) == 5) {
-		/* implement correct rounding. Increase digit if odd, let it be if even */
-		if ((*(s - 1) % 2)) *(s - 1) += 1;
-	}
 }
 
 static void _shift_left_nstr(const char* c, unsigned int places) {
 	char* s, *d;
+    if(places < 1)
+        places = 1;
 	while (places--) {
-		s = c + 1;
-		d = c;
+		s = (char*)(c + 1);
+		d = (char*) c;
 		while (*s) {
 			*d++ = *s++;
 		}

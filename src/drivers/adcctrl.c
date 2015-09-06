@@ -39,7 +39,7 @@ START_SEQUENCE(seq_3V)
 {
     0x01BFE292, 0x01BFE29A, /* preset */
     0x01BFE29D, 0x01BFE29C, 0x01BFE29A, /* signal */
-    0x11BFE292, /* preset */
+    //0x11BFE292, /* preset */
     0x11BFE295, 0x11BFE294, 0x41BFE292, /* signal zero */
     0x41BFE295, 0x41BFE294, 0x41BFE252, /* zero */
     0x41BFE255, 0x41BFE254, 0x41BFE252 /* ref */

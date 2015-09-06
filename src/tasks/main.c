@@ -21,7 +21,7 @@ int main()
 
 void vAssertCalled(const char* fileName, unsigned long lineNo)
 {
-    printf("FreeRTOS: %s, %ld\n", fileName, lineNo);
+    DIAG("FreeRTOS: %s, %ld\n", fileName, lineNo);
     while (1);
 }
 
@@ -39,6 +39,7 @@ void vApplicationStackOverflowHook(TaskHandle_t pxTask, signed char *pcTaskName)
 
 void vApplicationMallocFailedHook()
 {
+    DIAG("");
     assert(0);
     while (1);
 }
