@@ -29,7 +29,9 @@ implementation of the portSAVE_CONTEXT and portRESTORE_CONTEXT macros. */
     .extern hal_uart1_isr_handler
     .extern hal_uart2_isr_handler
     .extern hal_uart3_isr_handler
-    .extern hal_uart4_isr_handler    
+    .extern hal_uart4_isr_handler 
+    .extern hal_uart5_isr_handler
+    
     .extern OC3_handler
     .global OC3_wrapper
 
@@ -147,6 +149,30 @@ hal_uart4_isr_wrapper:
     from the interrupt. */
     portRESTORE_CONTEXT
     .end hal_uart4_isr_wrapper
+
+/******************************************************************************/
+
+    .set noreorder
+    .set noat
+    .ent hal_uart5_isr_wrapper
+/* Start of the handler implementation. */
+hal_uart5_isr_wrapper:
+    /* Save the context of the currently executing task. portSAVE_CONTEXT()
+    must be called before anything else is done. */
+    portSAVE_CONTEXT
+    /* Call the C portion of the interrupt handler. A NOP is always required
+    after a jal instruction. */
+    jal hal_uart5_isr_handler
+    nop
+    /* Restore the context of the next task to execute - which might be a
+    different task to that which was executing before this interrupt occurred
+    (that would be the case if the interrupt handler caused a task to leave the
+    Blocked state, and the unblocked task had a priority that was equal to or
+    above the priority of the originally executing task).
+    portRESTORE_CONTEXT must be called at the very end and handles returning
+    from the interrupt. */
+    portRESTORE_CONTEXT
+    .end hal_uart5_isr_wrapper
 
 
     .set noreorder

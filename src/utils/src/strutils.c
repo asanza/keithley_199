@@ -81,6 +81,7 @@ static void _shift_right_nstr(const char* c, unsigned int places) {
 			c1 = c2;
 		}
 	}
+//	}
 }
 
 static void _shift_left_nstr(const char* c, unsigned int places) {

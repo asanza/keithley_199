@@ -50,6 +50,7 @@ static struct txbuffer_struct* get_tx_buffer(hal_uart_port port){
 static void SetRxTxPins(UART_MODULE uart){
     switch(uart){
         case UART3: CONFIGURE_UART3_PPS();break;
+        case UART5: CONFIGURE_UART5_PPS(); break;
         default: assert(0);
     }
 }
@@ -279,6 +280,11 @@ void hal_uart4_isr_handler(){
     hal_uart_interrupt_handler(HAL_UART_PORT_4);
 }
 
+void hal_uart5_isr_handler(){
+    hal_uart_interrupt_handler(HAL_UART_PORT_5);
+}
+
+
 void hal_uart_register_data_received(hal_uart_port port,
         hal_uart_on_data_received_callback fn){
     assert(fn);
@@ -303,4 +309,8 @@ hal_uart3_isr_wrapper();
 
 void __attribute__(( nomips16, interrupt(), vector(_UART_4_VECTOR)))
 hal_uart4_isr_wrapper();
+
+void __attribute__(( nomips16, interrupt(), vector(_UART_5_VECTOR)))
+hal_uart5_isr_wrapper();
+
 #endif

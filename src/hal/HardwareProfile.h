@@ -34,14 +34,15 @@ extern "C" {
 //#define HAL_UART_2          UART2
 #define HAL_UART_3            UART3 /**< UART 3 enabled */
 //#define HAL_UART_4          UART4
+#define HAL_UART_5            UART5
 
 #if defined HAL_UART_1
 #error "define pps for uart 1"
 #endif
-#if defined HAL_UART_3
 #if defined HAL_UART_2
 #error "define pps for uart 2"
 #endif
+#if defined HAL_UART_3
 #define CONFIGURE_UART3_PPS() do{ \
         PPSInput(2,U3RX,RPB3); \
         PPSOutput(1,RPB5,U3TX); \
@@ -51,6 +52,16 @@ extern "C" {
 #if defined HAL_UART_4
 #error "define pps for uart 4"
 #endif
+    
+#if defined HAL_UART_5
+#define CONFIGURE_UART5_PPS() do{ \
+        PPSInput(4,U5RX,RPF13); \
+        PPSOutput(3,RPF12,U5TX); \
+        PORTSetPinsDigitalOut(IOPORT_F, BIT_12); \
+        PORTSetPinsDigitalIn(IOPORT_F,BIT_13);\
+        }while(0)  
+#endif
+    
 
 
 /* Configure hardware counter used for read adc value */

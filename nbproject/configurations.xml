@@ -167,6 +167,7 @@
         <itemPath>src/tasks/task_resistance_4w.c</itemPath>
         <itemPath>src/tasks/tskmgr.c</itemPath>
         <itemPath>src/tasks/task_scpi.c</itemPath>
+        <itemPath>src/tasks/wlan_task.c</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <logicalFolder name="fcvt-1.1" displayName="fcvt-1.1" projectFiles="true">
