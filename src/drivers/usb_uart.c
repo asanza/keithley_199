@@ -55,7 +55,7 @@ void _mon_putc(char c){
 static void on_data_received(hal_uart_port port, uint8_t data, hal_uart_error error){
     portBASE_TYPE xHigherPriorityTaskWoken;
     xQueueSendFromISR(usb_queue,&data, &xHigherPriorityTaskWoken);
-    //portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
+    portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 }
 
 int usb_uart_readline(char* buffer, int size){

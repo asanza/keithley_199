@@ -85,8 +85,6 @@ static void _shift_right_nstr(const char* c, unsigned int places) {
 
 static void _shift_left_nstr(const char* c, unsigned int places) {
 	char* s, *d;
-    if(places < 1)
-        places = 1;
 	while (places--) {
 		s = (char*)(c + 1);
 		d = (char*) c;

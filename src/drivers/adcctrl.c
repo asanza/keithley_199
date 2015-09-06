@@ -39,7 +39,7 @@ START_SEQUENCE(seq_3V)
 {
     0x01BFE292, 0x01BFE29A, /* preset */
     0x01BFE29D, 0x01BFE29C, 0x01BFE29A, /* signal */
-    //0x11BFE292, /* preset */
+    0x11BFE292, /* preset */
     0x11BFE295, 0x11BFE294, 0x41BFE292, /* signal zero */
     0x41BFE295, 0x41BFE294, 0x41BFE252, /* zero */
     0x41BFE255, 0x41BFE254, 0x41BFE252 /* ref */
@@ -163,18 +163,75 @@ START_SEQUENCE(seq_3AAC)
 }
 END_SEQUENCE(seq_3AAC)
 
-START_SEQUENCE(seq_30KOhm)
+START_SEQUENCE(seq_300Ohm)
 {
-    //TODO: Work on this sequence!
-    0x43BAE1D5, 0x43BAE1D4, 0x43BAE1D2,
-    0x43BAE1D5, 0x43BAE1D4, 0x43BAE1D2,
-    0x43BAE1D5, 0x43BAE1D4, 0x23BCE192,
+    0x43FAE1D5, 0x43FAE1D4, 0x43FAE1D2, // Signal???
+    0x43FAE1D5, 0x43FAE1D4, 0x23BCE192, 
     0x23BCE195, 0x23BCE194, 0x03BEE192,
     0x42BEE1D2,
     0x42BEE1D5, 0x42BEE1D4, 0x03BEE19A,
-    0x03BEE19D, 0x03BEE19C, 0x43BAE1D2,
+    0x03FEE19A,
+    0x03FEE19D, 0x03FEE19C, 0x43FAE1D2,
 }
-END_SEQUENCE(seq_30KOhm)
+END_SEQUENCE(seq_300Ohm)
+//
+//START_SEQUENCE(seq_3KOhm)
+//{
+//    0x43BAE1D5, 0x43BAE1D4, 0x43BAE1D2,
+//    0x43BAE1D5, 0x43BAE1D4, 0x23BCE192,
+//    0x23BCE195, 0x23BCE194, 0x03BEE192,
+//    0x42BEE1D2,
+//    0x42BEE1D5, 0x42BEE1D4, 0x03BEE19A,
+//    0x03BEE19D, 0x03BEE19C, 0x43BAE1D2,
+//}
+//END_SEQUENCE(seq_3KOhm)
+//
+//START_SEQUENCE(seq_30KOhm)
+//{
+//    //TODO: Work on this sequence!
+//    0x43BAE1D5, 0x43BAE1D4, 0x43BAE1D2,
+//    0x43BAE1D5, 0x43BAE1D4, 0x43BAE1D2,
+//    0x43BAE1D5, 0x43BAE1D4, 0x23BCE192,
+//    0x23BCE195, 0x23BCE194, 0x03BEE192,
+//    0x42BEE1D2,
+//    0x42BEE1D5, 0x42BEE1D4, 0x03BEE19A,
+//    0x03BEE19D, 0x03BEE19C, 0x43BAE1D2,
+//}
+//END_SEQUENCE(seq_30KOhm)
+//
+//START_SEQUENCE(seq_3MegOhm){
+//    0.003387  0xCB 0xB1 0xE1 0xD5,
+// 0.016401  0xCB 0xB1 0xE1 0xD4,
+// 0.000333  0xCB 0xB1 0xE1 0xD2,
+//
+// 0.003278  0xCB 0xB1 0xE1 0xD5,
+// 0.020328  0xCB 0xB1 0xE1 0xD4,
+// 0.000412  0xAB 0xB5 0xE1 0x92,
+//
+// 0.011265  0xAB 0xB5 0xE1 0x95,
+// 0.020245  0xAB 0xB5 0xE1 0x94,
+// 0.000355  0x8B 0xB5 0xE1 0x92,
+//
+// 0.000611  0x9B 0xB5 0xE1 0x92,
+//
+// 0.010804  0x9B 0xB5 0xE1 0x95,
+// 0.020271  0x9B 0xB5 0xE1 0x94,
+// 0.000412  0x8B 0xB5 0xE1 0x9A,
+//
+// 0.011329  0x8B 0xB5 0xE1 0x9D,
+// 0.020329  0x8B 0xB5 0xE1 0x9C,
+// 0.000412  0xCB 0xB1 0xE1 0xD2,
+//}END_SEQUENCE(seq_3MegOhm)
+//
+//
+//START_SEQUENCE(seq_30MegOhm){
+//    
+//}END_SEQUENCE(seq_30MegOhm)
+//
+//START_SEQUENCE(seq_300MegOhm){
+//    
+//}END_SEQUENCE(seq_300MegOhm)
+
 
 static adc_control_sequence* get_vdc_seq(adc_range range);
 static adc_control_sequence* get_vac_seq(adc_range range);
@@ -210,8 +267,8 @@ adc_control_sequence* adcctrl_get_sequence(adc_input input, adc_range range)
         case ADC_INPUT_VOLTAGE_AC: return get_vac_seq(range);
         case ADC_INPUT_CURRENT_DC: return get_cdc_seq(range);
         case ADC_INPUT_CURRENT_AC: return get_cac_seq(range);
-        case ADC_INPUT_RESISTANCE_4W: return get_res4w_seq(range);
         case ADC_INPUT_RESISTANCE_2W:
+        case ADC_INPUT_RESISTANCE_4W: return get_res4w_seq(range);
         case ADC_NUMBER_OF_INPUTS:
         default:
             assert(0);
@@ -222,7 +279,8 @@ adc_control_sequence* adcctrl_get_sequence(adc_input input, adc_range range)
 static adc_control_sequence* get_res4w_seq(adc_range range)
 {
     switch (range) {
-        case ADC_RANGE_300: return NULL;
+        case ADC_RANGE_300: seq_300Ohm.actual_value = 0;
+        return &seq_300Ohm;
         default: return NULL;
     }
     return NULL;

@@ -261,6 +261,7 @@ static void poll_key(void)
             apply_settings();
             break;
         case KEY_9:
+            stop_running_task();
             if (!shift_key) {
                 display_puts("LOAD 0-9?");
                 key = display_wait_for_key();

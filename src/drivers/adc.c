@@ -70,13 +70,19 @@ static adc_range range;
 static adc_input input;
 
 static double adc_do_measurement(unsigned char channel, adc_control_sequence* sequence);
+static double adc_do_resistance_measurement(unsigned char channel, adc_control_sequence* sequence);
 
 static double get_real_value(double value, adc_range range);
 
 double adc_read_value(adc_channel channel, int* flag){
     adc_control_sequence* seq = adcctrl_get_sequence(input, range);
     assert(seq);
-    double value = adc_do_measurement(channel, seq);
+    double value = 0;
+    if(input != ADC_INPUT_RESISTANCE_2W && input != ADC_INPUT_RESISTANCE_4W){
+        value = adc_do_measurement(channel, seq);
+    }else{
+        value = adc_do_resistance_measurement(channel, seq);
+    }
     if(input == ADC_INPUT_CURRENT_AC||input == ADC_INPUT_VOLTAGE_AC||
         input == ADC_INPUT_RESISTANCE_2W || input == ADC_INPUT_RESISTANCE_4W){
         if(value < 0){
@@ -182,3 +188,18 @@ static double adc_do_measurement(unsigned char channel, adc_control_sequence* se
     return VREF*val;
 }
 
+static double adc_do_resistance_measurement(unsigned char channel, 
+    adc_control_sequence* sequence){
+    assert(sequence);
+    adcctrl_reset(sequence);
+    int sense_lo, sense_hi, ref_lo, ref_hi;
+    sense_lo = do_sequence(channel, sequence);
+    sense_lo = do_sequence(channel, sequence);
+    ref_hi = do_sequence(channel, sequence);
+    ref_lo = do_sequence(channel, sequence);
+    sense_hi = do_sequence(channel, sequence);
+    double sense = sense_hi - sense_lo;
+    double ref = ref_hi - ref_lo;
+    double val = 2.0*sense/ref;
+    return val;
+}
