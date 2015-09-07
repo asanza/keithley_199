@@ -34,7 +34,7 @@
 #include <diag.h>
 
 typedef struct _settings_t{
-    adc_input               input               :4 ;
+    adc_input               input               :4 ; /* settings name */
     adc_channel             channel             :8 ; /* which channel is selected on the scanner */
     adc_integration_period  integration_period  :16; /* integration period used */
     adc_range               range               :4 ; /* selected range */
@@ -77,6 +77,7 @@ void settings_save(settings_location location){
     int addr = SETTINGS_START_ADDRESS + location*sizeof(settings);
     for(i = 0; i < ADC_NUMBER_OF_INPUTS; i++)
         eefs_object_save(addr + i,&settings[i], sizeof(settings_t));
+    eefs_object_save(addr + i, &actual_settings, sizeof(settings_t*));
     unlock();
 }
 
@@ -104,14 +105,19 @@ int settings_restore(settings_location location) {
         slock = xSemaphoreCreateMutex();
     }
     lock();
+    EEFS_ERROR err;
     int addr = SETTINGS_START_ADDRESS + location * sizeof (settings);
     for (i = 0; i < ADC_NUMBER_OF_INPUTS; i++) {
-        EEFS_ERROR err = eefs_object_restore(addr + i, &settings[i], sizeof (settings_t));
+        err = eefs_object_restore(addr + i, &settings[i], sizeof (settings_t));
         if (err != EEFS_OK) {
             settings_set_default();
             unlock();
             return 1;
         }
+    }
+    err = eefs_object_restore(addr + i, &actual_settings, sizeof(settings_t*));
+    if(err != EEFS_OK){
+        actual_settings = settings;
     }
     unlock();
     return 0;

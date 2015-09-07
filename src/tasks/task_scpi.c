@@ -55,7 +55,7 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param2, FALSE)) {
         // do something, if parameter not present
     }
-    char bf[15];
+
     
     /*SCPI_NumberToStr(context, scpi_special_numbers_def, &param1, bf, 15);
     printf( "\tP1=%s\r\n", bf);

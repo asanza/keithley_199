@@ -188,7 +188,6 @@ static double adc_do_measurement(unsigned char channel, adc_control_sequence* se
     return VREF*val;
 }
 
-static int SENSE;
 static double adc_do_resistance_measurement(unsigned char channel, 
     adc_control_sequence* sequence){
     assert(sequence);

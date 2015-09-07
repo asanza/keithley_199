@@ -30,6 +30,7 @@
 #include <dispkyb.h>
 #include <disfmt.h>
 #include <strutils.h>
+#include <math.h>
 #include "semphr.h"
 
 
