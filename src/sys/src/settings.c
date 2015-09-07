@@ -254,6 +254,14 @@ void calibration_save(double gain, double offset, double temperature){
 
 int calibration_restore(){
     lock();
+    if(actual_settings->input == ADC_INPUT_TEMP){
+        /* temperature does not need calibration. */
+        cal.gain = 1;
+        cal.offset = 0;
+        cal.temp = 25;
+        unlock();
+        return 1;
+    }
     int id = adcctrl_get_sequence_id(actual_settings->input, actual_settings->range);
     id = SETTINGS_START_ADDRESS + SETTINGS_LAST*ADC_NUMBER_OF_INPUTS + id;
     assert(id >= 0);

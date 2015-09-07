@@ -70,6 +70,8 @@ void hal_io_init(void){
     PORTSetBits(BRD_RED_LED);
     PORTSetPinsDigitalOut(DEBUG_PIN_0);
     PORTClearBits(DEBUG_PIN_0);
+    PORTSetPinsDigitalOut(BUZZER);
+    PORTClearBits(BUZZER);
     hal_io_displayport_init();
     hal_io_keyboard_init();
 }
