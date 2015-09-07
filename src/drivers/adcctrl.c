@@ -165,8 +165,8 @@ END_SEQUENCE(seq_3AAC)
 
 START_SEQUENCE(seq_300Ohm)
 {
-    0x43FAE1D5, 0x43FAE1D4, 0x43FAE1D2, // Signal???
-    0x43FAE1D5, 0x43FAE1D4, 0x23BCE192, 
+    0x43FAE1D5, 0x43FAE1D4, 0x43FAE1D2, // SenseLo
+    0x43FAE1D5, 0x43FAE1D4, 0x23BCE192, // Nothing
     0x23BCE195, 0x23BCE194, 0x03BEE192,
     0x42BEE1D2,
     0x42BEE1D5, 0x42BEE1D4, 0x03BEE19A,
@@ -174,17 +174,17 @@ START_SEQUENCE(seq_300Ohm)
     0x03FEE19D, 0x03FEE19C, 0x43FAE1D2,
 }
 END_SEQUENCE(seq_300Ohm)
-//
-//START_SEQUENCE(seq_3KOhm)
-//{
-//    0x43BAE1D5, 0x43BAE1D4, 0x43BAE1D2,
-//    0x43BAE1D5, 0x43BAE1D4, 0x23BCE192,
-//    0x23BCE195, 0x23BCE194, 0x03BEE192,
-//    0x42BEE1D2,
-//    0x42BEE1D5, 0x42BEE1D4, 0x03BEE19A,
-//    0x03BEE19D, 0x03BEE19C, 0x43BAE1D2,
-//}
-//END_SEQUENCE(seq_3KOhm)
+
+START_SEQUENCE(seq_3KOhm)
+{
+    0x43BAE1D5, 0x43BAE1D4, 0x43BAE1D2,
+    0x43BAE1D5, 0x43BAE1D4, 0x23BCE192,
+    0x23BCE195, 0x23BCE194, 0x03BEE192,
+    0x42BEE1D2,
+    0x42BEE1D5, 0x42BEE1D4, 0x03BEE19A,
+    0x03BEE19D, 0x03BEE19C, 0x43BAE1D2,
+}
+END_SEQUENCE(seq_3KOhm)
 //
 //START_SEQUENCE(seq_30KOhm)
 //{
@@ -281,6 +281,8 @@ static adc_control_sequence* get_res4w_seq(adc_range range)
     switch (range) {
         case ADC_RANGE_300: seq_300Ohm.actual_value = 0;
         return &seq_300Ohm;
+        case ADC_RANGE_3K: seq_3KOhm.actual_value = 0;
+        return &seq_3KOhm;
         default: return NULL;
     }
     return NULL;

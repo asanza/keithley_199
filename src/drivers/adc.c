@@ -188,18 +188,19 @@ static double adc_do_measurement(unsigned char channel, adc_control_sequence* se
     return VREF*val;
 }
 
+static int SENSE;
 static double adc_do_resistance_measurement(unsigned char channel, 
     adc_control_sequence* sequence){
     assert(sequence);
     adcctrl_reset(sequence);
     int sense_lo, sense_hi, ref_lo, ref_hi;
     sense_lo = do_sequence(channel, sequence);
-    sense_lo = do_sequence(channel, sequence);
+    do_sequence(channel, sequence);
     ref_hi = do_sequence(channel, sequence);
     ref_lo = do_sequence(channel, sequence);
     sense_hi = do_sequence(channel, sequence);
-    double sense = sense_hi - sense_lo;
-    double ref = ref_hi - ref_lo;
-    double val = 2.0*sense/ref;
+    int sense = (sense_hi - sense_lo);
+    double val = 2.0*(sense_hi - sense_lo)/(ref_hi - ref_lo);
+    SENSE = sense;
     return val;
 }

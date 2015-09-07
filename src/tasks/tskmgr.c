@@ -75,8 +75,8 @@ void taskmgr_start(void)
         WLAN_TASK_PRIORITY, NULL);
     xTaskCreate(task_multimeter, "MUL", TASK_STACK_SIZE, NULL, TASK_PRIORITY,
         &dmm_task);
-    xTaskCreate(wlan_task, "WLAN", SCPI_TASK_STACK_SIZE, NULL, SCPI_TASK_PRIORITY,
-        NULL);
+    //xTaskCreate(wlan_task, "WLAN", SCPI_TASK_STACK_SIZE, NULL, SCPI_TASK_PRIORITY,
+    //    NULL);
     vTaskSuspend(dmm_task);
 }
 
