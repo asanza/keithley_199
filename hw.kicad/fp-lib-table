@@ -1,6 +1,3 @@
 (fp_lib_table
-  (lib (name qfn)(type Legacy)(uri /home/diego/Kicad/Libraries/w_smd_qfn.mod)(options "")(descr "qfn packages"))
-  (lib (name soic)(type Legacy)(uri /home/diego/Kicad/Libraries/w_smd_dil.mod)(options "")(descr "soic packages"))
-  (lib (name to_smd)(type Legacy)(uri /home/diego/Kicad/Libraries/w_to.mod)(options "")(descr "to packages"))
-  (lib (name personal)(type Legacy)(uri /home/diego/Kicad/Libraries/hw01.mod)(options "")(descr PersLib))
+  (lib (name Tag-Connect)(type Legacy)(uri /home/diego/Electronics/Libraries/Tag-Connect.mod)(options "")(descr ""))
 )
