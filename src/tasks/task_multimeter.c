@@ -76,6 +76,7 @@ static void set_new_range(double value, system_flags_t flag)
         }
     }
     if(wset){
+        calibration_restore();
         system_set_configuration(settings_get_input(), settings_get_range(),
             settings_get_integration_period(), settings_get_channel(),
             calibration_gain(), calibration_offset(), settings_get_resolution());

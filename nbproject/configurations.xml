@@ -188,6 +188,7 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
+    <Elem>src</Elem>
     <Elem>src/hal</Elem>
     <Elem>src/FreeRTOS</Elem>
     <Elem>src/app</Elem>
