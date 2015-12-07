@@ -26,26 +26,23 @@
 
 #include "usb_uart.h"
 #include "system.h"
+#include "diag.h"
+#include "strutils.h"
 
 #define SCPI_INPUT_BUFFER_LENGTH 256
+#define SCPI_ERROR_QUEUE_SIZE 20
 static char scpi_input_buffer[SCPI_INPUT_BUFFER_LENGTH];
-
-static scpi_reg_val_t scpi_regs[SCPI_REG_COUNT];
+static int16_t scpi_error_queue_data[SCPI_ERROR_QUEUE_SIZE];
 
 size_t SCPI_Write(scpi_t * context, const char * data, size_t len) {
-    printf("%s", data);
-    /*if (context->user_context != NULL) {
-        int fd = *(int *)(context->user_context);
-        return write(fd, data, len);
-    }*/
-    return 0;
+    (void)context;
+    return fwrite(data, 1, len, stdout);
 }
 
 static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     scpi_number_t param1, param2;
 
     //printf("meas:volt:dc\r\n"); // debug command name   
-
     // read first parameter if present
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, FALSE)) {
         // do something, if parameter not present
@@ -63,9 +60,8 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     
     SCPI_NumberToStr(context, scpi_special_numbers_def, &param2, bf, 15);
     printf( "\tP2=%s\r\n", bf);*/
-    
-//    SCPI_ResultDouble(context, system_read_input());
-    
+    system_flags_t flags;
+    SCPI_ResultDouble(context, system_read_input(&flags));
     return SCPI_RES_OK;
 }
 
@@ -187,7 +183,7 @@ static scpi_result_t TEST_ChoiceQ(scpi_t * context) {
 static scpi_result_t TEST_Numbers(scpi_t * context) {
     int32_t numbers[2];
 
-    SCPI_CommandNumbers(context, numbers, 2);
+    SCPI_CommandNumbers(context, numbers, 2, 2);
 
     printf( "TEST numbers %d %d\r\n", numbers[0], numbers[1]);
 
@@ -304,14 +300,25 @@ scpi_t scpi_context = {
         .data = scpi_input_buffer,
     },
     .interface = &scpi_interface,
-    .registers = scpi_regs,
     .units = scpi_units_def,
     .idn = {"Advaced Microsystems Inc", "Keithley 199", NULL, REPOVERSION},
 };
 
+#define SCPI_IDN1 "MANUFACTURE"
+#define SCPI_IDN2 "INSTR2013"
+#define SCPI_IDN3 NULL
+#define SCPI_IDN4 "01-02"
+
 char buff[50];
 void scpi_task(void* param){
-    SCPI_Init(&scpi_context);
+    SCPI_Init(&scpi_context, 
+        scpi_commands, 
+        &scpi_interface, 
+        scpi_units_def,
+        SCPI_IDN1, SCPI_IDN2, SCPI_IDN3, SCPI_IDN4,
+        scpi_input_buffer, SCPI_INPUT_BUFFER_LENGTH,
+        scpi_error_queue_data, SCPI_ERROR_QUEUE_SIZE
+    );
     while(1){
         int rec = usb_uart_readline(buff, 50);
         SCPI_Input(&scpi_context, buff, rec);

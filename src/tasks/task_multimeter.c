@@ -51,11 +51,8 @@ void task_multimeter(void *params)
             settings_get_resolution(), value, flag);
         fmt_append_scale(buff, settings_get_input(), settings_get_range());
         display_puts(buff);
-        //double temp = system_read_temp();
-        //utils_dtostr(buff,8,value);
-        //printf("%s, ",buff);
-        //utils_dtostr(buff, 8, calibration_temp() - temp);
-        //printf("%s\n", buff);
+        /*TODO: give some space for other tasks to call system */
+        vTaskDelay(1);
     }
 }
 

@@ -1,4 +1,4 @@
-update=So 13 Sep 2015 19:29:29 CEST
+update=So 20 Sep 2015 12:18:17 CEST
 version=1
 last_client=kicad
 [cvpcb]
@@ -66,3 +66,4 @@ LibName29=contrib
 LibName30=valves
 LibName31=sigencomps
 LibName32=Tag-Connect
+LibName33=kicad-library/library/relays

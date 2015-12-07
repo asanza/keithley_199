@@ -34,12 +34,12 @@
 
 #define SYSTEM_TASK_STACK_SIZE      200
 #define WLAN_TASK_STACK_SIZE        200
-#define SCPI_TASK_STACK_SIZE        400
+#define SCPI_TASK_STACK_SIZE        600
 #define TASK_STACK_SIZE             400
-#define SYSTEM_TASK_PRIORITY        4
+#define SYSTEM_TASK_PRIORITY        2
 #define WLAN_TASK_PRIORITY          2
 #define SCPI_TASK_PRIORITY          2
-#define TASK_PRIORITY               3
+#define TASK_PRIORITY               2
 #define MESSAGE_DELAY               500
 
 typedef enum {
@@ -71,7 +71,7 @@ void taskmgr_start(void)
 {
     xTaskCreate(system_task, "SYS", SYSTEM_TASK_STACK_SIZE, NULL,
         SYSTEM_TASK_PRIORITY, NULL);
-    xTaskCreate(scpi_task, "SCPI", WLAN_TASK_STACK_SIZE, NULL,
+    xTaskCreate(scpi_task, "SCPI", SCPI_TASK_STACK_SIZE, NULL,
         WLAN_TASK_PRIORITY, NULL);
     xTaskCreate(task_multimeter, "MUL", TASK_STACK_SIZE, NULL, TASK_PRIORITY,
         &dmm_task);
@@ -120,9 +120,7 @@ static void start_task(sys_task_t task)
 
 static void stop_running_task()
 {
-    system_get_lock();
-    vTaskSuspend(dmm_task);
-    system_release_lock();
+    //vTaskSuspend(dmm_task);
 }
 
 static void sys_init(void)

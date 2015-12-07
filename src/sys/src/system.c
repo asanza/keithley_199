@@ -57,16 +57,15 @@ int system_set_configuration(adc_input input, adc_range range,
 {
     xSemaphoreTake(syslock, portMAX_DELAY);
     /* try to get syslock. Syslock shall be obtained before calling this function. */
-    if (xSemaphoreTake(syslock, 0) == pdTRUE) {
-        /* you MUST call system_get_lock before calling this function. */
-        assert(0);
-    }
     if(input == ADC_INPUT_TEMP){
         is_temp_mode = true;
     }else{
         is_temp_mode = false;
         adc_error err = adc_init(period, input, range);
-        if (err != ADC_ERROR_NONE) return -1;
+        if (err != ADC_ERROR_NONE){
+            xSemaphoreGive(syslock);
+            return -1;
+        }
     }
     channel = _channel;
     gain = _gain;
@@ -111,11 +110,14 @@ double system_get_max(adc_range range){
 
 double system_read_input(system_flags_t* flag)
 {
+    if(xSemaphoreTake(syslock, 1000) == pdFALSE){
+        DIAG("Cannot obtain sysmutex");
+        return 0;
+    }
     /* get lock before doing a measurement. It guarantees that no settings changes
      * are done while using the adc. */
     double value, temperature;
     *flag = 0;
-    xSemaphoreTake(syslock, portMAX_DELAY);
     if(is_temp_mode){
         temperature = tmp245_read_temp_double();
         value = temperature;
@@ -144,14 +146,4 @@ void system_init(void)
     tmp245_init();
     /* initialize system lock */
     syslock = xSemaphoreCreateMutex();
-}
-
-void system_get_lock()
-{
-    xSemaphoreTake(syslock, portMAX_DELAY);
-}
-
-void system_release_lock(void)
-{
-    xSemaphoreGive(syslock);
 }

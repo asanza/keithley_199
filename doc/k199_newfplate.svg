@@ -98,7 +98,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="1.9352381"
-     inkscape:cx="523.40102"
+     inkscape:cx="524.43448"
      inkscape:cy="357.86312"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
@@ -633,59 +633,59 @@
          y="771.64319">Amps</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       x="539.28571"
-       y="771.56427"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="539.80243"
+       y="733.32605"
        id="text4314"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4316"
-         x="539.28571"
-         y="771.56427">Store</tspan></text>
+         x="539.80243"
+         y="733.32605">Store</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       x="537.10486"
-       y="733.23602"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="537.62158"
+       y="770.95746"
        id="text4318"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4320"
-         x="537.10486"
-         y="733.23602">Recall</tspan></text>
+         x="537.62158"
+         y="770.95746">Recall</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       x="354.52136"
-       y="706.01764"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="355.03809"
+       y="671.91333"
        id="text4322"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4324"
-         x="354.52136"
-         y="706.01764">Filter</tspan></text>
+         x="355.03809"
+         y="671.91333">Filter</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       x="420.87387"
-       y="672.38397"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="421.90735"
+       y="707.52173"
        id="text4326"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4328"
-         x="420.87387"
-         y="672.38397">dB</tspan></text>
+         x="421.90735"
+         y="707.52173">dB</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
        x="417.84192"
-       y="706.13763"
+       y="672.03333"
        id="text4330"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4332"
          x="417.84192"
-         y="706.13763">Zero</tspan></text>
+         y="672.03333">Zero</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
@@ -699,26 +699,26 @@
          y="677.36218">Power</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       x="478.21429"
-       y="707.18079"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="477.69757"
+       y="672.04297"
        id="text4346"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4348"
-         x="478.21429"
-         y="707.18079">Auto</tspan></text>
+         x="477.69757"
+         y="672.04297">Auto</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       x="290.50507"
-       y="707.03186"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="291.53854"
+       y="671.37732"
        id="text4350"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4352"
-         x="290.50507"
-         y="707.03186">Math</tspan></text>
+         x="291.53854"
+         y="671.37732">Math</tspan></text>
     <path
        style="fill:none;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 604.64286,671.29074 8.42349,-14.11613 8.65808,14.09446 z"
@@ -745,26 +745,26 @@
        sodipodi:nodetypes="ccc" />
     <text
        xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       x="285.12155"
-       y="671.51007"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="285.63828"
+       y="707.16461"
        id="text4458"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4460"
-         x="285.12155"
-         y="671.51007">Settings</tspan></text>
+         x="285.63828"
+         y="707.16461">Settings</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;display:inline;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       x="346.26413"
-       y="671.85468"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none"
+       x="347.29758"
+       y="708.02594"
        id="text4458-1"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4460-6"
-         x="346.26413"
-         y="671.85468">Settings</tspan></text>
+         x="347.29758"
+         y="708.02594">Settings</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
@@ -855,15 +855,15 @@
          y="799.50507">3A Max</tspan></text>
     <text
        xml:space="preserve"
-       style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"
-       x="475.83591"
-       y="673.06036"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="474.28571"
+       y="708.19812"
        id="text3185"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3187"
-         x="475.83591"
-         y="673.06036">Resoln</tspan></text>
+         x="474.28571"
+         y="708.19812">Resoln</tspan></text>
     <rect
        style="fill:none;stroke:#000000;stroke-width:1;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        id="rect3189"
@@ -1346,25 +1346,25 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none"
-       x="602.08691"
+       x="604.15387"
        y="707.71466"
        id="text3197-6"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3199-2"
-         x="602.08691"
+         x="604.15387"
          y="707.71466">Esc</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;line-height:125%;font-family:'TeX Gyre Adventor';-inkscape-font-specification:'TeX Gyre Adventor';letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none"
-       x="603.61707"
-       y="735.16644"
+       x="601.55011"
+       y="734.64972"
        id="text3192-6"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan3194-9"
-         x="603.61707"
-         y="735.16644">Enter</tspan></text>
+         x="601.55011"
+         y="734.64972">Enter</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:10px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:TeX Gyre Adventor;-inkscape-font-specification:TeX Gyre Adventor"

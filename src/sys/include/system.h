@@ -50,11 +50,6 @@ extern "C" {
      * configuration. */
     double system_read_input(system_flags_t* flag);
     
-    /** get the system lock before changing configuration. */
-    void system_get_lock();
-    /** dont forget to release the lock after you are done. */
-    void system_release_lock();
-    
     double system_read_temp(void);
     
     double system_get_max(adc_range range);
