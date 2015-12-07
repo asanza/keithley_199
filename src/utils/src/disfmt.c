@@ -55,7 +55,7 @@ void fmt_format_string(char* buff, int buffsize, adc_range scale, adc_resolution
         case ADC_RANGE_3K: value *= 1e-3;
         case ADC_RANGE_3:  value *= 1e+0;
         {
-            if (flag & SYSTEM_OVERFLOW || flag & SYSTEM_UNDERFLOW) {
+            if (flag & SYS_FLAG_OVERFLOW || flag & SYS_FLAG_UNDERFLOW) {
                 sprintf(buff, " O.VERFL");
             } else {
                 utils_dtofixstr(buff, ndigits, ndigits - 1, value);
@@ -67,7 +67,7 @@ void fmt_format_string(char* buff, int buffsize, adc_range scale, adc_resolution
         case ADC_RANGE_30m: value *= 1e+3;
         case ADC_RANGE_30:  value *= 1e+0;
         {
-            if (flag & SYSTEM_OVERFLOW || flag & SYSTEM_UNDERFLOW) {
+            if (flag & SYS_FLAG_OVERFLOW || flag & SYS_FLAG_UNDERFLOW) {
                 sprintf(buff, " OV.ERFL");
             } else {
                 utils_dtofixstr(buff, ndigits, ndigits - 2, value);
@@ -79,7 +79,7 @@ void fmt_format_string(char* buff, int buffsize, adc_range scale, adc_resolution
         case ADC_RANGE_300m: value *= 1e+3;
         case ADC_RANGE_300:  value *= 1e+0;
         {
-            if (flag & SYSTEM_OVERFLOW || flag & SYSTEM_UNDERFLOW) {
+            if (flag & SYS_FLAG_OVERFLOW || flag & SYS_FLAG_UNDERFLOW) {
                 sprintf(buff, " OVE.RFL");
             } else {
                 utils_dtofixstr(buff, ndigits, ndigits - 3, value);

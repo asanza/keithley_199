@@ -55,7 +55,6 @@
       <logicalFolder name="f1" displayName="libscpi" projectFiles="true">
         <itemPath>src/scpi-parser/libscpi/inc/scpi/config.h</itemPath>
         <itemPath>src/scpi-parser/libscpi/inc/scpi/constants.h</itemPath>
-        <itemPath>src/scpi-parser/libscpi/inc/scpi/debug.h</itemPath>
         <itemPath>src/scpi-parser/libscpi/inc/scpi/error.h</itemPath>
         <itemPath>src/scpi-parser/libscpi/inc/scpi/ieee488.h</itemPath>
         <itemPath>src/scpi-parser/libscpi/inc/scpi/minimal.h</itemPath>
@@ -256,7 +255,7 @@
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
         <property key="preprocessor-macros"
-                  value="NDEBUG;REPOVERSION=\&apos;&quot;$(GIT_VERSION)&apos;\&quot;;REPOBRANCH=\&apos;&quot;$(GIT_BRANCH)&apos;\&quot;"/>
+                  value="NDEBUG;REPOVERSION=\&apos;&quot;$(GIT_VERSION)&apos;\&quot;;REPOBRANCH=\&apos;&quot;$(GIT_BRANCH)&apos;\&quot;;HAVE_DTOSTRE"/>
         <property key="strict-ansi" value="false"/>
         <property key="support-ansi" value="false"/>
         <property key="use-cci" value="false"/>

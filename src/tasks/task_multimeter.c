@@ -60,7 +60,7 @@ static void set_new_range(double value, system_flags_t flag)
 {
     int wset = 0;
     double maxl = system_get_max(settings_get_range());
-    if(fabs(value) >= maxl  || (flag&SYSTEM_OVERFLOW) ){
+    if(fabs(value) >= maxl  || (flag&SYS_FLAG_OVERFLOW) ){
         settings_range_up();
         wset++;
     }else{

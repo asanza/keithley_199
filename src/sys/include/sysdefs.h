@@ -30,9 +30,10 @@ extern "C" {
 #endif
 
     typedef enum{
-        SYSTEM_OVERFLOW = ADC_OVERFLOW,
-                SYSTEM_UNDERFLOW = ADC_UNDERFLOW,
-                SYSTEM_FILTER_OUT_WINDOW = 0x04
+        SYS_FLAG_OK = 0x00,
+        SYS_FLAG_OVERFLOW = ADC_OVERFLOW,
+                SYS_FLAG_UNDERFLOW = ADC_UNDERFLOW,
+                SYS_FLAG_FILTER_OUT_WINDOW = 0x04
     }system_flags_t;
 
 

@@ -21,13 +21,12 @@
  * Created on August 29, 2015, 7:20 PM
  */
 
+#include <strutils.h>
 #include <scpi/scpi.h>
 #include <stdio.h>
-
 #include "usb_uart.h"
 #include "system.h"
 #include "diag.h"
-#include "strutils.h"
 
 #define SCPI_INPUT_BUFFER_LENGTH 256
 #define SCPI_ERROR_QUEUE_SIZE 20
@@ -41,9 +40,6 @@ size_t SCPI_Write(scpi_t * context, const char * data, size_t len) {
 
 static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     scpi_number_t param1, param2;
-
-    //printf("meas:volt:dc\r\n"); // debug command name   
-    // read first parameter if present
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, FALSE)) {
         // do something, if parameter not present
     }
@@ -53,43 +49,29 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
         // do something, if parameter not present
     }
 
-    
-    /*SCPI_NumberToStr(context, scpi_special_numbers_def, &param1, bf, 15);
-    printf( "\tP1=%s\r\n", bf);
-
-    
-    SCPI_NumberToStr(context, scpi_special_numbers_def, &param2, bf, 15);
-    printf( "\tP2=%s\r\n", bf);*/
     system_flags_t flags;
-    SCPI_ResultDouble(context, system_read_input(&flags));
+    double value = system_read_input(&flags);
+    if(flags & SYS_FLAG_OVERFLOW){
+        value = 9.999999999e99;
+    }else if(flags & SYS_FLAG_UNDERFLOW){
+        value = -9.999999999e99;
+    }
+    SCPI_ResultDouble(context, value);
     return SCPI_RES_OK;
 }
 
 static scpi_result_t DMM_MeasureTemperature(scpi_t* context){
     scpi_number_t param1, param2;
     char bf[15];
-    //printf("meas:volt:temp\r\n"); // debug command name   
-
     // read first parameter if present
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, FALSE)) {
         // do something, if parameter not present
     }
-
     // read second paraeter if present
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param2, FALSE)) {
         // do something, if parameter not present
     }
-
-    
-    SCPI_NumberToStr(context, scpi_special_numbers_def, &param1, bf, 15);
-    //printf( "\tP1=%s\r\n", bf);
-
-    
-    SCPI_NumberToStr(context, scpi_special_numbers_def, &param2, bf, 15);
-    //printf( "\tP2=%s\r\n", bf);
-
-    SCPI_ResultDouble(context, system_read_temp());
-    
+    SCPI_ResultDouble(context, system_read_temp());    
     return SCPI_RES_OK;    
 }
 
@@ -248,24 +230,15 @@ static const scpi_command_t scpi_commands[] = {
     {.pattern = "SYSTem:ERRor[:NEXT]?", .callback = SCPI_SystemErrorNextQ,},
     {.pattern = "SYSTem:ERRor:COUNt?", .callback = SCPI_SystemErrorCountQ,},
     {.pattern = "SYSTem:VERSion?", .callback = SCPI_SystemVersionQ,},
-
-    //{.pattern = "STATus:OPERation?", .callback = scpi_stub_callback,},
-    //{.pattern = "STATus:OPERation:EVENt?", .callback = scpi_stub_callback,},
-    //{.pattern = "STATus:OPERation:CONDition?", .callback = scpi_stub_callback,},
-    //{.pattern = "STATus:OPERation:ENABle", .callback = scpi_stub_callback,},
-    //{.pattern = "STATus:OPERation:ENABle?", .callback = scpi_stub_callback,},
-
     {.pattern = "STATus:QUEStionable[:EVENt]?", .callback = SCPI_StatusQuestionableEventQ,},
-    //{.pattern = "STATus:QUEStionable:CONDition?", .callback = scpi_stub_callback,},
     {.pattern = "STATus:QUEStionable:ENABle", .callback = SCPI_StatusQuestionableEnable,},
     {.pattern = "STATus:QUEStionable:ENABle?", .callback = SCPI_StatusQuestionableEnableQ,},
-
     {.pattern = "STATus:PRESet", .callback = SCPI_StatusPreset,},
 
     /* DMM */
     {.pattern = "MEASure:VOLTage:DC?", .callback = DMM_MeasureVoltageDcQ,},
-    {.pattern = "CONFigure:VOLTage:DC", .callback = DMM_ConfigureVoltageDc,},
     {.pattern = "MEASure:VOLTage:DC:RATio?", .callback = SCPI_StubQ,},
+    {.pattern = "CONFigure:VOLTage:DC", .callback = DMM_ConfigureVoltageDc,},
     {.pattern = "MEASure:VOLTage:AC?", .callback = DMM_MeasureVoltageAcQ,},
     {.pattern = "MEASure:CURRent:DC?", .callback = SCPI_StubQ,},
     {.pattern = "MEASure:CURRent:AC?", .callback = SCPI_StubQ,},
@@ -273,9 +246,6 @@ static const scpi_command_t scpi_commands[] = {
     {.pattern = "MEASure:FRESistance?", .callback = SCPI_StubQ,},
     {.pattern = "MEASure:TEMPerature?", .callback = DMM_MeasureTemperature,},
     {.pattern = "MEASure:PERiod?", .callback = SCPI_StubQ,},
-
-    //{.pattern = "SYSTem:COMMunication:TCPIP:CONTROL?", .callback = SCPI_SystemCommTcpipControlQ,},
-
     {.pattern = "TEST:BOOL", .callback = TEST_Bool,},
     {.pattern = "TEST:CHOice?", .callback = TEST_ChoiceQ,},
     {.pattern = "TEST#:NUMbers#", .callback = TEST_Numbers,},
@@ -301,13 +271,12 @@ scpi_t scpi_context = {
     },
     .interface = &scpi_interface,
     .units = scpi_units_def,
-    .idn = {"Advaced Microsystems Inc", "Keithley 199", NULL, REPOVERSION},
 };
 
-#define SCPI_IDN1 "MANUFACTURE"
-#define SCPI_IDN2 "INSTR2013"
+#define SCPI_IDN1 "Advanced Microsystems Inc"
+#define SCPI_IDN2 "KEITHLEY 199"
 #define SCPI_IDN3 NULL
-#define SCPI_IDN4 "01-02"
+#define SCPI_IDN4 REPOVERSION
 
 char buff[50];
 void scpi_task(void* param){

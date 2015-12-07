@@ -128,7 +128,7 @@ double system_read_input(system_flags_t* flag)
                 acc_value = acc_value + (value - acc_value)/RESLN_6_5_FILTER_SIZE;
                 value = acc_value;
             }else{
-                *flag |= SYSTEM_FILTER_OUT_WINDOW;
+                *flag |= SYS_FLAG_FILTER_OUT_WINDOW;
                 acc_value = value;
             }
         }
