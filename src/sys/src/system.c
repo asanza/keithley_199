@@ -147,3 +147,11 @@ void system_init(void)
     /* initialize system lock */
     syslock = xSemaphoreCreateMutex();
 }
+
+void system_get_lock(void){
+    xSemaphoreTake(syslock, portMAX_DELAY);
+}
+
+void system_release_lock(void){
+    xSemaphoreGive(syslock);
+}

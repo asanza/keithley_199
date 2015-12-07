@@ -37,7 +37,6 @@
 #define SCPI_TASK_STACK_SIZE        600
 #define TASK_STACK_SIZE             400
 #define SYSTEM_TASK_PRIORITY        2
-#define WLAN_TASK_PRIORITY          2
 #define SCPI_TASK_PRIORITY          2
 #define TASK_PRIORITY               2
 #define MESSAGE_DELAY               500
@@ -72,11 +71,9 @@ void taskmgr_start(void)
     xTaskCreate(system_task, "SYS", SYSTEM_TASK_STACK_SIZE, NULL,
         SYSTEM_TASK_PRIORITY, NULL);
     xTaskCreate(scpi_task, "SCPI", SCPI_TASK_STACK_SIZE, NULL,
-        WLAN_TASK_PRIORITY, NULL);
+        SCPI_TASK_PRIORITY, NULL);
     xTaskCreate(task_multimeter, "MUL", TASK_STACK_SIZE, NULL, TASK_PRIORITY,
         &dmm_task);
-    //xTaskCreate(wlan_task, "WLAN", SCPI_TASK_STACK_SIZE, NULL, SCPI_TASK_PRIORITY,
-    //    NULL);
     vTaskSuspend(dmm_task);
 }
 
@@ -120,7 +117,9 @@ static void start_task(sys_task_t task)
 
 static void stop_running_task()
 {
-    //vTaskSuspend(dmm_task);
+    system_get_lock();
+    vTaskSuspend(dmm_task);
+    system_release_lock();
 }
 
 static void sys_init(void)
@@ -138,7 +137,6 @@ static void sys_init(void)
 
 static void load_settings()
 {
-    //display_puts("LOADING");
     if (settings_restore(SETTINGS_0)) {
         display_clear();
         DIAG("Bad Settings on Store. Loading defaults");
