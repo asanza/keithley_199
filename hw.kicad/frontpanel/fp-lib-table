@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name dot_matrix)(type KiCad)(uri /home/diego/Electronics/Libraries/footprints/dot_matrix.pretty)(options "")(descr ""))
+)
