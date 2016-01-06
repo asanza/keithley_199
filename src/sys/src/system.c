@@ -42,7 +42,6 @@ static double gain;
 static double offset;
 
 static double acc_value;
-static int filter_size;
 
 static bool is_temp_mode;
 

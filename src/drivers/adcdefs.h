@@ -58,7 +58,7 @@ typedef enum {
         ADC_INPUT_CURRENT_AC,
         ADC_INPUT_RESISTANCE_2W,
         ADC_INPUT_RESISTANCE_4W,
-                ADC_INPUT_TEMP,
+        ADC_INPUT_TEMP,
         ADC_NUMBER_OF_INPUTS /**< number of valid inputs */
 }adc_input;
 

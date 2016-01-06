@@ -55,8 +55,8 @@
 #define SYNC_BIT                (1<<1)
 #define INT_BIT                 (1<<0)
 
-#define ADC_MAX_VALUE 3.03
-#define ADC_MIN_VALUE -3.03
+#define ADC_MAX_VALUE           3.03
+#define ADC_MIN_VALUE          -3.03
 
 
 #define IS_START_INTEGRATION(x)  ((x&(N_FINAL_SLOPE_BIT|INT_BIT)) == (N_FINAL_SLOPE_BIT|INT_BIT))
@@ -209,9 +209,11 @@ static double adc_do_resistance_measurement(unsigned char channel,
             break;
         case ADC_RANGE_300K:
         case ADC_RANGE_300M:
+            val = val*.02;
             break;
         case ADC_RANGE_3M:
         case ADC_RANGE_30M:
+            val = val*.002;
             break;
         default:
             assert(0);

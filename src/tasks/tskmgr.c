@@ -137,6 +137,7 @@ static void sys_init(void)
 
 static void load_settings()
 {
+    settings_init();
     if (settings_restore(SETTINGS_0)) {
         display_clear();
         DIAG("Bad Settings on Store. Loading defaults");

@@ -50,6 +50,8 @@ typedef enum{
 typedef double(*conv_func)(double val, void* param, size_t param_size);
 typedef void(*out_fmt)(double val, char* buff, size_t size);
 
+void settings_init(void);
+
 /* make sure that input, range combination are valid. */
 void settings_set_range(adc_range range);
 adc_range settings_get_range();

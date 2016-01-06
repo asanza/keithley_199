@@ -10,8 +10,13 @@ from serial import SerialException
 
 test = serial.Serial(port='/dev/ttyUSB0', baudrate=115200, timeout=0.5)
 ref  = serial.Serial(port='/dev/ttyUSB1', baudrate=9600, timeout=0.5)
-ref.write('T0B0P0R2Q0G1X\n')
-
+ref.write('T0B0P0R3Q0G1X\n')
+f = open('measurements.txt', 'ab+')
+f.write('#' + str(datetime.datetime.today()) + '\n');
+f.flush()
+os.fsync(f.fileno())
+f.close();
+i = 0
 while True:
 	f = open('measurements.txt', 'ab+')
 	try:
@@ -43,7 +48,8 @@ while True:
 		time.sleep(1)
 		continue
 	error = tval - rval;
-	outstr = str(datetime.datetime.today()) + '; ' + testvar.rstrip() + "; " + refvar.rstrip() + "; " + str(error)
+	i = i + 1
+	outstr = str(i) + '; ' + testvar.rstrip() + "; " + refvar.rstrip() + "; " + str(error)
 	print outstr
 	f.write(outstr + '\n');
 	f.flush()

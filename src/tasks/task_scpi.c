@@ -30,6 +30,7 @@
 
 #define SCPI_INPUT_BUFFER_LENGTH 256
 #define SCPI_ERROR_QUEUE_SIZE 20
+
 static char scpi_input_buffer[SCPI_INPUT_BUFFER_LENGTH];
 static int16_t scpi_error_queue_data[SCPI_ERROR_QUEUE_SIZE];
 
@@ -43,12 +44,10 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, FALSE)) {
         // do something, if parameter not present
     }
-
     // read second paraeter if present
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param2, FALSE)) {
         // do something, if parameter not present
     }
-
     system_flags_t flags;
     double value = system_read_input(&flags);
     if(flags & SYS_FLAG_OVERFLOW){
@@ -62,7 +61,6 @@ static scpi_result_t DMM_MeasureVoltageDcQ(scpi_t * context) {
 
 static scpi_result_t DMM_MeasureTemperature(scpi_t* context){
     scpi_number_t param1, param2;
-    char bf[15];
     // read first parameter if present
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, FALSE)) {
         // do something, if parameter not present
@@ -78,8 +76,6 @@ static scpi_result_t DMM_MeasureTemperature(scpi_t* context){
 static scpi_result_t DMM_MeasureVoltageAcQ(scpi_t * context) {
     scpi_number_t param1, param2;
     char bf[15];
-    printf("meas:volt:ac\r\n"); // debug command name   
-
     // read first parameter if present
     if (!SCPI_ParamNumber(context, scpi_special_numbers_def, &param1, FALSE)) {
         // do something, if parameter not present
@@ -204,9 +200,7 @@ static scpi_result_t TEST_ArbQ(scpi_t * context) {
  * Return SCPI_RES_OK
  */
 static scpi_result_t My_CoreTstQ(scpi_t * context) {
-
     SCPI_ResultInt(context, 0);
-
     return SCPI_RES_OK;
 }
 
@@ -251,7 +245,6 @@ static const scpi_command_t scpi_commands[] = {
     {.pattern = "TEST#:NUMbers#", .callback = TEST_Numbers,},
     {.pattern = "TEST:TEXT", .callback = TEST_Text,},
     {.pattern = "TEST:ARBitrary?", .callback = TEST_ArbQ,},
-
     SCPI_CMD_LIST_END
 };
 

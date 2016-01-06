@@ -71,6 +71,12 @@ static settings_t* actual_settings = settings;
 
 static void settings_set_default();
 
+void settings_init(void){
+    if(!slock){
+        slock = xSemaphoreCreateMutex();
+    }    
+}
+
 void settings_save(settings_location location){
     lock();
     int i;
@@ -101,9 +107,6 @@ void settings_set_resolution(adc_resolution res){
 
 int settings_restore(settings_location location) {
     int i;
-    if(!slock){
-        slock = xSemaphoreCreateMutex();
-    }
     lock();
     EEFS_ERROR err;
     int addr = SETTINGS_START_ADDRESS + location * sizeof (settings);
