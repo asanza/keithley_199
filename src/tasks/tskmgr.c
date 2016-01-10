@@ -32,13 +32,13 @@
 #include <queue.h>
 #include <ctype.h>
 
-#define SYSTEM_TASK_STACK_SIZE      1000
+#define SYSTEM_TASK_STACK_SIZE      300
 #define WLAN_TASK_STACK_SIZE        200
 #define SCPI_TASK_STACK_SIZE        600
 #define TASK_STACK_SIZE             400
 #define SYSTEM_TASK_PRIORITY        2
-#define SCPI_TASK_PRIORITY          2
-#define TASK_PRIORITY               2
+#define SCPI_TASK_PRIORITY          3
+#define TASK_PRIORITY               3
 #define MESSAGE_DELAY               500
 
 typedef enum {
@@ -78,9 +78,10 @@ static void system_task(void* pvParameters)
     // Reload Sysstate from eeprom.
     load_settings();
     while (1) {
+        vTaskDelay(10);
         if (running_task) {
-            vTaskDelay(10);
-            continue;
+            if(running_task->has_keys)
+                continue;
         }
         poll_key();
     }

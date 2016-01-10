@@ -53,7 +53,8 @@ task_iface_t calibration_task = {
     .task = task_calibration,
     .pause = pause,
     .resume = resume,
-    .destroy = destroy
+    .destroy = destroy,
+    .has_keys = true
 };
 
 static void pause(void){

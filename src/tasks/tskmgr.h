@@ -26,6 +26,7 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
+#include <stdbool.h>
     
     typedef void(*task_loop)(void* param);
     typedef void(*task_fn)(void);
@@ -36,6 +37,7 @@ extern "C" {
         task_fn destroy;
         task_fn pause;
         task_fn resume;
+        bool has_keys; 
     }task_iface_t;
     
     void taskmgr_start(void);
