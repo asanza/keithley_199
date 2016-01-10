@@ -248,7 +248,7 @@ void calibration_save(double gain, double offset, double temperature){
     int id = adcctrl_get_sequence_id(actual_settings->input, actual_settings->range);
     id = SETTINGS_START_ADDRESS + SETTINGS_LAST*ADC_NUMBER_OF_INPUTS + id;
     assert(id >= 0);
-    assert(id > 255); //max number of objects
+    assert(id < 255); //max number of objects
     cal.gain = gain;
     cal.offset = offset;
     cal.temp = temperature;
