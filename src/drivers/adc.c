@@ -105,6 +105,9 @@ static double get_real_value(double value, adc_range range){
          case ADC_RANGE_3K:  value*=1e+3; break;
         case ADC_RANGE_30K:  value*=1e+4; break;
         case ADC_RANGE_300K: value*=1e+5; break;
+        case ADC_RANGE_3M:   value*=1e+6; break;
+        case ADC_RANGE_30M:  value*=1e+7; break;
+        case ADC_RANGE_300M: value*=1e+8; break;
         default: assert(0);
     }
     return value;    
