@@ -23,6 +23,7 @@
 
 #include<diag.h>
 #include<FreeRTOS.h>
+#include<semphr.h>
 #include<task.h>
 #include<dispkyb.h>
 #include<diag.h>
@@ -33,10 +34,46 @@
 #include <sysdefs.h>
 #include <strutils.h>
 #include "fitlinear.h"
+#include <assert.h>
 
 #define CAL_FILTER_SIZE  50.0
 #define ADC_CAL_POS  3.00
 #define ADC_CAL_NEG -3.00
+
+static void task_calibration(void* params);
+static void pause(void);
+static void resume(void);
+static void destroy(void);
+
+static SemaphoreHandle_t lock;
+static TaskHandle_t handle;
+
+task_iface_t calibration_task = {
+    .handler = &handle,
+    .task = task_calibration,
+    .pause = pause,
+    .resume = resume,
+    .destroy = destroy
+};
+
+static void pause(void){
+    assert(calibration_task.handler);
+    assert(lock);
+    xSemaphoreTake(lock, portMAX_DELAY);
+    vTaskSuspend(*calibration_task.handler);    
+}
+
+static void resume(void){
+    assert(calibration_task.handler);
+    assert(lock);
+    vTaskResume(*calibration_task.handler);
+    xSemaphoreTake(lock, portMAX_DELAY);
+}
+
+static void destroy(void){
+    xSemaphoreTake(lock, portMAX_DELAY);
+    xSemaphoreGive(lock);
+}
 
 static double do_measure()
 {
@@ -52,8 +89,10 @@ static double do_measure()
     return value;
 }
 
-void task_calibration(void* params)
+static void task_calibration(void* params)
 {
+    lock = xSemaphoreCreateMutex();
+    xSemaphoreTake(lock, portMAX_DELAY);
     double refvals[3];
     double measval[3];
     int mpoints = 0;
@@ -98,5 +137,6 @@ void task_calibration(void* params)
     system_set_configuration(settings_get_input(), settings_get_range(),
         settings_get_integration_period(), ADC_CHANNEL_0, calibration_gain(),
         calibration_offset(), settings_get_resolution());
-    taskmgr_delete();
+    xSemaphoreGive(lock);
+    vTaskDelete(calibration_task.handler);
 }

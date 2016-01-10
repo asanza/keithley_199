@@ -32,7 +32,7 @@
 #include <queue.h>
 #include <ctype.h>
 
-#define SYSTEM_TASK_STACK_SIZE      200
+#define SYSTEM_TASK_STACK_SIZE      1000
 #define WLAN_TASK_STACK_SIZE        200
 #define SCPI_TASK_STACK_SIZE        600
 #define TASK_STACK_SIZE             400
@@ -43,26 +43,21 @@
 
 typedef enum {
     TASK_MULTIMETER,
-    TASK_RESISTANCE_4W,
     TASK_CALIBRATION,
     TASK_COUNT
 } sys_task_t;
 
+extern task_iface_t multimeter_task;
+extern task_iface_t calibration_task;
+
+static task_iface_t* running_task = NULL;
 
 static void system_task(void* params);
-extern void task_multimeter(void* params);
-extern void task_resistance_4w(void* params);
-extern void task_calibration(void* params);
 extern void scpi_task(void* params);
-extern void wlan_task(void* params);
-
-static TaskHandle_t running_task = NULL;
-static TaskHandle_t dmm_task;
 
 static void sys_init(void);
 static void load_settings();
 static void start_task(sys_task_t task);
-static void stop_running_task();
 static void apply_settings();
 static void poll_key(void);
 
@@ -72,9 +67,9 @@ void taskmgr_start(void)
         SYSTEM_TASK_PRIORITY, NULL);
     xTaskCreate(scpi_task, "SCPI", SCPI_TASK_STACK_SIZE, NULL,
         SCPI_TASK_PRIORITY, NULL);
-    xTaskCreate(task_multimeter, "MUL", TASK_STACK_SIZE, NULL, TASK_PRIORITY,
-        &dmm_task);
-    vTaskSuspend(dmm_task);
+    xTaskCreate(multimeter_task.task, "MUL", TASK_STACK_SIZE, NULL, TASK_PRIORITY,
+        multimeter_task.handler);
+    vTaskSuspend(*multimeter_task.handler);
 }
 
 static void system_task(void* pvParameters)
@@ -91,35 +86,22 @@ static void system_task(void* pvParameters)
     }
 }
 
-void taskmgr_delete(void)
-{
-    //TODO: This gets called from other threads... 
-    // maybe is a good idea to make it thread safe.
-    running_task = NULL;
-    start_task(TASK_MULTIMETER);
-    vTaskDelete(NULL);
-}
-
 static void start_task(sys_task_t task)
 {
     switch (task) {
-        case TASK_MULTIMETER: vTaskResume(dmm_task);
+        case TASK_MULTIMETER: 
+            multimeter_task.resume();
+            running_task = &multimeter_task;
             break;
         case TASK_CALIBRATION:
             assert(running_task != NULL);
-            xTaskCreate(task_calibration, "MUL", TASK_STACK_SIZE, NULL, TASK_PRIORITY,
-                &running_task);
+            xTaskCreate(calibration_task.task, "CAL", TASK_STACK_SIZE, NULL, TASK_PRIORITY,
+                calibration_task.handler);
+            running_task = &calibration_task;
             break;
         default:
             assert(0);
     }
-}
-
-static void stop_running_task()
-{
-    system_get_lock();
-    vTaskSuspend(dmm_task);
-    system_release_lock();
 }
 
 static void sys_init(void)
@@ -160,7 +142,8 @@ static void load_settings()
 
 static void apply_settings()
 {
-    stop_running_task();
+    if(running_task != NULL)
+        running_task->pause();
     display_puts(" ------- ");
     if (!calibration_restore()) {
         display_clear();
@@ -188,8 +171,6 @@ static void apply_settings()
         case ADC_INPUT_VOLTAGE_AC:
         case ADC_INPUT_TEMP:
             start_task(TASK_MULTIMETER);
-            break;
-        case ADC_INPUT_RESISTANCE_4W:
             break;
         default:
             assert(0);
@@ -264,7 +245,7 @@ static void poll_key(void)
             apply_settings();
             break;
         case KEY_9:
-            stop_running_task();
+            running_task->pause();
             if (!shift_key) {
                 display_puts("LOAD 0-9?");
                 key = display_wait_for_key();
@@ -294,7 +275,7 @@ static void poll_key(void)
             apply_settings();
             break;
         case KEY_CAL:
-            stop_running_task();
+            running_task->pause();
             start_task(TASK_CALIBRATION);
             break;
         case KEY_NONE:

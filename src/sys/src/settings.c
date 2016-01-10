@@ -109,6 +109,10 @@ int settings_restore(settings_location location) {
     int i;
     lock();
     EEFS_ERROR err;
+    settings_set_default();
+    unlock();
+    settings_save(location);
+    lock();
     int addr = SETTINGS_START_ADDRESS + location * sizeof (settings);
     for (i = 0; i < ADC_NUMBER_OF_INPUTS; i++) {
         err = eefs_object_restore(addr + i, &settings[i], sizeof (settings_t));

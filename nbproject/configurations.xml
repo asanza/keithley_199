@@ -162,7 +162,6 @@
         <itemPath>src/tasks/task_calibration.c</itemPath>
         <itemPath>src/tasks/task_multimeter.c</itemPath>
         <itemPath>src/tasks/main.c</itemPath>
-        <itemPath>src/tasks/task_resistance_4w.c</itemPath>
         <itemPath>src/tasks/tskmgr.c</itemPath>
         <itemPath>src/tasks/task_scpi.c</itemPath>
       </logicalFolder>
@@ -255,7 +254,7 @@
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
         <property key="preprocessor-macros"
-                  value="NDEBUG;REPOVERSION=\&apos;&quot;$(GIT_VERSION)&apos;\&quot;;REPOBRANCH=\&apos;&quot;$(GIT_BRANCH)&apos;\&quot;;HAVE_DTOSTRE"/>
+                  value="REPOVERSION=\&apos;&quot;$(GIT_VERSION)&apos;\&quot;;REPOBRANCH=\&apos;&quot;$(GIT_BRANCH)&apos;\&quot;;HAVE_DTOSTRE"/>
         <property key="strict-ansi" value="false"/>
         <property key="support-ansi" value="false"/>
         <property key="use-cci" value="false"/>
@@ -335,7 +334,7 @@
         <property key="place-data-into-section" value="false"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
-        <property key="preprocessor-macros" value=""/>
+        <property key="preprocessor-macros" value="NDEBUG"/>
         <property key="rtti" value="false"/>
         <property key="strict-ansi" value="false"/>
         <property key="use-cci" value="false"/>

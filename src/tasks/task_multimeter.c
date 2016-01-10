@@ -21,6 +21,9 @@
  * Created on July 17, 2015, 10:43 PM
  */
 
+#include "tskmgr.h"
+
+
 #include <diag.h>
 #include <system.h>
 #include "settings.h"
@@ -32,17 +35,55 @@
 #include <strutils.h>
 #include <math.h>
 #include "semphr.h"
+#include <assert.h>
 
+static SemaphoreHandle_t task_lock;
+static TaskHandle_t handle;
 
 static void set_new_range(double value, system_flags_t flag);
 
-void task_multimeter(void *params)
+static void task_multimeter(void* params);
+static void pause(void);
+static void resume(void);
+static void destroy(void);
+
+task_iface_t multimeter_task = {
+    .handler = &handle,
+    .task = &task_multimeter,
+    .pause = &pause,
+    .resume = &resume,
+    .destroy = &destroy
+};
+
+static void pause(void){
+    assert(multimeter_task.handler);
+    assert(task_lock != NULL);
+    xSemaphoreTake(task_lock, portMAX_DELAY);
+    vTaskSuspend(*multimeter_task.handler);
+}
+
+static void resume(void){    
+    assert(multimeter_task.handler);
+    vTaskResume(*multimeter_task.handler);
+    if(task_lock != NULL)
+        xSemaphoreGive(task_lock);
+}
+
+static void destroy(void){
+    xSemaphoreTake(task_lock, portMAX_DELAY);
+    vTaskDelete(*multimeter_task.handler);
+    xSemaphoreGive(task_lock);
+}
+
+static void task_multimeter(void *params)
 {
+    task_lock = xSemaphoreCreateMutex();
     DIAG("Loaded");
     char buff[NUMBER_OF_CHARACTERS];
     system_flags_t flag;
     double value;
     while (1) {
+        xSemaphoreTake(task_lock, portMAX_DELAY);
         hal_disp_adci_toggle();
         value = system_read_input(&flag); 
         if (settings_is_autorange())
@@ -51,6 +92,7 @@ void task_multimeter(void *params)
             settings_get_resolution(), value, flag);
         fmt_append_scale(buff, settings_get_input(), settings_get_range());
         display_puts(buff);
+        xSemaphoreGive(task_lock);
         /*TODO: give some space for other tasks to call system */
         vTaskDelay(1);
     }

@@ -27,8 +27,18 @@
 extern "C" {
 #endif
     
+    typedef void(*task_loop)(void* param);
+    typedef void(*task_fn)(void);
+    
+    typedef struct task_iface_T{
+        void** handler;
+        task_loop task;
+        task_fn destroy;
+        task_fn pause;
+        task_fn resume;
+    }task_iface_t;
+    
     void taskmgr_start(void);
-    void taskmgr_delete(void);
 
 #ifdef	__cplusplus
 }

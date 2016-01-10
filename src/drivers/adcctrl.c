@@ -16,7 +16,7 @@ struct hal_adc_integration_sequence_t {
     const uint32_t* mux_values;
 };
 
-#define START_SEQUENCE(seq_name) const uint32_t seq_name##__[]=
+#define START_SEQUENCE(seq_name) static const uint32_t seq_name##__[]=
 
 #define END_SEQUENCE(seq_name) ; static adc_control_sequence seq_name = { \
                                             .actual_value = 0, \
@@ -262,7 +262,7 @@ adc_control_sequence* adcctrl_get_sequence(adc_input input, adc_range range)
         case ADC_INPUT_RESISTANCE_4W: return get_res4w_seq(range);
         case ADC_NUMBER_OF_INPUTS:
         default:
-            assert(0);
+            return NULL;
     }
     return NULL;
 }
@@ -336,7 +336,8 @@ static adc_control_sequence* get_vdc_seq(adc_range range)
             return &seq_30V;
         case ADC_RANGE_300: seq_300V.actual_value = 0;
             return &seq_300V;
-        default: return NULL;
+        default: 
+            return NULL;
     };
     return NULL;
 }
@@ -356,6 +357,7 @@ uint32_t adcctrl_get_next_sequence(adc_control_sequence* sequence)
 
 void adcctrl_reset(adc_control_sequence* sequence)
 {
+    assert(sequence);
     sequence->actual_value = 0;
 }
 
