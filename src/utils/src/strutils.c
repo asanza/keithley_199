@@ -59,7 +59,12 @@ void utils_dtofixstr(char* buff, int digits, int dplaces, double value){
     char* dp = strchr(out, '.');
     /* find out how many places to shift. */
     i = 0;
-    while(*++dp) i++;
+    if(!dp){
+        /* no decimal point */
+        i = dplaces;
+    } else {
+        while(*++dp) i++;
+    }
     int shift = i - dplaces;
     if(shift > 0){
         _shift_right_nstr(out, shift);
