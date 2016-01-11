@@ -74,6 +74,9 @@ static void resume(void){
 static void destroy(void){
     xSemaphoreTake(lock, portMAX_DELAY);
     xSemaphoreGive(lock);
+    *calibration_task.handler = NULL;
+    DIAG(" calibration task");
+    vTaskDelete(NULL);
 }
 
 static double do_measure()
@@ -92,6 +95,7 @@ static double do_measure()
 
 static void task_calibration(void* params)
 {
+    DIAG(": entering");
     lock = xSemaphoreCreateMutex();
     xSemaphoreTake(lock, portMAX_DELAY);
     double refvals[3];
@@ -139,5 +143,5 @@ static void task_calibration(void* params)
         settings_get_integration_period(), ADC_CHANNEL_0, calibration_gain(),
         calibration_offset(), settings_get_resolution());
     xSemaphoreGive(lock);
-    vTaskDelete(calibration_task.handler);
+    destroy();
 }

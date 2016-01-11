@@ -115,7 +115,7 @@ unsigned char hal_i2c_readNak(void);
 unsigned char hal_i2c_read(unsigned char ack);
 #define hal_i2c_read(ack)  (ack) ? hal_i2c_readAck() : hal_i2c_readNak();
 
-
+void hal_eeprom_reset(void);
 
 #ifdef	__cplusplus
 }

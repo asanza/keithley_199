@@ -79,9 +79,12 @@ static void system_task(void* pvParameters)
     load_settings();
     while (1) {
         vTaskDelay(10);
-        if (running_task) {
-            if(running_task->has_keys)
-                continue;
+        if (!running_task->handler) {
+            running_task = &multimeter_task;
+            running_task->resume();
+        }
+        if(running_task->has_keys){
+            continue;
         }
         poll_key();
     }
@@ -139,12 +142,22 @@ static void load_settings()
     vTaskDelay(MESSAGE_DELAY / portTICK_PERIOD_MS);
     display_clear();
     apply_settings();
+    switch (settings_get_input()) {
+        case ADC_INPUT_CURRENT_DC:
+        case ADC_INPUT_CURRENT_AC:
+        case ADC_INPUT_RESISTANCE_2W:
+        case ADC_INPUT_VOLTAGE_DC:
+        case ADC_INPUT_VOLTAGE_AC:
+        case ADC_INPUT_TEMP:
+            start_task(TASK_MULTIMETER);
+            break;
+        default:
+            assert(0);
+    }
 }
 
 static void apply_settings()
 {
-    if(running_task != NULL)
-        running_task->pause();
     display_puts(" ------- ");
     if (!calibration_restore()) {
         display_clear();
@@ -164,18 +177,6 @@ static void apply_settings()
         display_setmode(DISP_AC);
     else
         display_clearmode(DISP_AC);
-    switch (settings_get_input()) {
-        case ADC_INPUT_CURRENT_DC:
-        case ADC_INPUT_CURRENT_AC:
-        case ADC_INPUT_RESISTANCE_2W:
-        case ADC_INPUT_VOLTAGE_DC:
-        case ADC_INPUT_VOLTAGE_AC:
-        case ADC_INPUT_TEMP:
-            start_task(TASK_MULTIMETER);
-            break;
-        default:
-            assert(0);
-    }
 }
 
 bool shift_key = false;
@@ -240,10 +241,11 @@ static void poll_key(void)
         case KEY_8:
             if (shift_key) {
                 shift_key = false;
-            } else
+            } else{
                 settings_set_input(ADC_INPUT_TEMP);
-            settings_set_autorange(false);
-            apply_settings();
+                settings_set_autorange(false);
+                apply_settings();
+            }
             break;
         case KEY_9:
             running_task->pause();
@@ -264,6 +266,7 @@ static void poll_key(void)
                     settings_save(key);
             }
             apply_settings();
+            running_task->resume();
             break;
         case KEY_UP:
             settings_range_up();

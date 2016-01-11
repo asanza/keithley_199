@@ -27,6 +27,10 @@
 #include "HardwareProfile.h"
 #include "hal.h"
 
+void eeprom_reset(void){
+    hal_eeprom_reset();
+}
+
 void eeprom_read_page(uint16_t address, uint8_t* _data){
     address = address * HAL_EEPROM_PAGE_SIZE;
     hal_i2c_start(HAL_EEPROM_ADDRESS, HAL_I2C_WRITE);

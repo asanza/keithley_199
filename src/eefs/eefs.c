@@ -83,6 +83,7 @@ EEFS_ERROR eefs_read_page(uint16_t page_address, eefs_page* page){
 
 
 EEFS_ERROR eefs_object_save(uint8_t object_id, const void* data, size_t size){
+    eeprom_reset();
 	int page_address, page_offset;
     /* objects should be smaller than MAX_OBJECT_SIZE */
 	assert(size <= MAX_OBJECT_SIZE);
@@ -101,6 +102,7 @@ EEFS_ERROR eefs_object_save(uint8_t object_id, const void* data, size_t size){
 }
 
 EEFS_ERROR eefs_object_restore(uint8_t object_id, void* data, size_t size){
+    eeprom_reset();
     /* objects should be smaller than MAX_OBJECT_SIZE */
     assert(size <= MAX_OBJECT_SIZE);
 	int page_address, page_offset;

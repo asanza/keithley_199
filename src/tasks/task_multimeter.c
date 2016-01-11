@@ -56,13 +56,15 @@ task_iface_t multimeter_task = {
 };
 
 static void pause(void){
+    DIAG("dmm");
     assert(multimeter_task.handler);
     assert(task_lock != NULL);
     xSemaphoreTake(task_lock, portMAX_DELAY);
     vTaskSuspend(*multimeter_task.handler);
 }
 
-static void resume(void){    
+static void resume(void){
+    DIAG("dmm");
     assert(multimeter_task.handler);
     vTaskResume(*multimeter_task.handler);
     if(task_lock != NULL)
@@ -70,6 +72,7 @@ static void resume(void){
 }
 
 static void destroy(void){
+    DIAG("dmm");
     xSemaphoreTake(task_lock, portMAX_DELAY);
     vTaskDelete(*multimeter_task.handler);
     xSemaphoreGive(task_lock);

@@ -28,7 +28,7 @@
 #include "hal_i2c.h"
 
 /** Send i2c eeprom reset sequency. Needed for Microchip eeproms :S:S*/
-static void hal_eeprom_reset(){
+void hal_eeprom_reset(){
     /* Bitbang Reset Sequence. */
     PORTSetPinsDigitalOut(I2C_SDA);
     PORTSetPinsDigitalOut(I2C_SCL);
