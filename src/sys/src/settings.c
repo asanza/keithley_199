@@ -33,6 +33,7 @@
 #include <string.h>
 #include <diag.h>
 #include <math.h>
+#include <adcdefs.h>
 
 typedef struct _settings_t{
     adc_input               input               :4 ; /* settings name */
@@ -121,6 +122,7 @@ int settings_restore(settings_location location) {
     int addr = SETTINGS_START_ADDRESS + location * sizeof (settings);
     for (i = 0; i < ADC_NUMBER_OF_INPUTS; i++) {
         err = eefs_object_restore(addr + i, &settings[i], sizeof (settings_t));
+        DIAG("iperiod: %d", settings[i].integration_period);
         if (err != EEFS_OK) {
             DIAG("error loading settings");
             settings_set_default();
@@ -128,11 +130,13 @@ int settings_restore(settings_location location) {
             return 1;
         }
     }
-    err = eefs_object_restore(addr + i, &actual_settings, sizeof(settings_t*));
-    if(err != EEFS_OK){
-        actual_settings = settings;
-        DIAG("error loading actual setting");
-    }
+    actual_settings = settings;
+    DIAG("");
+//    err = eefs_object_restore(addr + i, &actual_settings, sizeof(settings_t*));
+//    if(err != EEFS_OK){
+//        actual_settings = settings;
+//        DIAG("error loading actual setting");
+//    }
     unlock();
     return 0;
 }

@@ -30,6 +30,7 @@
 #include <assert.h>
 #include <dispkyb.h>
 #include <queue.h>
+#include <adcdefs.h>
 #include <ctype.h>
 
 #define SYSTEM_TASK_STACK_SIZE      300
@@ -130,14 +131,16 @@ static void load_settings()
         display_puts("SETT ERROR");
         vTaskDelay(MESSAGE_DELAY / portTICK_PERIOD_MS);
     }
-
-    switch (settings_get_integration_period()) {
+    int integration_period = settings_get_integration_period();
+    DIAG("i period: %d", integration_period);
+    switch (integration_period) {
             display_clear();
         case ADC_INTEGRATION_50HZ: display_puts("FREQ=50 HZ");
             break;
         case ADC_INTEGRATION_60HZ: display_puts("FREQ=60 HZ");
             break;
-        default: assert(0);
+        default:
+            assert(0);
     }
     vTaskDelay(MESSAGE_DELAY / portTICK_PERIOD_MS);
     display_clear();

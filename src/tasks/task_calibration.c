@@ -148,5 +148,6 @@ static void task_calibration(void* params)
         settings_get_integration_period(), ADC_CHANNEL_0, calibration_gain(),
         calibration_offset(), settings_get_resolution());
     xSemaphoreGive(task_lock);
+    calibration_task.handler = NULL;
     vTaskDelete(NULL);
 }

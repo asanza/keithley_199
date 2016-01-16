@@ -204,6 +204,7 @@ static double adc_do_resistance_measurement(unsigned char channel,
     ref_hi = do_sequence(channel, sequence);
     ref_lo = do_sequence(channel, sequence);
     sense_hi = do_sequence(channel, sequence);
+    DIAG("SH: %d, RL: %d", sense_hi - sense_lo, ref_hi - ref_lo);
     double val = (1.0*sense_hi - sense_lo)/(1.0*ref_hi - ref_lo);
     switch(range){
         case ADC_RANGE_300:
@@ -215,11 +216,11 @@ static double adc_do_resistance_measurement(unsigned char channel,
             break;
         case ADC_RANGE_300K:
         case ADC_RANGE_300M:
-            val = val*.02;
+            //val = val*.02;
             break;
         case ADC_RANGE_3M:
         case ADC_RANGE_30M:
-            val = val*.002;
+            //val = val*.002;
             break;
         default:
             assert(0);
