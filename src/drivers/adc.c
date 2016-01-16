@@ -92,7 +92,10 @@ double adc_read_value(adc_channel channel, int* flag){
     *flag = 0;
     if(value >= ADC_MAX_VALUE) *flag = ADC_OVERFLOW;
     if(value <= ADC_MIN_VALUE) *flag = ADC_UNDERFLOW;
-    return get_real_value(value, range);
+    value = get_real_value(value, range);
+    assert(!isnan(value));
+    assert(!isinf(value));    
+    return value;
 }
 
 static double get_real_value(double value, adc_range range){

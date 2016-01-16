@@ -32,6 +32,7 @@
 #include <assert.h>
 #include <string.h>
 #include <diag.h>
+#include <math.h>
 
 typedef struct _settings_t{
     adc_input               input               :4 ; /* settings name */
@@ -74,7 +75,14 @@ static void settings_set_default();
 void settings_init(void){
     if(!slock){
         slock = xSemaphoreCreateMutex();
-    }    
+    }
+    int i;    
+    for (i = 0; i < ADC_NUMBER_OF_INPUTS; i++) {
+        settings_set_default();
+    }
+    cal.gain = 1;
+    cal.offset = 0;
+    cal.temp = 25;
 }
 
 void settings_save(settings_location location){
@@ -273,7 +281,8 @@ int calibration_restore(){
     assert(id >= 0);
     assert(id < 255);
     EEFS_ERROR err = eefs_object_restore(id, &cal, sizeof(calibration_t));
-    if(err == EEFS_OK){
+    if(err == EEFS_OK && !(isnan(cal.gain) || isinf(cal.gain) 
+            || isnan(cal.offset) || isinf(cal.offset))){
         unlock();
         return 1;
     }
@@ -285,7 +294,6 @@ int calibration_restore(){
 }
 
 static void settings_set_default(){
-    DIAG("");
     int i;
     for(i = 0; i < ADC_NUMBER_OF_INPUTS;i++){
         settings[i].auto_range = true;

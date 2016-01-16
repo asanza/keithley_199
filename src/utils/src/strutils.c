@@ -42,6 +42,8 @@ static void _shift_right_nstr(const char* c, unsigned int places);
 static void _shift_left_nstr(const char* c, unsigned int places);
 
 void utils_dtofixstr(char* buff, int digits, int dplaces, double value){
+    assert(!isnan(value));
+    assert(!isinf(value));
     value = round_to_n(value, dplaces);
     utils_dtostr(buff, digits, value);
     char* out = buff;
@@ -86,7 +88,6 @@ static void _shift_right_nstr(const char* c, unsigned int places) {
 			c1 = c2;
 		}
 	}
-//	}
 }
 
 static void _shift_left_nstr(const char* c, unsigned int places) {

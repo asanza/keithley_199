@@ -61,6 +61,7 @@ static void pause(void){
     assert(task_lock != NULL);
     xSemaphoreTake(task_lock, portMAX_DELAY);
     vTaskSuspend(*multimeter_task.handler);
+    xSemaphoreGive(task_lock);
 }
 
 static void resume(void){

@@ -160,6 +160,7 @@ static void apply_settings()
 {
     display_puts(" ------- ");
     if (!calibration_restore()) {
+        DIAG("CAL ERROR");
         display_clear();
         display_puts("CAL ERROR");
         vTaskDelay(MESSAGE_DELAY / portTICK_PERIOD_MS);
@@ -205,7 +206,9 @@ static void poll_key(void)
                     settings_set_autorange(true);
                 }
             }
+            running_task->pause();
             apply_settings();
+            running_task->resume();
             break;
         case KEY_4:
             if (repeat_key == false) break;
@@ -220,7 +223,9 @@ static void poll_key(void)
                 settings_set_input(ADC_INPUT_RESISTANCE_2W);
             }
             shift_key = false;
+            running_task->pause();
             apply_settings();
+            running_task->resume();
             break;
         case KEY_6:
             if (shift_key) {
@@ -228,7 +233,9 @@ static void poll_key(void)
                 shift_key = false;
             } else
                 settings_set_input(ADC_INPUT_VOLTAGE_DC);
+            running_task->pause();
             apply_settings();
+            running_task->resume();
             break;
         case KEY_7:
             if (shift_key) {
@@ -236,7 +243,9 @@ static void poll_key(void)
                 shift_key = false;
             } else
                 settings_set_input(ADC_INPUT_CURRENT_DC);
+            running_task->pause();
             apply_settings();
+            running_task->resume();
             break;
         case KEY_8:
             if (shift_key) {
@@ -244,7 +253,9 @@ static void poll_key(void)
             } else{
                 settings_set_input(ADC_INPUT_TEMP);
                 settings_set_autorange(false);
-                apply_settings();
+            running_task->pause();
+            apply_settings();
+            running_task->resume();
             }
             break;
         case KEY_9:
@@ -265,18 +276,24 @@ static void poll_key(void)
                 if (key <= 9)
                     settings_save(key);
             }
+            running_task->pause();
             apply_settings();
+            running_task->resume();
             running_task->resume();
             break;
         case KEY_UP:
             settings_range_up();
             settings_set_autorange(false);
+            running_task->pause();
             apply_settings();
+            running_task->resume();
             break;
         case KEY_DOWN:
             settings_range_down();
             settings_set_autorange(false);
+            running_task->pause();
             apply_settings();
+            running_task->resume();
             break;
         case KEY_CAL:
             running_task->pause();

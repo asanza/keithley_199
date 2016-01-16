@@ -45,7 +45,7 @@ static void pause(void);
 static void resume(void);
 static void destroy(void);
 
-static SemaphoreHandle_t lock;
+static SemaphoreHandle_t task_lock;
 static TaskHandle_t handle;
 
 task_iface_t calibration_task = {
@@ -59,24 +59,25 @@ task_iface_t calibration_task = {
 
 static void pause(void){
     assert(calibration_task.handler);
-    assert(lock);
-    xSemaphoreTake(lock, portMAX_DELAY);
-    vTaskSuspend(*calibration_task.handler);    
+    assert(task_lock);
+    xSemaphoreTake(task_lock, portMAX_DELAY);
+    vTaskSuspend(*calibration_task.handler);
+    xSemaphoreGive(task_lock);    
 }
 
 static void resume(void){
     assert(calibration_task.handler);
-    assert(lock);
+    assert(task_lock);
+    xSemaphoreTake(task_lock, portMAX_DELAY);
     vTaskResume(*calibration_task.handler);
-    xSemaphoreTake(lock, portMAX_DELAY);
+    xSemaphoreGive(task_lock);
 }
 
 static void destroy(void){
-    xSemaphoreTake(lock, portMAX_DELAY);
-    xSemaphoreGive(lock);
+    xSemaphoreTake(task_lock, portMAX_DELAY);
+    vTaskDelete(*calibration_task.handler);
     *calibration_task.handler = NULL;
-    DIAG(" calibration task");
-    vTaskDelete(NULL);
+    xSemaphoreGive(task_lock);
 }
 
 static double do_measure()
@@ -96,8 +97,8 @@ static double do_measure()
 static void task_calibration(void* params)
 {
     DIAG(": entering");
-    lock = xSemaphoreCreateMutex();
-    xSemaphoreTake(lock, portMAX_DELAY);
+    task_lock = xSemaphoreCreateMutex();
+    xSemaphoreTake(task_lock, portMAX_DELAY);
     double refvals[3];
     double measval[3];
     int mpoints = 0;
@@ -138,10 +139,14 @@ static void task_calibration(void* params)
         
         fit_linear(measval, refvals, mpoints, &offset, &gain);
     }
+    assert(!isnan(gain));
+    assert(!isnan(offset));
+    assert(!isinf(gain));
+    assert(!isinf(offset));
     calibration_save(gain, offset, temperature);
     system_set_configuration(settings_get_input(), settings_get_range(),
         settings_get_integration_period(), ADC_CHANNEL_0, calibration_gain(),
         calibration_offset(), settings_get_resolution());
-    xSemaphoreGive(lock);
-    destroy();
+    xSemaphoreGive(task_lock);
+    vTaskDelete(NULL);
 }

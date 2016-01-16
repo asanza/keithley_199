@@ -50,19 +50,16 @@ static double wn_delta;
 
 #define RESLN_6_5_FILTER_SIZE 10.0
 
-int system_set_configuration(adc_input input, adc_range range,
+static int set_configuration(adc_input input, adc_range range, 
     adc_integration_period period, adc_channel _channel, double _gain, double _offset,
-    adc_resolution res)
-{
-    xSemaphoreTake(syslock, portMAX_DELAY);
-    /* try to get syslock. Syslock shall be obtained before calling this function. */
+    adc_resolution res){
+        /* try to get syslock. Syslock shall be obtained before calling this function. */
     if(input == ADC_INPUT_TEMP){
         is_temp_mode = true;
     }else{
         is_temp_mode = false;
         adc_error err = adc_init(period, input, range);
         if (err != ADC_ERROR_NONE){
-            xSemaphoreGive(syslock);
             return -1;
         }
     }
@@ -90,8 +87,17 @@ int system_set_configuration(adc_input input, adc_range range,
             break;
         default: assert(0);
     }
-    xSemaphoreGive(syslock);
     return 0;
+}
+
+int system_set_configuration(adc_input input, adc_range range,
+    adc_integration_period period, adc_channel _channel, double _gain, double _offset,
+    adc_resolution res)
+{
+    xSemaphoreTake(syslock, portMAX_DELAY);
+    int ret = set_configuration(input, range, period, _channel, _gain, _offset, res);
+    xSemaphoreGive(syslock);
+    return ret;
 }
 
 double system_read_temp(void){
@@ -134,6 +140,8 @@ double system_read_input(system_flags_t* flag)
     }
     /* release semaphore when done. */
     xSemaphoreGive(syslock);
+    assert(!isnan(value));
+    assert(!isinf(value));
     return value;
 }
 
@@ -145,4 +153,6 @@ void system_init(void)
     tmp245_init();
     /* initialize system lock */
     syslock = xSemaphoreCreateMutex();
+    set_configuration(ADC_INPUT_VOLTAGE_DC, ADC_RANGE_300, 
+        ADC_INTEGRATION_50HZ, ADC_CHANNEL_0, 1, 0, ADC_RESOLUTION_5_5);
 }
