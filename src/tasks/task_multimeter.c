@@ -68,8 +68,6 @@ static void resume(void){
     DIAG("dmm");
     assert(multimeter_task.handler);
     vTaskResume(*multimeter_task.handler);
-    if(task_lock != NULL)
-        xSemaphoreGive(task_lock);
 }
 
 static void destroy(void){

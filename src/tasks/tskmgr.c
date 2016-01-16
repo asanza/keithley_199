@@ -231,8 +231,9 @@ static void poll_key(void)
             if (shift_key) {
                 settings_set_input(ADC_INPUT_VOLTAGE_AC);
                 shift_key = false;
-            } else
+            } else{
                 settings_set_input(ADC_INPUT_VOLTAGE_DC);
+            }
             running_task->pause();
             apply_settings();
             running_task->resume();
@@ -276,9 +277,7 @@ static void poll_key(void)
                 if (key <= 9)
                     settings_save(key);
             }
-            running_task->pause();
             apply_settings();
-            running_task->resume();
             running_task->resume();
             break;
         case KEY_UP:
