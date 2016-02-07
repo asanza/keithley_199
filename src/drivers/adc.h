@@ -8,7 +8,7 @@
 #ifndef ADC_H
 #define	ADC_H
 
-#include <hal.h>
+#include "adcdefs.h"
 #include "adcctrl.h"
 
 #ifdef	__cplusplus

@@ -1,4 +1,4 @@
-update=Fr 16 Okt 2015 23:11:21 CEST
+update=Mo 18 Jan 2016 22:01:02 CET
 version=1
 last_client=kicad
 [pcbnew]
@@ -60,3 +60,6 @@ LibName28=contrib
 LibName29=valves
 LibName30=dot_matrix
 LibName31=hw01
+LibName32=sigencomps
+LibName33=transil
+LibName34=Tag-Connect

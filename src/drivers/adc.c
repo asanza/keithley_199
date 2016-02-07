@@ -37,6 +37,7 @@
 #include <stdint.h>
 #include <assert.h>
 #include <diag.h>
+#include <hal_adc.h>
 #include "adc.h"
 #include "adcctrl.h"
 #include "strutils.h"
