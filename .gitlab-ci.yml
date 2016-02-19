@@ -1,5 +1,5 @@
 before_script:
-  - export PATH=$PATH
+  - export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/opt/microchip/xc32/v1.31/bin/:/opt/microchip/mplabx/v3.05/mplab_ide/bin/
 
 UnitTests:
   script: "rake test:all"
