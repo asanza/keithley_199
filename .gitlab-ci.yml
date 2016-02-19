@@ -1,8 +1,7 @@
-# Run before each script
 before_script:
   - export PATH=$PATH
 
-jobs:
-  - script: "rake test:all"
-    runner: "mplabx"
-    name:   "MPLABX"
+UnitTests:
+  test: "rake test:all"
+  tags:
+    - mplabx
