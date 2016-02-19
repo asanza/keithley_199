@@ -1,5 +1,6 @@
-#before_script:
-#  - ls
+# Run before each script
+before_script:
+  - export PATH=$PATH
 
 jobs:
   - script: "rake test:all"
