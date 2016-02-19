@@ -2,6 +2,6 @@ before_script:
   - export PATH=$PATH
 
 UnitTests:
-  test: "rake test:all"
+  script: "rake test:all"
   tags:
     - mplabx
