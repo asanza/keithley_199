@@ -1,5 +1,7 @@
 #before_script:
 #  - ls
 
-UnitTests:
-  - rake test:all
+jobs:
+  - script: "rake test:all"
+    runner: "mplabx"
+    name:   "MPLABX"
