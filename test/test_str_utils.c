@@ -1,6 +1,7 @@
 #include "unity.h"
 #include "strutils.h"
 #include "fcvt.h"
+#include "utils_math.h"
 #include <math.h>
 
 void setUp(void){
@@ -19,7 +20,7 @@ void test_strutils(void){
   TEST_ASSERT_EQUAL_DOUBLE(5.18305611836e-3, x);
   char buffer[10];
   utils_dtostr(buffer, 9, x);
-  TEST_ASSERT_EQUAL_STRING("0.00518305", buffer);
+  TEST_ASSERT_EQUAL_STRING("0.00518306", buffer);
   utils_dtostr(buffer, 5, 2.342345e2);
   TEST_ASSERT_EQUAL_STRING("234.23", buffer);
   utils_dtostr(buffer, 5, -2.342345e2);
@@ -27,7 +28,7 @@ void test_strutils(void){
   utils_dtostr(buffer, 4, 2.44445);
   TEST_ASSERT_EQUAL_STRING("2.444", buffer);
   utils_dtofixstr(buffer, 6, 3, 8.23455);
-  TEST_ASSERT_EQUAL_STRING(" 008.234", buffer);
+  TEST_ASSERT_EQUAL_STRING(" 008.235", buffer);
   utils_dtofixstr(buffer, 6, 3, 8.23555);
   TEST_ASSERT_EQUAL_STRING(" 008.236", buffer);
   utils_dtofixstr(buffer, 6, 4, 8.23455);
@@ -49,9 +50,7 @@ void test_strutils(void){
 void test_ecvt(void){
   char buffer[50], *res;
   int decpt, sign;
-  //res = e_cvt(0, buffer, 8, &decpt, &sign);
   res = dtostre (34.0003203, buffer, 3,
     DTOSTR_PLUS_SIGN|DTOSTR_ALWAYS_SIGN|DTOSTR_UPPERCASE);
-  printf("%s\n", res);
-  //printf("%s, decpt: %d, sign: %d\n", buffer, decpt, sign);
+  TEST_ASSERT_EQUAL_STRING("+0.340E+02", res);
 }

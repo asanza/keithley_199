@@ -28,13 +28,9 @@
 #include <stdbool.h>
 #include <math.h>
 #include <assert.h>
+#include "utils_math.h"
 #include "strutils.h"
 #include "fcvt.h"
-
-static double round_to_n(double x, unsigned int digits) {
-    double fac = pow(10, digits);
-    return rint(x*fac)/fac;
-}
 
 /* shift a number in string form n places to the right. Push zeroes to front. */
 static void _shift_right_nstr(const char* c, unsigned int places);
@@ -44,7 +40,7 @@ static void _shift_left_nstr(const char* c, unsigned int places);
 void utils_dtofixstr(char* buff, int digits, int dplaces, double value){
     assert(!isnan(value));
     assert(!isinf(value));
-    value = round_to_n(value, dplaces);
+    value = utils_roundd(value, dplaces);
     utils_dtostr(buff, digits, value);
     char* out = buff;
     int i=0; 
@@ -107,6 +103,8 @@ void utils_dtostr(char* buff, int digits, double value)
 {
 	int decpt, sign;
 	digits++;
+    /* round to n digits */
+    value = utils_roundd(value, digits - 2);
 	char *out = e_cvt(value, buff, digits, &decpt, &sign);
 	if (decpt <= 0) {
 		_shift_right_nstr(out, -1*decpt + 2);

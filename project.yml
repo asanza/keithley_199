@@ -61,6 +61,7 @@
       - -MMD
       - -Wno-packed-bitfield-compat
       - -Wno-pragmas
+      - -lm
       - -fno-short-double
       - "${1}"
       - -o "${2}"
@@ -72,6 +73,7 @@
     :executable: xc32-gcc
     :arguments:
       - -mprocessor=32MX350F256L
+      - -lm
       #- -mips16
       #- -minterlink-compressed
       - --gc-sections
