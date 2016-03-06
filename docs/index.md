@@ -3,7 +3,7 @@
 <li><a href="https://github.com/asanza/keithley_199/tarball/master">Download <strong>TAR Ball</strong></a></li>
 <li><a href="https://github.com/asanza/keithley_199">View On <strong>GitHub</strong></a></li>
 
-![k199](http://asanza.github.io/keithley_199/site/img/IMG_20140421_224119.jpg)
+![k199](http://asanza.github.io/keithley_199/site/img/IMG_20140303_171144.jpg)
 
 Recently I bought an old Keithley 199 on e-bay. It didn't work, but it was cheap and I thought it would be easy to fix, and in the worst case I would have at least a source of electronic components for future projects.
 
