@@ -113,13 +113,13 @@
 <p>Looking for the shortcut on the obvious places, circuit board traces and solder pads, I found nothing. My next suspect where the capacitors. I checked them all they where ok. The IC's where next, some of them where mounted on sockets, and where easy to check, but some others where soldered and needed painfully work.</p>
 <p>I started desoldering the via. Via is an acronym of Versatile Interface Adapter and is an interface chip for the microprocessor (this multimeter was build when microprocessors where just computing units and relied on external chips to manage interface, floating point, etc). After taking it out of the circuit, I checked it and found it was defective. I know, I could buy a new via (they are discontinued, I think, but some are still available from re-sellers on e-bay), but I thought it will be more interesting to replace the old digital board with a new design.</p>
 <p>The interface between digital and analog boards couldn't be more simple. In order to reduce the number of control lines, the Keithley 199 uses a serial interface, just a shift register. Three control lines go from digital to analog board and one goes back into the digital world. The firs three are serial data which are clocked into shift registers in the analog board, which in turn, control the different switches for range selection, ohms measurements, and analog digital conversion. The line which goes back provides the digital value of the analog signal, the output of the analog digital converter. A simplified diagram is shown in the following figure:</p>
-<p><img alt="k199simp" src="http://asanza.github.io/keithley_199/site/img/k199Simp.png" />
-Figure 1: Keithley 199 Analog Board simplified diagram</p>
+<p><img alt="k199simp" src="http://asanza.github.io/keithley_199/site/img/k199Simp.png" /></p>
+<p>Figure 1: Keithley 199 Analog Board simplified diagram</p>
 <p>Well, this in theory. Now it is time to go into the finer details. One thing, which I personally find fascinating, is that the analog digital converter is actually implemented with discrete parts, and actually controlled from the processor.  Nowadays there is frequently a custom ASIC or an FPGA who does the control of the integrating analog digital converter. In this multimeter, the micro-controller sends a sequence of serial data to the shift register, which in turns controls the analog digital conversion. As we will see in the following paragraphs, the timing in which this sequence are transmitted are critical for accurate A/D conversions.</p>
 <p>Let start talking about the analog digital converter, which is from the charge-balancing variety. In order to explain how it works, may be is easier to start with a close cousin, the double ramp integrating analog to digital converter (figure2).</p>
-<p><img alt="dslope" src="http://asanza.github.io/keithley_199/site/img/Enhanced_runup_dual_slope.png" />
-Figure 2: Enhanced run-up dual slope integrating ADC (source: Wikipedia)
-The double ramp integrating converter, as it name hints, works integrating the unknown voltage for a fixed amount of time, and then discharging the integration capacitor connecting a reference voltage of opposite polarity and measuring the time the output of the integrator takes to reach zero. This process is shown graphically on figure 2. It shows a basic integrator circuit where the voltage output ramps up as function of the unknown voltage(Vin) and time. The relationship between unknown voltage and time is given by following formula:</p>
+<p><img alt="dslope" src="http://asanza.github.io/keithley_199/site/img/Enhanced_runup_dual_slope.png" /></p>
+<p>Figure 2: Enhanced run-up dual slope integrating ADC (source: Wikipedia)</p>
+<p>The double ramp integrating converter, as it name hints, works integrating the unknown voltage for a fixed amount of time, and then discharging the integration capacitor connecting a reference voltage of opposite polarity and measuring the time the output of the integrator takes to reach zero. This process is shown graphically on figure 2. It shows a basic integrator circuit where the voltage output ramps up as function of the unknown voltage(Vin) and time. The relationship between unknown voltage and time is given by following formula:</p>
 <p>
 <script type="math/tex; mode=display">V_{out-up} = -\frac{V_{in}}{R_aC}t_{u} + V_{initial}</script>
 </p>
@@ -135,7 +135,7 @@ The double ramp integrating converter, as it name hints, works integrating the u
 <p>1 y 2</p>
 <p>Did you see?. When you equal these two equations in order to get the output voltage, you make the assumption that the capacitor in the interval one is the same that is on interval two, and it is not always the case. Due to a phenomenon know as “Dielectric absorption”, the capacitor will change its behavior with time.</p>
 <p><img alt="sch" src="http://asanza.github.io/keithley_199/site/img/keithley_adc_sch.png" />
-Figure 3: Keithley 199 A/D Converter schematic</p></p>
+Figure 3: Keithley 199 A/D Converter schematic</p>
 <p>Here comes the charge balancing in the game. Charge balancing works similar as double slope, first an unknown voltage is integrated, but instead of let the output go indefinite up, a circuit compares the output and when it reaches a defined level, and then, a reference voltage is applied in the input which causes the output to ramp down. When the output voltage has ramp down for a little while, we disconnect again the reference voltage, which causes the output to ramp up again, as the unknown voltage is still present in the input. If we track carefully how much time has the output voltage ramped down, we can also calculate the unknown input voltage.</p>
               
             </div>
@@ -175,5 +175,5 @@ Figure 3: Keithley 199 A/D Converter schematic</p></p>
 
 <!--
 MkDocs version : 0.15.3
-Build Date UTC : 2016-03-06 09:29:38.878200
+Build Date UTC : 2016-03-06 09:32:46.051234
 -->
