@@ -20,6 +20,7 @@ I started desoldering the via. Via is an acronym of Versatile Interface Adapter 
 The interface between digital and analog boards couldn't be more simple. In order to reduce the number of control lines, the Keithley 199 uses a serial interface, just a shift register. Three control lines go from digital to analog board and one goes back into the digital world. The firs three are serial data which are clocked into shift registers in the analog board, which in turn, control the different switches for range selection, ohms measurements, and analog digital conversion. The line which goes back provides the digital value of the analog signal, the output of the analog digital converter. A simplified diagram is shown in the following figure:
 
 ![k199simp](http://asanza.github.io/keithley_199/site/img/k199Simp.png)
+
 Figure 1: Keithley 199 Analog Board simplified diagram
 
 Well, this in theory. Now it is time to go into the finer details. One thing, which I personally find fascinating, is that the analog digital converter is actually implemented with discrete parts, and actually controlled from the processor.  Nowadays there is frequently a custom ASIC or an FPGA who does the control of the integrating analog digital converter. In this multimeter, the micro-controller sends a sequence of serial data to the shift register, which in turns controls the analog digital conversion. As we will see in the following paragraphs, the timing in which this sequence are transmitted are critical for accurate A/D conversions.
