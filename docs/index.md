@@ -27,7 +27,9 @@ Well, this in theory. Now it is time to go into the finer details. One thing, wh
 Let start talking about the analog digital converter, which is from the charge-balancing variety. In order to explain how it works, may be is easier to start with a close cousin, the double ramp integrating analog to digital converter (figure2).
 
 ![dslope](http://asanza.github.io/keithley_199/site/img/Enhanced_runup_dual_slope.png)
+
 Figure 2: Enhanced run-up dual slope integrating ADC (source: Wikipedia)
+
 The double ramp integrating converter, as it name hints, works integrating the unknown voltage for a fixed amount of time, and then discharging the integration capacitor connecting a reference voltage of opposite polarity and measuring the time the output of the integrator takes to reach zero. This process is shown graphically on figure 2. It shows a basic integrator circuit where the voltage output ramps up as function of the unknown voltage(Vin) and time. The relationship between unknown voltage and time is given by following formula:
 
 $$V_{out-up} = -\frac{V_{in}}{R_aC}t_{u} + V_{initial}$$
@@ -51,6 +53,6 @@ The second problem comes from the integrating capacitor. I know, it comes a litt
 Did you see?. When you equal these two equations in order to get the output voltage, you make the assumption that the capacitor in the interval one is the same that is on interval two, and it is not always the case. Due to a phenomenon know as “Dielectric absorption”, the capacitor will change its behavior with time.
 
 ![sch](http://asanza.github.io/keithley_199/site/img/keithley_adc_sch.png)
-Figure 3: Keithley 199 A/D Converter schematic</p>
+Figure 3: Keithley 199 A/D Converter schematic
 
 Here comes the charge balancing in the game. Charge balancing works similar as double slope, first an unknown voltage is integrated, but instead of let the output go indefinite up, a circuit compares the output and when it reaches a defined level, and then, a reference voltage is applied in the input which causes the output to ramp down. When the output voltage has ramp down for a little while, we disconnect again the reference voltage, which causes the output to ramp up again, as the unknown voltage is still present in the input. If we track carefully how much time has the output voltage ramped down, we can also calculate the unknown input voltage.
