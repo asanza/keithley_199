@@ -1,0 +1,19 @@
+build/default/production/src/tasks/task_scpi.o:  \
+src/tasks/task_scpi.c  \
+ src/utils/include/strutils.h  \
+src/scpi-parser/libscpi/inc/scpi/scpi.h  \
+ src/scpi-parser/libscpi/inc/scpi/parser.h  \
+ src/scpi-parser/libscpi/inc/scpi/types.h  \
+ src/scpi-parser/libscpi/inc/scpi/config.h  \
+ src/scpi-parser/libscpi/inc/scpi/ieee488.h  \
+ src/scpi-parser/libscpi/inc/scpi/error.h  \
+ src/scpi-parser/libscpi/inc/scpi/constants.h  \
+ src/scpi-parser/libscpi/inc/scpi/minimal.h  \
+ src/scpi-parser/libscpi/inc/scpi/units.h  \
+ src/scpi-parser/libscpi/inc/scpi/utils.h  \
+ src/scpi-parser/libscpi/inc/scpi/expression.h  \
+src/drivers/usb_uart.h  \
+ src/sys/include/system.h  \
+src/drivers/adcdefs.h  \
+src/sys/include/sysdefs.h  \
+ src/utils/include/diag.h 

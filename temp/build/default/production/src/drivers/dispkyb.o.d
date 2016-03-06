@@ -1,0 +1,20 @@
+build/default/production/src/drivers/dispkyb.o:  \
+src/drivers/dispkyb.c  \
+ src/hal/hal.h  \
+src/hal/hal_sys.h  \
+src/hal/hal_adc.h  \
+src/hal/hal_io.h  \
+ src/hal/hal_spi.h  \
+src/hal/hal_timer.h  \
+src/hal/hal_uart.h  \
+ src/hal/hal_i2c.h  \
+src/FreeRTOS/include/FreeRTOS.h  \
+ src/FreeRTOS/include/projdefs.h  \
+src/FreeRTOS/include/FreeRTOSConfig.h  \
+ src/FreeRTOS/include/portable.h  \
+ src/FreeRTOS/portable/MPLAB/PIC32MX/portmacro.h  \
+ src/FreeRTOS/include/mpu_wrappers.h  \
+src/FreeRTOS/include/queue.h  \
+ src/FreeRTOS/include/task.h  \
+src/FreeRTOS/include/list.h  \
+ src/drivers/dispkyb.h 

@@ -1,0 +1,24 @@
+build/default/production/src/tasks/task_calibration.o:  \
+ src/tasks/task_calibration.c  \
+src/utils/include/diag.h  \
+ src/FreeRTOS/include/FreeRTOS.h  \
+src/FreeRTOS/include/projdefs.h  \
+ src/FreeRTOS/include/FreeRTOSConfig.h  \
+src/hal/hal_sys.h  \
+ src/FreeRTOS/include/portable.h  \
+ src/FreeRTOS/portable/MPLAB/PIC32MX/portmacro.h  \
+ src/FreeRTOS/include/mpu_wrappers.h  \
+src/FreeRTOS/include/semphr.h  \
+ src/FreeRTOS/include/queue.h  \
+src/FreeRTOS/include/task.h  \
+ src/FreeRTOS/include/list.h  \
+src/drivers/dispkyb.h  \
+ src/utils/include/disfmt.h  \
+src/drivers/adcdefs.h  \
+ src/sys/include/sysdefs.h  \
+src/tasks/tskmgr.h  \
+src/sys/include/settings.h  \
+ src/sys/include/system.h  \
+src/sys/include/sysdefs.h  \
+ src/utils/include/strutils.h  \
+src/utils/include/fitlinear.h 

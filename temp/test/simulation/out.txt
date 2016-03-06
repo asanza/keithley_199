@@ -1,0 +1,5 @@
+test_hal_uart.c:14:test_hal_uart_open:PASS
+
+-----------------------
+1 Tests 0 Failures 0 Ignored 
+OK

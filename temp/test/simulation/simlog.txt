@@ -1,0 +1,58 @@
+device pic32MX350F256H
+content/mplab/mplab.deviceSupport
+content/mplab/PluginBoardSupport.xml
+
+hwtool sim
+
+set oscillator.auxfrequency 	120
+
+set oscillator.auxfrequencyunit Mega
+
+set oscillator.frequency 	100
+
+set oscillator.frequencyunit 	Mega
+
+set oscillator.rcfrequency  	250
+
+set oscillator.rcfrequencyunit 	Kilo
+
+set uart2io.uartioenabled	true
+
+set uart2io.output		file
+
+set uart2io.outputfile		test/simulation/out.txt
+
+set system.disableerrormsg 	true
+
+
+
+program build/test/TestBuild.elf
+Programming target...
+
+
+Resetting SFRs
+Resetting peripherals
+Program succeeded.
+
+run
+Running
+
+break unity.c:1168
+Breakpoint 0 at file unity.c, line 1168.
+wait 20000
+
+Single breakpoint: @0x9D006C18
+Simulator halted
+Stop at
+	address:0x9d006c18
+	file:/home/diego/MPLABXProjects/keithley_199/vendor/ceedling/vendor/unity/src/unity.c
+	source line:1168
+
+>
+quit
+Stop at
+	address:0x9d006c18
+	file:/home/diego/MPLABXProjects/keithley_199/vendor/ceedling/vendor/unity/src/unity.c
+	source line:1168
+
+>

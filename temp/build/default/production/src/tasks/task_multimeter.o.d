@@ -1,0 +1,24 @@
+build/default/production/src/tasks/task_multimeter.o:  \
+ src/tasks/task_multimeter.c  \
+src/tasks/tskmgr.h  \
+src/utils/include/diag.h  \
+ src/sys/include/system.h  \
+src/drivers/adcdefs.h  \
+src/sys/include/sysdefs.h  \
+ src/sys/include/settings.h  \
+src/FreeRTOS/include/FreeRTOS.h  \
+ src/FreeRTOS/include/projdefs.h  \
+src/FreeRTOS/include/FreeRTOSConfig.h  \
+ src/hal/hal_sys.h  \
+src/FreeRTOS/include/portable.h  \
+ src/FreeRTOS/portable/MPLAB/PIC32MX/portmacro.h  \
+ src/FreeRTOS/include/mpu_wrappers.h  \
+src/FreeRTOS/include/task.h  \
+ src/FreeRTOS/include/list.h  \
+src/FreeRTOS/include/queue.h  \
+ src/drivers/dispkyb.h  \
+src/utils/include/disfmt.h  \
+ src/sys/include/sysdefs.h  \
+src/utils/include/strutils.h  \
+ src/FreeRTOS/include/semphr.h  \
+src/FreeRTOS/include/queue.h 

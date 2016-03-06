@@ -1,0 +1,17 @@
+---
+:source:
+  :path: test
+  :file: test_utils_math.c
+:successes:
+- :test: test_utils_roundd_should_behavior
+  :line: 12
+  :message: ''
+:failures: []
+:ignores: []
+:counts:
+  :total: 1
+  :passed: 1
+  :failed: 0
+  :ignored: 0
+:stdout:
+- ''
