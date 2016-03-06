@@ -1,7 +1,7 @@
 /*
  * eeprom.h
  *
- * Copyright (c) ${year}, Diego F. Asanza. All rights reserved.
+ * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,15 @@ extern "C" {
 
 #define EEPROM_PAGE_SIZE 64     /* size of an eeprom page in bytes*/
 #define EEPROM_SIZE      0x8000 /* total eeprom size in bytes */
-    
+
+/**
+ * @brief Bit bang a reset secuence in order to reset eeprom.
+ * @details Microchip memories sometimes hang up if system
+ * resets while transmitting an i2c sequence. This function
+ * called at startup reset the eeprom.
+ */    
+void eeprom_reset(void);
+
 void eeprom_read_page(uint16_t page_address, uint8_t* _data);
 void eeprom_write_page(uint16_t address, uint8_t* _data);
 
