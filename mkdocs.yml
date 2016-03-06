@@ -1,4 +1,4 @@
-site_name: '42'
+site_name: 'Documentation'
 
 theme: 'readthedocs'
 copyright: 'Copyright © 2016 Diego F. Asanza'
