@@ -2,13 +2,13 @@
     "docs": [
         {
             "location": "/", 
-            "text": "Notes\n\n\nSome random notes.", 
+            "text": "Upgrading an old Keithley 199 multimeter with a new digital board.", 
             "title": "Home"
         }, 
         {
-            "location": "/#notes", 
-            "text": "Some random notes.", 
-            "title": "Notes"
+            "location": "/#upgrading-an-old-keithley-199-multimeter-with-a-new-digital-board", 
+            "text": "", 
+            "title": "Upgrading an old Keithley 199 multimeter with a new digital board."
         }
     ]
 }
