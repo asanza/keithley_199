@@ -1,8 +1,8 @@
 Keithley 199 Upgrade
 --------------------
 
-Recently I bought an old Keithley 199 multimeter (datasheet can be found at 
-http://exodus.poly.edu/~kurt/manuals/manuals/Keithley/KEI%20199%20Operation,%20Programming%20&%20Maintenance.pdf). 
+Recently I bought an old Keithley 199 multimeter (
+[datasheet](http://exodus.poly.edu/~kurt/manuals/manuals/Keithley/KEI%20199%20Operation,%20Programming%20&%20Maintenance.pdf) ). 
 It was cheap because it didn't work. The digital control board was damaged 
 (the "Versatile Interface Adapter" was dead), so I designed a new digital 
 control board (see section hw.kicad) around an pic32 which was liying around. 
