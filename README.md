@@ -14,7 +14,7 @@ The hardware files are in [Kicad](http://kicad-pcb.org/) format. Gerber files ar
 
 # Building the software
 
-The software was built with the microchip toolchain (http://www.microchip.com/mplab/compilers). 
+The software was built with the [Microchip Toolchain](http://www.microchip.com/mplab/compilers). 
 
 We use [Ceedling](http://www.throwtheswitch.org/ceedling/) for building and testing (but for comfort, [MPLABX](http://www.microchip.com/mplab/mplab-x-ide)files are available). 
 
