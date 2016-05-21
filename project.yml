@@ -9,18 +9,34 @@
   :use_auxiliary_dependencies: TRUE
   :build_root: build
   :test_file_prefix: test_
+  :release_build: TRUE
 
 :environment:
+  - :mcu:  32MX350F256L
+  - :freq: 80000000UL
+  - :uart: UART1
+  - :path:
+    - /bin
+    - /usr/bin
+    - /opt/microchip/xc32/v1.31/bin
+    - /opt/microchip/mplabx/v3.26/mplab_ide/bin
 
 :extension:
   :executable: .elf
+  :assembly: .S
+
+:release_build:
+  :output: k199
+  :use_assembly: TRUE
 
 :paths:
   :test:
     - +:test/**
     - -:test/support
   :source:
-    - src/**
+    - +:src/**
+    - -:src/scpi-parser/examples/**
+    - -:src/scpi-parser/libscpi/test/**
   :support:
     - test/support
   :include:
@@ -29,6 +45,9 @@
   :commmon: &common_defines
     - UNITY_INCLUDE_DOUBLE
     - UNITY_DOUBLE_PRECISION=1e-6
+  :release:
+    - REPOVERSION=1
+    - REPOBRANCH=1
   :test:
     - *common_defines
     - TEST
@@ -54,7 +73,7 @@
   :test_compiler:
     :executable: xc32-gcc
     :arguments:
-      - -mprocessor=32MX350F256L
+      - -mprocessor=#{ENV['MCU']}
       - -x c
       - -c
       - -g
@@ -72,16 +91,13 @@
   :test_linker:
     :executable: xc32-gcc
     :arguments:
-      - -mprocessor=32MX350F256L
+      - ${1}
+      - -mprocessor=#{ENV['MCU']}
       - -lm
-      #- -mips16
-      #- -minterlink-compressed
       - --gc-sections
       - -fno-short-double
-      - ${1}
       - -o "./build/test/TestBuild.elf"
-      #- -L
-      - -Wl,-Tp32MX350F256L.ld,--defsym=_min_heap_size=2000,-Map=./build/test/TestOutput.map,--report-mem
+      - -Wl,-Tp#{ENV['MCU']}.ld,--defsym=_min_heap_size=2000,-Map=./build/test/TestOutput.map,--report-mem
       - --defsym=_min_heap_size=32440
       - --defsym=_min_stack_size=1056
   :test_fixture:
@@ -91,31 +107,45 @@
     :arguments:
       - test/simulation/sim_test_fixture.rb
 
+  :release_assembler:
+    :executable: xc32-gcc
+    :arguments:
+      - -mprocessor=#{ENV['MCU']}
+      - -c
+      - -I"$": COLLECTION_PATHS_SOURCE_AND_INCLUDE
+      - "${1}"
+      - -o "${2}"      
+      - -Wa,--defsym=__MPLAB_BUILD=1,--gdwarf-2 
+
   :release_compiler:
     :executable: xc32-gcc
     :arguments:
-      - -mcpu=32MX150F128D
+      - -mprocessor=#{ENV['MCU']}
       - -x c
-      - -minterlink-compressed
       - -c
+      - -g
+      - -MMD
+      - -Wno-packed-bitfield-compat
+      - -Wno-pragmas
+      - -lm
+      - -fno-short-double
       - "${1}"
       - -o "${2}"
-      - -I"$": COLLECTION_PATHS_SOURCE_INCLUDE_VENDOR
-      - -I"$": COLLECTION_PATHS_RELEASE_TOOLCHAIN_INCLUDE
       - -D$: COLLECTION_DEFINES_RELEASE_AND_VENDOR
+      - -I"$": COLLECTION_PATHS_SOURCE_AND_INCLUDE
       - -Wall
-      - -Werror
-      - -Os
-      - -mlarge-code
-      #- -mlarge-arrays
   :release_linker:
     :executable: xc32-gcc
     :arguments:
-      - -mcpu=32MX150F128D
       - ${1}
-      - ${1}
-      - -o "${2}"
-      - -Wl,-Tp32MX150F128D.gld,-Map=./build/release/MyPicApp.map,--report-mem
+      - -mprocessor=#{ENV['MCU']}
+      - -lm
+      - --gc-sections
+      - -fno-short-double
+      - -o "./build/test/TestBuild.elf"
+      - -Wl,-Tp#{ENV['MCU']}.ld,--defsym=_min_heap_size=2000,-Map=./build/release/app.map,--report-mem
+      - --defsym=_min_heap_size=32440
+      - --defsym=_min_stack_size=1056
 
 :plugins:
   :load_paths:

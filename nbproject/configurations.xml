@@ -275,6 +275,8 @@
         <property key="extra-include-directories-for-preprocessor"
                   value="src/hal;src/FreeRTOS/include;src/FreeRTOS/portable/MPLAB/PIC32MX"/>
         <property key="false-conditionals" value="false"/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
         <property key="keep-locals" value="false"/>
         <property key="list-assembly" value="false"/>
         <property key="list-source" value="false"/>
