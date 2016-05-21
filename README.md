@@ -12,7 +12,7 @@ This repository contains hardware and software files needed to build a replaceme
 
 # Building the hardware 
 
-The hardware files are in [Kicad](http://kicad-pcb.org/) format. Gerber files are available.
+The hardware files are in [Kicad](http://kicad-pcb.org/) format. Gerber files are (not yet) available.
 
 # Building the software
 
