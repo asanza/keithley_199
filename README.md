@@ -8,7 +8,7 @@ The [Keithley 199](http://exodus.poly.edu/~kurt/manuals/manuals/Keithley/KEI%201
 
 These multimeters contains three electronic circuit boards, one which contains the analog circuitry, including analog signal conditioning and analog digital converter, a display board which contains the user interface, and a digital control board, with a processor who controls display, gpib interface and analog digital converter.
 
-This repository contains hardware and software files needed to build a replacement of this board.
+This repository contains hardware and software files needed to build a replacement of the digital control board.
 
 # Building the hardware 
 
