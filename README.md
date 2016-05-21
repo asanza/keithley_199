@@ -6,7 +6,7 @@ This is an upgrade replacement for the digital control board on Keithley 199 mul
 
 The [Keithley 199](http://exodus.poly.edu/~kurt/manuals/manuals/Keithley/KEI%20199%20Operation,%20Programming%20&%20Maintenance.pdf) is a digital multimeter built in the nineties. It is capable of current, voltage and resistance measurements and also provides a gpib interface for remote control.
 
-This multimeters contains three electronic circuit boards, one which contains the analog circuitry, including analog signal conditioning and analog digital converter, a display board which contains the user interface, and a digital control board, with a processor who controls display, gpib interface and analog digital converter.
+These multimeters contains three electronic circuit boards, one which contains the analog circuitry, including analog signal conditioning and analog digital converter, a display board which contains the user interface, and a digital control board, with a processor who controls display, gpib interface and analog digital converter.
 
 This repository contains hardware and software files needed to build a replacement of this board.
 
