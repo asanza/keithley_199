@@ -1,5 +1,7 @@
 # Keithley 199 Digital Board Replacement
 
+![alt tag](https://raw.githubusercontent.com/asanza/keithley_199/img/K199.jpg)
+
 This is an upgrade replacement for the digital control board on Keithley 199 multimeters.
 
 The [Keithley 199](http://exodus.poly.edu/~kurt/manuals/manuals/Keithley/KEI%20199%20Operation,%20Programming%20&%20Maintenance.pdf) is a digital multimeter built in the nineties. It is capable of current, voltage and resistance measurements and also provides a gpib interface for remote control.
@@ -16,7 +18,7 @@ The hardware files are in [Kicad](http://kicad-pcb.org/) format. Gerber files ar
 
 The software was built with the [Microchip Toolchain](http://www.microchip.com/mplab/compilers). 
 
-We use [Ceedling](http://www.throwtheswitch.org/ceedling/) for building and testing (but for comfort, [MPLABX](http://www.microchip.com/mplab/mplab-x-ide)files are available). 
+We use [Ceedling](http://www.throwtheswitch.org/ceedling/) for building and testing (but for comfort, [MPLABX](http://www.microchip.com/mplab/mplab-x-ide) files are available). 
 
 In order to build the software, go to the root directory and do:
 
