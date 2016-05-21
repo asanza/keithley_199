@@ -1,22 +1,37 @@
-Keithley 199 Upgrade
---------------------
+# Keithley 199 Digital Board Replacement
 
-Recently I bought an old Keithley 199 multimeter (
-[datasheet](http://exodus.poly.edu/~kurt/manuals/manuals/Keithley/KEI%20199%20Operation,%20Programming%20&%20Maintenance.pdf) ). 
-It was cheap because it didn't work. The digital control board was damaged 
-(the "Versatile Interface Adapter" was dead), so I designed a new digital 
-control board (see section hw.kicad) around an pic32 which was liying around. 
-The new board replaces the old and is in charge of controlling the analog 
-circuitry (which contains a custom made, discrete analog digital converters, 
-signal conditioning and analog switchs for mode and range selection). 
-For the software, I used the mplabx environment from microchip and the xc32 
-compiler. 
+This is an upgrade replacement for the digital control board on Keithley 199 multimeters.
 
-The software works (at least I can measure AC and DC voltages and Currents with good 
-accuracy, support for resistance measurements is on the way). 
+The [Keithley 199](http://exodus.poly.edu/~kurt/manuals/manuals/Keithley/KEI%20199%20Operation,%20Programming%20&%20Maintenance.pdf) is a digital multimeter built in the 90. It is capable of current, voltage and resistance measurements and also provides a gpib interface for remote control.
 
-The new board contains also a temperature sensor (for accurate temperature 
-compensation) and instead of the old gpib interface in the old board, an usb
-interface.
+This multimeters contains three electronic circuit boards, one which contains the analog circuitry, including analog signal conditioning and analog digital converter, a display board which contains the user interface, and a digital control board, with a processor who controls display, gpib interface and analog digital converter.
 
-I want also implement mathematical functions and a scpi compliant interface (via usb).
+This repository contains hardware and software files needed to build a replacement of this board.
+
+# Building the hardware 
+
+The hardware files are in [Kicad](http://kicad-pcb.org/) format. Gerber files are available.
+
+# Building the software
+
+The software was built with the microchip toolchain (http://www.microchip.com/mplab/compilers). 
+
+We use [Ceedling](http://www.throwtheswitch.org/ceedling/) for building and testing (but for comfort, [MPLABX](http://www.microchip.com/mplab/mplab-x-ide)files are available). 
+
+In order to build the software, go to the root directory and do:
+
+```
+$rake release
+
+```
+Or to perform the unit tests:
+```
+$rake test:all
+```
+
+
+## Hardware
+
+The hardware is pretty basic. It contains a pic32mx controller which do the heavy lifting. An ftdi chip provides an usb interface, while two open drain drivers controll the led displays. The external trigger input and output are connected to the microcontroller through the necessary input/output protection.
+
+## Software 
