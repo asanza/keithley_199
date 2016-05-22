@@ -1,6 +1,6 @@
 # Keithley 199 Digital Board Replacement
 
-![alt tag](doc/img/K199.jpg)
+![keithley 199](doc/img/K199.jpg)
 
 This is an upgrade replacement for the digital control board on Keithley 199 multimeters.
 
@@ -49,6 +49,8 @@ The hardware is pretty basic. It contains a pic32mx controller which do the heav
 ## Software 
 
 The interesting part is the Control of the analog board. The analog board contains a series of switches that are controlled with a shift register. The adc conversion is performed with a discrete charge-balance adc which returns a pulse train with a pulse count proportional to the input voltage. The control of the adc is performed by the microcontroller in the digital board and should observe a precise timing in order to guarantee adc accuracy.
+
+![charge balance](doc/img/chargebalance.png)
 
 
 # Licence
