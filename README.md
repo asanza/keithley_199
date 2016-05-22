@@ -10,6 +10,16 @@ These multimeters contains three electronic circuit boards, one which contains t
 
 This repository contains hardware and software files needed to build a replacement of the digital control board.
 
+# Features
+- Voltage Measurement 0.3, 3, 30, 300 VDC/VAC 6.5 digits
+- Current Measurement 30mA, 3A DC/AC,  6.5 digits
+- Resistance Measurement 300-3GOhm, 6.5 digits, 4 wire.
+- Arbitrary integration period
+- SCPI interface
+- Free Software
+
+
+
 # Building the hardware 
 
 The hardware files are in [Kicad](http://kicad-pcb.org/) format. Gerber files are (not yet) available.
@@ -37,3 +47,28 @@ $rake test:all
 The hardware is pretty basic. It contains a pic32mx controller which do the heavy lifting. An ftdi chip provides an usb interface, while two open drain drivers controll the led displays. The external trigger input and output are connected to the microcontroller through the necessary input/output protection.
 
 ## Software 
+
+The interesting part is the Control of the analog board. The analog board contains a series of switches that are controlled with a shift register. The adc conversion is performed with a discrete charge-balance adc which returns a pulse train with a pulse count proportional to the input voltage. The control of the adc is performed by the microcontroller in the digital board and should observe a precise timing in order to guarantee adc accuracy.
+
+
+# Licence
+
+```
+ * Copyright (c) 2015, Diego F. Asanza. All rights reserved.
+ *
+ * This software is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
+ * MA 02110-1301  USA
+ *
+ ```

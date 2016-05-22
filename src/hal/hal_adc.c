@@ -90,6 +90,10 @@ static void hal_counter_init();
 static void hal_counter_restart();
 static uint32_t hal_counter_read();
 
+
+/* It would be nice to remove the os dependencies from this file.
+ */
+
 void hal_adc_send_mux(uint8_t channel, uint32_t mux){
     /* send this mux configuration */
     adc_send_mux(channel, mux);
@@ -97,6 +101,7 @@ void hal_adc_send_mux(uint8_t channel, uint32_t mux){
     /* wait a little bit before sending the next sequence */
     vTaskDelay(1);
 }
+
 
 int hal_adc_integration_sequence (uint8_t channel, uint32_t int_mux, uint32_t pause_mux, uint32_t rund_mux){
     uint32_t up_counter, down_counter;

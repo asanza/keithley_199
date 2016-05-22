@@ -21,13 +21,13 @@
  * Created on July 17, 2015, 10:46 PM
  */
 
-#include<diag.h>
-#include<FreeRTOS.h>
-#include<semphr.h>
-#include<task.h>
-#include<dispkyb.h>
-#include<diag.h>
-#include<disfmt.h>
+#include <diag.h>
+#include <FreeRTOS.h>
+#include <semphr.h>
+#include <task.h>
+#include <dispkyb.h>
+#include <diag.h>
+#include <disfmt.h>
 #include "tskmgr.h"
 #include "settings.h"
 #include <system.h>
