@@ -52,6 +52,7 @@ The interesting part is the Control of the analog board. The analog board contai
 
 ![charge balance](doc/img/chargebalance.png)
 
+As shown in the figure above, the charge balance phase starts after the controller sends a start of conversion to the analog board. While the charge balance phase takes place, the controller counts the number of pulses it receives from the analog board. The analog board only send pulses on the up parts, thus the number of pulses is proportional to the charge acumulated. After exactly 16.66 msecs the controller sends an stop of conversion and the single slope phase starts, discharging the integrator. While discharge takes place, the controller counts the number of pulses received.
 
 # Licence
 
