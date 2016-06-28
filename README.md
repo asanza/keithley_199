@@ -1,6 +1,6 @@
 # Keithley 199 Digital Board Replacement
 
-![keithley 199](doc/img/K199.jpg)
+![keithley 199](doc/img/K199iA.jpg)
 
 This is an upgrade replacement for the digital control board on Keithley 199 multimeters.
 
