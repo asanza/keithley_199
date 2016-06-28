@@ -46,7 +46,11 @@ $rake test:all
 
 The hardware is pretty basic. It contains a pic32mx controller which do the heavy lifting. An ftdi chip provides an usb interface, while two open drain drivers controll the led displays. The external trigger input and output are connected to the microcontroller through the necessary input/output protection.
 
-## Software 
+## Calibration
+
+TODO
+
+## Principles of Operation
 
 The interesting part is the Control of the analog board. The analog board contains a series of switches that are controlled with a shift register. The adc conversion is performed with a discrete charge-balance adc which returns a pulse train with a pulse count proportional to the input voltage. The control of the adc is performed by the microcontroller in the digital board and should observe a precise timing in order to guarantee adc accuracy.
 
