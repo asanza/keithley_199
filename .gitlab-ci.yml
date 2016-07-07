@@ -1,5 +1,5 @@
 before_script:
-  - export PATH=/usr/local/bin:/usr/bin:/bin:/opt/microchip/xc32/v1.31/bin/:/opt/microchip/mplabx/v3.30/mplab_ide/bin
+  - export PATH=/usr/local/bin:/usr/bin:/bin:/opt/microchip/xc32/v1.31/bin/:/opt/microchip/mplabx/v3.05/mplab_ide/bin
   - git submodule update --init
 
 UnitTests:
