@@ -1,0 +1,9 @@
+- Revisar FTDI Pinout (which type??)
+- Look out for a LDO 3.3V (http://www.ti.com/lit/ds/symlink/lm2936.pdf)
+- Xtal (8MHz) footprint (type, condensators)    //DONE
+- EEPROM (Need code)                            
+- Display drivers (or transistors)              
+- Trigger Input and Voltmeter complete (outputs) voltmeter complete can be used for other signals also (square wave, pulse, pwm, etc)
+- Look for resistor networks (80 and 4k7 (10k))
+- Look for ftdi circuit
+
