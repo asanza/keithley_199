@@ -1,0 +1,40 @@
+Data is shifted in Positive clock Transitions. (It means data is valid on trailing edge (negative transition)
+Data is received INVERTED in analog board (the optocoupler inverts).
+Strobe shifts data to out. Strobe is also inverted in analog board.
+
+5 bytes are sended each time (there are 5 shift registers, four on analog board and one on scanner card.). The last byte controls the analog digital converter.
+
+Last Register Bits: (Digital Board)
+Seq.	Q8	Q7	Q6	Q5		Q4	Q3		Q2	Q1	Time
+	/Cal	/Zero	Fast	/ReadSwitch	Sig	/FinalSlope	Sync	Int
+0x95	1	0	0	1		0	1		0	1	6m  // Start integration
+0x94	1	0	0	1		0	1		0	0	20m // end integration
+0x92	1	0	0	1		0	0		1	0	0   // Rundown slope	
+
+0x55	0	1	0	1		0	1		0	1	6m  // Start Integration
+0x54	0	1	0	1		0	1		0	0	20m  // end integration
+0x52	0	1	0	1		0	0		1	0	800u // Rundown slope
+
+Cal: When 0 is the reference connected to the A/D
+Zero: When 0  the multiplexer selects ground for input to the A/D
+Fast:
+ReadSwitch: When 0 in Analog board, the position of front/rear switch is readed (-4.3 and volts/ohms lo)
+Sig: When 1 in analog board, 3V signal direct to A/D
+/FinalSlope:	Starts the Rundown slope integration
+Sync: Resets AD Clocks
+Int: (Start Conversion)
+
+
+
+The conversion sequence is as follows. 
+
+- Integration Vin
+- Integration Vin Zero
+- Integration Vref
+- Integration Vref Zero
+
+Vout = -2.8*(Vin - VinZero)/(Vref - VrefZero)
+
+30 V requeriments requerew a separate zero
+ 
+
